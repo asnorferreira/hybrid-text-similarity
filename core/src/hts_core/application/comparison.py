@@ -1,4 +1,5 @@
 from dataclasses import asdict
+from time import perf_counter
 
 import numpy as np
 
@@ -7,7 +8,7 @@ from hts_core.domain.hybrid import (bounded, class_summary, classify_pair, fuse,
                                     semantic_cosine, similarity_index)
 from hts_core.domain.lexical import cosine
 from hts_core.domain.signature import salient_terms, signature
-from hts_core.domain.strings import CHARACTER_ALGORITHMS, levenshtein, vsm_cosine
+from hts_core.domain.strings import CHARACTER_ALGORITHMS, vsm_cosine
 from hts_core.domain.text import clean_extracted
 
 
@@ -31,8 +32,12 @@ class ComparisonService:
             raise InvalidDocument('limite de sentenças ou caracteres por sentença excedido')
         return sentences
 
-    def compare(self, source, suspect, mode='hybrid'):
+    def compare(self, source, suspect, mode='hybrid', timings=None):
+        started = perf_counter()
         a, b = self._prepare(source), self._prepare(suspect)
+        if timings is not None:
+            timings['preprocess'] = perf_counter() - started
+        started = perf_counter()
         av, bv = [[self.idf.vector(s.lexical) for s in doc] for doc in (a, b)]
         lexical = np.asarray([[bounded(cosine(x, y)) for y in bv] for x in av])
         wa, wb = [s.words for s in a], [s.words for s in b]
@@ -55,28 +60,40 @@ class ComparisonService:
                                'unavailable_components': ['siamese', 'learned_fusion', 'inserted_segment'],
                                'signature': {'method': 'adapted_top30_tfidf_set_blake2b64_mod2^64', 'source': signatures[0],
                                              'suspect': signatures[1], 'equal_is_not_identity': True}}}
+        if timings is not None:
+            timings['lexical'] = perf_counter() - started
         if mode == 'lexical':
             result['index'] = lexical_index
             return result
         if self.encoder is None:
             result['state'] = 'resource_unavailable'
             return result
+        started = perf_counter()
         vectors, windows = self.encoder.encode([s.semantic for s in a + b], self.config['max_content_tokens'])
         for i, item in enumerate(info[0] + info[1]):
             item['window'] = windows[i]
+        if timings is not None:
+            timings['embeddings'] = perf_counter() - started
+        started = perf_counter()
         semantic = np.asarray([[semantic_cosine(x, y) for y in vectors[len(a):]] for x in vectors[:len(a)]])
         operational, fused = fuse(lexical, semantic)
         result['index'] = similarity_index(fused, wa, wb)
         result['semantic_index'] = similarity_index(operational, wa, wb)
         result['matrices'].update(semantic_raw=semantic.tolist(), semantic_operational=operational.tolist(), fused=fused.tolist())
+        if timings is not None:
+            timings['matrices'] = perf_counter() - started
+        started = perf_counter()
         result['alignment'] = hungarian(fused)
+        if timings is not None:
+            timings['alignment'] = perf_counter() - started
+        started = perf_counter()
         matches = []
         thresholds = {name: self.config[name] for name in ('edited_threshold', 'low_threshold', 'paraphrase_threshold', 'lexical_high')}
         for j, sentence in enumerate(b):
             i = int(np.argmax(fused[:, j]))
             x, y = a[i].semantic, sentence.semantic
-            edit = levenshtein(x, y)
             characters = {name: func(x, y) for name, func in CHARACTER_ALGORITHMS.items()}
+            edit = characters['levenshtein']
             characters['osa'] = characters.pop('damerau_levenshtein')
             characters['vsm_cosine'] = vsm_cosine(a[i].lexical, sentence.lexical)
             decision = classify_pair(x, y, lexical[i, j], operational[i, j], edit, **thresholds)
@@ -85,4 +102,6 @@ class ComparisonService:
                             'edit': edit, 'characters': characters, 'decision': decision})
         result['matches'] = matches
         result['summary'] = class_summary([m['decision']['label'] for m in matches])
+        if timings is not None:
+            timings['pairs'] = perf_counter() - started
         return result
