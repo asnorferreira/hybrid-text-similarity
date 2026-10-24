@@ -1,4 +1,4 @@
-from typing import Literal
+from typing import Annotated, Literal
 
 from pydantic import BaseModel, ConfigDict, Field, JsonValue
 
@@ -73,11 +73,15 @@ class Summary(StrictModel):
     inserted_segment: Literal['indisponivel_regra_nao_definida']
 
 
+UnitScore = Annotated[float, Field(ge=0, le=1)]
+RawCosine = Annotated[float, Field(ge=-1, le=1)]
+
+
 class Matrices(StrictModel):
-    lexical: list[list[float]]
-    semantic_raw: list[list[float]] | None
-    semantic_operational: list[list[float]] | None
-    fused: list[list[float]] | None
+    lexical: list[list[UnitScore]]
+    semantic_raw: list[list[RawCosine]] | None
+    semantic_operational: list[list[UnitScore]] | None
+    fused: list[list[UnitScore]] | None
 
 
 class Metadata(StrictModel):

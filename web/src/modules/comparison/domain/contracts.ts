@@ -14,11 +14,12 @@ const jsonRecord = z.record(z.string(), z.json());
 const sentence = z.strictObject({ index: z.number().int().nonnegative(), raw: z.string(), semantic: z.string(),
   lexical: z.array(z.string()), words: z.number().int().nonnegative(), flags: z.array(z.string()), window: jsonRecord.nullable() });
 const labels = z.enum(['copia_exata', 'copia_editada', 'parafrase', 'sem_correspondencia_detectada']);
-const matrix = z.array(z.array(z.number()));
+const matrix = (entry: z.ZodNumber) => z.array(z.array(entry));
 export const responseSchema = z.strictObject({
   contract_version: version, state: z.enum(['calculated', 'resource_unavailable']), method: z.enum(['hybrid', 'lexical']),
   index: index.nullable(), lexical_index: index, semantic_index: index.nullable(),
-  matrices: z.strictObject({ lexical: matrix, semantic_raw: matrix.nullable(), semantic_operational: matrix.nullable(), fused: matrix.nullable() }),
+  matrices: z.strictObject({ lexical: matrix(score), semantic_raw: matrix(z.number().min(-1).max(1)).nullable(),
+    semantic_operational: matrix(score).nullable(), fused: matrix(score).nullable() }),
   source: z.array(sentence), suspect: z.array(sentence),
   matches: z.array(z.strictObject({ source: z.number().int(), suspect: z.number().int(), lexical: score,
     semantic_raw: z.number().min(-1).max(1), semantic_operational: score, fused: score, edit: score,
