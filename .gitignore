@@ -28,3 +28,4 @@ core/data/generated/
 *.safetensors
 *.onnx
 *.tsbuildinfo
+web/artifacts/

@@ -6,6 +6,10 @@ docs
 TCC
 .claude
 .codex
+AGENTS.md
+CLAUDE.md
+.agents
+.aws
 **/.venv
 **/__pycache__
 **/.pytest_cache
@@ -13,6 +17,8 @@ TCC
 **/node_modules
 **/.next
 core/models
+core/data/refcorpus/raw
 core/artifacts
 core/.uv-audit-cache
 **/*.tsbuildinfo
+web/artifacts

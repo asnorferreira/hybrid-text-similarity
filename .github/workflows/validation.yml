@@ -1,4 +1,4 @@
-name: Validate S2
+name: Validate S3
 
 on:
   push:
@@ -40,7 +40,9 @@ jobs:
           chmod 777 core/artifacts/ci/results
           docker compose config --quiet
       - name: Build locked Python and Node environments
-        run: docker compose build core web
+        run: |
+          docker compose build core web
+          docker compose build browser
       - name: Restore frozen corpus and verify hashes without rebuilding IDF
         run: |
           docker compose run --rm --no-deps --user "$(id -u):$(id -g)" prepare python -m hts_core.cli restaurar-corpus
@@ -63,6 +65,29 @@ jobs:
         run: |
           docker compose exec -T web npm run integration
           docker compose exec -T web node --import tsx scripts/integration-failure.ts
+          docker compose exec -T web npm run test:security
+          docker compose exec -T web node --import tsx scripts/pagination.ts
+      - name: Browser system tests with real services
+        run: |
+          docker compose run --rm --no-deps browser npm run test:e2e
+          python3 scripts/ci/check_junit.py core/artifacts/ci/results/e2e/system.xml
+      - name: Browser with semantic model unavailable
+        run: |
+          docker compose -f docker-compose.ci.yml -f docker-compose.no-model.yml up -d --wait --wait-timeout 180 core
+          docker compose run --rm --no-deps -e HTS_FAILURE_KIND=model -e HTS_E2E_OUTPUT=/results/model-unavailable browser npm run test:unavailable
+          python3 scripts/ci/check_junit.py core/artifacts/ci/results/model-unavailable/system.xml
+      - name: Browser with core stopped
+        run: |
+          docker compose stop core
+          docker compose run --rm --no-deps -e HTS_FAILURE_KIND=core -e HTS_E2E_OUTPUT=/results/core-unavailable browser npm run test:unavailable
+          python3 scripts/ci/check_junit.py core/artifacts/ci/results/core-unavailable/system.xml
+      - name: Restore normal core after failure scenarios
+        if: always()
+        run: docker compose up -d --wait --wait-timeout 180 core
+      - name: Dependency advisory audits
+        run: |
+          docker compose exec -T web npm audit --json > core/artifacts/ci/results/npm-audit.json
+          docker compose run --rm --no-deps prepare uv tool run --from pip-audit==2.10.1 pip-audit --path /opt/venv/lib/python3.11/site-packages --format json --progress-spinner off --output /results/pip-audit.json
       - name: Record technical versions and execution identity
         run: |
           docker compose exec -T core python -c "import json,platform,importlib.metadata as m; print(json.dumps({'python':platform.python_version(),'packages':{n:m.version(n) for n in ['flask','pydantic','spacy','pt-core-news-sm','sentence-transformers','torch','transformers']}}))" > core/artifacts/ci/results/runtime-core.json
@@ -81,5 +106,10 @@ jobs:
             core/artifacts/ci/results/runtime-core.json
             core/artifacts/ci/results/runtime-web.json
             core/artifacts/ci/results/technical.json
+            core/artifacts/ci/results/e2e/system.xml
+            core/artifacts/ci/results/model-unavailable/system.xml
+            core/artifacts/ci/results/core-unavailable/system.xml
+            core/artifacts/ci/results/npm-audit.json
+            core/artifacts/ci/results/pip-audit.json
           if-no-files-found: warn
           retention-days: 7
