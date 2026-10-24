@@ -35,3 +35,19 @@ Fusão: `F = 0.6*max(0,C) + 0.4*L`; C bruto preservado. O índice usa máximos p
 Limites e limiares em `core/configs/comparison.json`; o hash de configuração inclui os arquivos de implementação. O IDF provisório permanece congelado, com versão histórica e descritor observado de tabela/pipeline/modelo; não é atestação retroativa de construção. No futuro experimental, ajustar IDF só no treino.
 
 Testes e seeds são desenvolvimento, sem validação de hipóteses ou desempenho científico. Não há OCR, busca online, acervo/FAISS ou deploy. Evidências privadas em TCC; não executar operações Git de publicação automaticamente.
+
+## CI — preparação em 2026-10-24
+
+Workflow preparado; validação no GitHub ainda não executada.
+
+`.github/workflows/validation.yml` executa em push na `main` e abertura (`opened`) de PR destinado à `main`. Push em outra branch, criação de branch e commits posteriores num PR aberto não disparam execução. Essa política é intencional: um resultado antigo não valida automaticamente commits novos. O workflow precisa estar na branch antes da abertura do PR que o executará. Se o PR já existir, publicar a atualização não cria esse evento; não ampliar gatilhos ou fechar/reabrir PR automaticamente.
+
+As actions estão fixadas por SHA, com `contents: read` e checkout sem credenciais persistidas. A validação usa um único job Ubuntu e os ambientes Docker fixados (Python3.11.9/uv0.9.5 e Node24.22.1), `uv sync --frozen` e `npm ci`, evitando instalar outra pilha nos jobs. O build web executa `npm run build`; depois rodam testes/typecheck e integração real.
+
+`docker-compose.ci.yml` é independente do Compose de desenvolvimento: Mongo interno sem porta publicada, namespace `hts_ci_s2`, sem banco externo/credenciais do autor. Recursos ficam em `core/artifacts/ci/`, fora do Git. O CI parte sem `.env`, corpus raw, ambientes ou pesos: restaura as revisões congeladas, verifica hashes sem reconstruir IDF, instala spaCy pelo lock e prepara explicitamente o modelo fixo antes da inferência offline. Falhas nesses passos impedem aprovação; JUnit vazio, com falha ou skip/xfail é rejeitado.
+
+As fixtures PDF/DOCX são geradas por `core/scripts/gerar_fixtures_ci.py`, com conteúdo de desenvolvimento declarado e bytes determinísticos, sem amostras privadas. O script real de integração verifica parsing, APIs, persistência/leitura e seed duplicado. `integration-failure.ts` restringe-se ao Mongo/namespace CI, provoca rejeição de um relatório, verifica falha explícita/registros parciais não apresentados como concluídos e restaura o validador antes do retry idempotente. Não exclui dados.
+
+Artifacts limitam-se a JUnit e identificação técnica de versões/evento/SHAs; não incluem documentos privados, banco, caches ou pesos. Downloads e tempos de CI não são resultados científicos. A autenticação/interface da S3 ainda não foi implementada.
+
+Na revisão local, o checkout público isolado passou em 220 testes Linux e no fluxo integrado antes do último reforço dos schemas. Após esse reforço, Windows passou em 220 testes e web em quatro; a repetição Linux registrou duas falhas de deadline e dois erros de inicialização semântica, durante uma rodada em que a API do Docker Desktop passou a responder 500. Causa não determinada; não se alteraram deadlines/testes para aprovar. Revalidar sequencialmente o estado final quando o Docker estiver operacional. Isso permanece separado da execução futura no GitHub.
