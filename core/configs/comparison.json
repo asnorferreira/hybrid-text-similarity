@@ -1,0 +1,19 @@
+{
+  "policy": "q5-v2",
+  "contract_version": "1.0",
+  "max_characters": 30000,
+  "max_sentences": 120,
+  "max_sentence_characters": 4000,
+  "max_upload_bytes": 5242880,
+  "max_content_tokens": 12000,
+  "edited_threshold": 0.8,
+  "low_threshold": 0.3,
+  "paraphrase_threshold": 0.75,
+  "lexical_high": 0.85,
+  "semantic_weight": 0.6,
+  "lexical_weight": 0.4,
+  "rounding": "none in API; display decimal half-up, 2 places",
+  "alignment": "hungarian_unweighted; ascending scans, strict improvement, zero unmatched",
+  "best_pair": "maximum F; lowest source index on exact ties",
+  "windows": "complete_nonoverlapping_token_ids; unit_each; content_token_weighted_mean; unit_final"
+}

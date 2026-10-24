@@ -1,0 +1,693 @@
+{
+  "provenance": "fixture manual independente; não é saída de modelo ou resultado de pesquisa",
+  "valid": [
+    {
+      "contract_version": "1.0",
+      "state": "calculated",
+      "method": "lexical",
+      "index": {
+        "source_to_suspect": 1.0,
+        "suspect_to_source": 1.0,
+        "value": 100.0
+      },
+      "lexical_index": {
+        "source_to_suspect": 1.0,
+        "suspect_to_source": 1.0,
+        "value": 100.0
+      },
+      "semantic_index": null,
+      "matrices": {
+        "lexical": [
+          [
+            1.0
+          ]
+        ],
+        "semantic_raw": null,
+        "semantic_operational": null,
+        "fused": null
+      },
+      "source": [
+        {
+          "index": 0,
+          "raw": "Texto.",
+          "semantic": "Texto.",
+          "lexical": [
+            "texto"
+          ],
+          "words": 1,
+          "flags": [],
+          "window": null
+        }
+      ],
+      "suspect": [
+        {
+          "index": 0,
+          "raw": "Texto.",
+          "semantic": "Texto.",
+          "lexical": [
+            "texto"
+          ],
+          "words": 1,
+          "flags": [],
+          "window": null
+        }
+      ],
+      "matches": null,
+      "alignment": null,
+      "summary": null,
+      "metadata": {
+        "policy": "q5-v2",
+        "config_sha256": "fixture-independent-contract",
+        "configuration": {},
+        "idf": {
+          "fixture": true
+        },
+        "model": null,
+        "semantic_unavailable": "cenário de contrato",
+        "unavailable_components": [
+          "siamese"
+        ],
+        "signature": {}
+      }
+    }
+  ],
+  "invalid": [
+    {
+      "contract_version": "2.0",
+      "state": "calculated",
+      "method": "lexical",
+      "index": {
+        "source_to_suspect": 1.0,
+        "suspect_to_source": 1.0,
+        "value": 100.0
+      },
+      "lexical_index": {
+        "source_to_suspect": 1.0,
+        "suspect_to_source": 1.0,
+        "value": 100.0
+      },
+      "semantic_index": null,
+      "matrices": {
+        "lexical": [
+          [
+            1.0
+          ]
+        ],
+        "semantic_raw": null,
+        "semantic_operational": null,
+        "fused": null
+      },
+      "source": [
+        {
+          "index": 0,
+          "raw": "Texto.",
+          "semantic": "Texto.",
+          "lexical": [
+            "texto"
+          ],
+          "words": 1,
+          "flags": [],
+          "window": null
+        }
+      ],
+      "suspect": [
+        {
+          "index": 0,
+          "raw": "Texto.",
+          "semantic": "Texto.",
+          "lexical": [
+            "texto"
+          ],
+          "words": 1,
+          "flags": [],
+          "window": null
+        }
+      ],
+      "matches": null,
+      "alignment": null,
+      "summary": null,
+      "metadata": {
+        "policy": "q5-v2",
+        "config_sha256": "fixture-independent-contract",
+        "configuration": {},
+        "idf": {
+          "fixture": true
+        },
+        "model": null,
+        "semantic_unavailable": "cenário de contrato",
+        "unavailable_components": [
+          "siamese"
+        ],
+        "signature": {}
+      }
+    },
+    {
+      "contract_version": "1.0",
+      "state": "calculated",
+      "method": "lexical",
+      "index": {
+        "value": "alto"
+      },
+      "lexical_index": {
+        "source_to_suspect": 1.0,
+        "suspect_to_source": 1.0,
+        "value": 100.0
+      },
+      "semantic_index": null,
+      "matrices": {
+        "lexical": [
+          [
+            1.0
+          ]
+        ],
+        "semantic_raw": null,
+        "semantic_operational": null,
+        "fused": null
+      },
+      "source": [
+        {
+          "index": 0,
+          "raw": "Texto.",
+          "semantic": "Texto.",
+          "lexical": [
+            "texto"
+          ],
+          "words": 1,
+          "flags": [],
+          "window": null
+        }
+      ],
+      "suspect": [
+        {
+          "index": 0,
+          "raw": "Texto.",
+          "semantic": "Texto.",
+          "lexical": [
+            "texto"
+          ],
+          "words": 1,
+          "flags": [],
+          "window": null
+        }
+      ],
+      "matches": null,
+      "alignment": null,
+      "summary": null,
+      "metadata": {
+        "policy": "q5-v2",
+        "config_sha256": "fixture-independent-contract",
+        "configuration": {},
+        "idf": {
+          "fixture": true
+        },
+        "model": null,
+        "semantic_unavailable": "cenário de contrato",
+        "unavailable_components": [
+          "siamese"
+        ],
+        "signature": {}
+      }
+    },
+    {
+      "contract_version": "1.0",
+      "state": "calculated",
+      "method": "lexical",
+      "index": {
+        "source_to_suspect": 1.0,
+        "suspect_to_source": 1.0,
+        "value": 100.0
+      },
+      "lexical_index": {
+        "source_to_suspect": 1.0,
+        "suspect_to_source": 1.0,
+        "value": 100.0
+      },
+      "semantic_index": null,
+      "matrices": {
+        "lexical": [
+          [
+            1.0
+          ]
+        ],
+        "semantic_raw": null,
+        "semantic_operational": null,
+        "fused": null
+      },
+      "source": [
+        {
+          "index": 0,
+          "raw": "Texto.",
+          "semantic": "Texto.",
+          "lexical": [
+            "texto"
+          ],
+          "words": 1,
+          "flags": [],
+          "window": null
+        }
+      ],
+      "suspect": [
+        {
+          "index": 0,
+          "raw": "Texto.",
+          "semantic": "Texto.",
+          "lexical": [
+            "texto"
+          ],
+          "words": 1,
+          "flags": [],
+          "window": null
+        }
+      ],
+      "matches": "inválido",
+      "alignment": null,
+      "summary": null,
+      "metadata": {
+        "policy": "q5-v2",
+        "config_sha256": "fixture-independent-contract",
+        "configuration": {},
+        "idf": {
+          "fixture": true
+        },
+        "model": null,
+        "semantic_unavailable": "cenário de contrato",
+        "unavailable_components": [
+          "siamese"
+        ],
+        "signature": {}
+      }
+    },
+    {
+      "contract_version": "1.0",
+      "state": "calculated",
+      "method": "lexical",
+      "index": {
+        "source_to_suspect": 1.0,
+        "suspect_to_source": 1.0,
+        "value": 100.0
+      },
+      "lexical_index": {
+        "source_to_suspect": 1.0,
+        "suspect_to_source": 1.0,
+        "value": 100.0
+      },
+      "semantic_index": null,
+      "matrices": {
+        "lexical": [
+          [
+            1.0
+          ]
+        ],
+        "semantic_raw": null,
+        "semantic_operational": null,
+        "fused": null
+      },
+      "source": [
+        {
+          "index": 0,
+          "raw": "Texto.",
+          "semantic": "Texto.",
+          "lexical": [
+            "texto"
+          ],
+          "words": 1,
+          "flags": [],
+          "window": null
+        }
+      ],
+      "suspect": [
+        {
+          "index": 0,
+          "raw": "Texto.",
+          "semantic": "Texto.",
+          "lexical": [
+            "texto"
+          ],
+          "words": 1,
+          "flags": [],
+          "window": null
+        }
+      ],
+      "matches": null,
+      "alignment": null,
+      "summary": null
+    },
+    {
+      "contract_version": "1.0",
+      "state": "calculated",
+      "method": "lexical",
+      "index": {
+        "source_to_suspect": 1.0,
+        "suspect_to_source": 1.0,
+        "value": 100.0
+      },
+      "lexical_index": {
+        "source_to_suspect": 1.0,
+        "suspect_to_source": 1.0,
+        "value": 100.0
+      },
+      "semantic_index": null,
+      "matrices": {
+        "lexical": [
+          [
+            "não é escore"
+          ]
+        ],
+        "semantic_raw": null,
+        "semantic_operational": null,
+        "fused": null
+      },
+      "source": [
+        {
+          "index": 0,
+          "raw": "Texto.",
+          "semantic": "Texto.",
+          "lexical": [
+            "texto"
+          ],
+          "words": 1,
+          "flags": [],
+          "window": null
+        }
+      ],
+      "suspect": [
+        {
+          "index": 0,
+          "raw": "Texto.",
+          "semantic": "Texto.",
+          "lexical": [
+            "texto"
+          ],
+          "words": 1,
+          "flags": [],
+          "window": null
+        }
+      ],
+      "matches": null,
+      "alignment": null,
+      "summary": null,
+      "metadata": {
+        "policy": "q5-v2",
+        "config_sha256": "fixture-independent-contract",
+        "configuration": {},
+        "idf": {
+          "fixture": true
+        },
+        "model": null,
+        "semantic_unavailable": "cenário de contrato",
+        "unavailable_components": [
+          "siamese"
+        ],
+        "signature": {}
+      }
+    },
+    {
+      "contract_version": "1.0",
+      "state": "calculated",
+      "method": "lexical",
+      "index": {
+        "source_to_suspect": 1.0,
+        "suspect_to_source": 1.0,
+        "value": 100.0
+      },
+      "lexical_index": {
+        "source_to_suspect": 1.0,
+        "suspect_to_source": 1.0,
+        "value": 100.0
+      },
+      "semantic_index": null,
+      "matrices": {
+        "lexical": [
+          [
+            2.0
+          ]
+        ],
+        "semantic_raw": null,
+        "semantic_operational": null,
+        "fused": null
+      },
+      "source": [
+        {
+          "index": 0,
+          "raw": "Texto.",
+          "semantic": "Texto.",
+          "lexical": [
+            "texto"
+          ],
+          "words": 1,
+          "flags": [],
+          "window": null
+        }
+      ],
+      "suspect": [
+        {
+          "index": 0,
+          "raw": "Texto.",
+          "semantic": "Texto.",
+          "lexical": [
+            "texto"
+          ],
+          "words": 1,
+          "flags": [],
+          "window": null
+        }
+      ],
+      "matches": null,
+      "alignment": null,
+      "summary": null,
+      "metadata": {
+        "policy": "q5-v2",
+        "config_sha256": "fixture-independent-contract",
+        "configuration": {},
+        "idf": {
+          "fixture": true
+        },
+        "model": null,
+        "semantic_unavailable": "cenário de contrato",
+        "unavailable_components": [
+          "siamese"
+        ],
+        "signature": {}
+      }
+    },
+    {
+      "contract_version": "1.0",
+      "state": "calculated",
+      "method": "lexical",
+      "index": {
+        "source_to_suspect": 1.0,
+        "suspect_to_source": 1.0,
+        "value": 100.0
+      },
+      "lexical_index": {
+        "source_to_suspect": 1.0,
+        "suspect_to_source": 1.0,
+        "value": 100.0
+      },
+      "semantic_index": null,
+      "matrices": {
+        "lexical": [
+          [
+            1.0
+          ]
+        ],
+        "semantic_raw": [
+          [
+            2.0
+          ]
+        ],
+        "semantic_operational": null,
+        "fused": null
+      },
+      "source": [
+        {
+          "index": 0,
+          "raw": "Texto.",
+          "semantic": "Texto.",
+          "lexical": [
+            "texto"
+          ],
+          "words": 1,
+          "flags": [],
+          "window": null
+        }
+      ],
+      "suspect": [
+        {
+          "index": 0,
+          "raw": "Texto.",
+          "semantic": "Texto.",
+          "lexical": [
+            "texto"
+          ],
+          "words": 1,
+          "flags": [],
+          "window": null
+        }
+      ],
+      "matches": null,
+      "alignment": null,
+      "summary": null,
+      "metadata": {
+        "policy": "q5-v2",
+        "config_sha256": "fixture-independent-contract",
+        "configuration": {},
+        "idf": {
+          "fixture": true
+        },
+        "model": null,
+        "semantic_unavailable": "cenário de contrato",
+        "unavailable_components": [
+          "siamese"
+        ],
+        "signature": {}
+      }
+    },
+    {
+      "contract_version": "1.0",
+      "state": "calculated",
+      "method": "lexical",
+      "index": {
+        "source_to_suspect": 1.0,
+        "suspect_to_source": 1.0,
+        "value": 100.0
+      },
+      "lexical_index": {
+        "source_to_suspect": 1.0,
+        "suspect_to_source": 1.0,
+        "value": 100.0
+      },
+      "semantic_index": null,
+      "matrices": {
+        "lexical": [
+          [
+            1.0
+          ]
+        ],
+        "semantic_raw": null,
+        "semantic_operational": [
+          [
+            -0.1
+          ]
+        ],
+        "fused": null
+      },
+      "source": [
+        {
+          "index": 0,
+          "raw": "Texto.",
+          "semantic": "Texto.",
+          "lexical": [
+            "texto"
+          ],
+          "words": 1,
+          "flags": [],
+          "window": null
+        }
+      ],
+      "suspect": [
+        {
+          "index": 0,
+          "raw": "Texto.",
+          "semantic": "Texto.",
+          "lexical": [
+            "texto"
+          ],
+          "words": 1,
+          "flags": [],
+          "window": null
+        }
+      ],
+      "matches": null,
+      "alignment": null,
+      "summary": null,
+      "metadata": {
+        "policy": "q5-v2",
+        "config_sha256": "fixture-independent-contract",
+        "configuration": {},
+        "idf": {
+          "fixture": true
+        },
+        "model": null,
+        "semantic_unavailable": "cenário de contrato",
+        "unavailable_components": [
+          "siamese"
+        ],
+        "signature": {}
+      }
+    },
+    {
+      "contract_version": "1.0",
+      "state": "calculated",
+      "method": "lexical",
+      "index": {
+        "source_to_suspect": 1.0,
+        "suspect_to_source": 1.0,
+        "value": 100.0
+      },
+      "lexical_index": {
+        "source_to_suspect": 1.0,
+        "suspect_to_source": 1.0,
+        "value": 100.0
+      },
+      "semantic_index": null,
+      "matrices": {
+        "lexical": [
+          [
+            1.0
+          ]
+        ],
+        "semantic_raw": null,
+        "semantic_operational": null,
+        "fused": [
+          [
+            1.1
+          ]
+        ]
+      },
+      "source": [
+        {
+          "index": 0,
+          "raw": "Texto.",
+          "semantic": "Texto.",
+          "lexical": [
+            "texto"
+          ],
+          "words": 1,
+          "flags": [],
+          "window": null
+        }
+      ],
+      "suspect": [
+        {
+          "index": 0,
+          "raw": "Texto.",
+          "semantic": "Texto.",
+          "lexical": [
+            "texto"
+          ],
+          "words": 1,
+          "flags": [],
+          "window": null
+        }
+      ],
+      "matches": null,
+      "alignment": null,
+      "summary": null,
+      "metadata": {
+        "policy": "q5-v2",
+        "config_sha256": "fixture-independent-contract",
+        "configuration": {},
+        "idf": {
+          "fixture": true
+        },
+        "model": null,
+        "semantic_unavailable": "cenário de contrato",
+        "unavailable_components": [
+          "siamese"
+        ],
+        "signature": {}
+      }
+    }
+  ]
+}

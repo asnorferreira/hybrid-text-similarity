@@ -1,0 +1,4 @@
+services:
+  web:
+    volumes:
+      - ./TCC/evidencias/codex-s0-s1/amostras-parsing:/fixtures:ro

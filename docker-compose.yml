@@ -1,0 +1,59 @@
+services:
+  mongo:
+    image: mongo:8.0.34
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_ROOT_USER:?defina no .env}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD:?defina no .env}
+    networks: [backend]
+    volumes:
+      - mongo-data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping').ok"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  core:
+    networks: [backend]
+    build:
+      context: .
+      dockerfile: core/Dockerfile
+    environment:
+      HF_HUB_OFFLINE: "1"
+      TRANSFORMERS_OFFLINE: "1"
+      HTS_MODEL_PATH: /app/models/e8f8c211226b894fcb81acc59f3b34ba3efd5f42
+    volumes:
+      - ./core/models:/app/models:ro
+      - ./core/data/refcorpus/raw:/app/data/refcorpus/raw:ro
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:5000/v1/health')"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  web:
+    networks: [default, backend]
+    build:
+      context: .
+      dockerfile: web/Dockerfile
+      target: runtime
+    environment:
+      CORE_URL: http://core:5000
+      MONGO_URI: mongodb://${MONGO_ROOT_USER}:${MONGO_ROOT_PASSWORD}@mongo:27017/?authSource=admin
+      MONGO_DB: hts_s3_development
+      HTS_APP_ORIGIN: http://127.0.0.1:3000
+    ports:
+      - "127.0.0.1:3000:3000"
+    depends_on:
+      mongo:
+        condition: service_healthy
+      core:
+        condition: service_healthy
+
+volumes:
+  mongo-data:
+
+networks:
+  backend:
+    internal: true

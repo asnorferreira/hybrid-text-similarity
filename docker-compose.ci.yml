@@ -1,0 +1,79 @@
+services:
+  mongo:
+    networks: [backend]
+    image: mongo:8.0.34
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping').ok"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+  core:
+    networks: [backend]
+    image: hts-ci-core:local
+    build:
+      context: .
+      dockerfile: core/Dockerfile
+    environment:
+      HF_HUB_OFFLINE: "1"
+      TRANSFORMERS_OFFLINE: "1"
+      HTS_MODEL_PATH: /model
+    volumes:
+      - ./core/artifacts/ci/model:/model:ro
+      - ./core/artifacts/ci/raw:/app/data/refcorpus/raw:ro
+      - ./core/artifacts/ci/results:/results
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:5000/v1/health')"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+  prepare:
+    image: hts-ci-core:local
+    profiles: [tools]
+    environment:
+      HTS_MODEL_PATH: /model
+      HF_HOME: /tmp/hf
+    volumes:
+      - ./core/artifacts/ci/model:/model
+      - ./core/artifacts/ci/raw:/app/data/refcorpus/raw
+      - ./core/artifacts/ci/fixtures:/fixtures
+      - ./core/artifacts/ci/results:/results
+  web:
+    networks: [default, backend]
+    image: hts-ci-web:local
+    build:
+      context: .
+      dockerfile: web/Dockerfile
+      target: runtime
+    environment:
+      CORE_URL: http://core:5000
+      MONGO_URI: mongodb://mongo:27017
+      MONGO_DB: hts_ci_s3
+      HTS_APP_ORIGIN: http://web:3000
+      HTS_HTTP_DEV: "1"
+      HTS_FIXTURE_MANIFEST: /fixtures/expected.json
+      HTS_INTEGRATION_SUMMARY: "1"
+    volumes:
+      - ./core/artifacts/ci/fixtures:/fixtures:ro
+    depends_on:
+      mongo:
+        condition: service_healthy
+      core:
+        condition: service_healthy
+  browser:
+    image: hts-ci-browser:local
+    profiles: [tools]
+    build:
+      context: .
+      dockerfile: web/Dockerfile
+      target: browser
+    environment:
+      HTS_WEB_URL: http://web:3000
+      HTS_FIXTURE_DIR: /fixtures
+      HTS_E2E_OUTPUT: /results/e2e
+    volumes:
+      - ./core/artifacts/ci/fixtures:/fixtures:ro
+      - ./core/artifacts/ci/results:/results
+
+networks:
+  backend:
+    internal: true

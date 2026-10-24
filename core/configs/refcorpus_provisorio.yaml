@@ -1,0 +1,24 @@
+# Corpus de referência PROVISÓRIO do IDF (Sessão 1). Amostra da lista de fontes da Wikipédia em
+# português; na Sessão 4 o IDF passa a usar só as fontes do split de treino do dataset.
+status: provisorio
+titles:
+  - Brasil
+  - Língua portuguesa
+  - Fotossíntese
+  - Revolução Industrial
+  - Sistema Solar
+  - Inteligência artificial
+  - Futebol
+  - Floresta Amazônica
+  - Machado de Assis
+  - Água
+  - Democracia
+  - Vacina
+  - Internet
+  - Música popular brasileira
+  - Café
+  - Energia solar
+  - Segunda Guerra Mundial
+  - Mecânica quântica
+  - Economia
+  - Literatura

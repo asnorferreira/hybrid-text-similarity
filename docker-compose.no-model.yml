@@ -1,0 +1,4 @@
+services:
+  core:
+    environment:
+      HTS_MODEL_PATH: /unavailable-model-for-development-test
