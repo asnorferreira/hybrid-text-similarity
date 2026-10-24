@@ -1,0 +1,49 @@
+[project]
+name = "hts-core"
+version = "0.1.0"
+description = "Núcleo de similaridade de textos (TCC): parsing, pré-processamento e motores E1 a E4"
+requires-python = ">=3.11,<3.12"
+license = "Apache-2.0"
+dependencies = [
+    "pdfplumber",
+    "python-docx",
+    "spacy>=3.8,<3.9",
+    "pt-core-news-sm",
+    "numpy",
+    "pyyaml",
+    "mwparserfromhell>=0.7.2",
+    "flask==3.1.3",
+    "pydantic==2.14.1",
+    "sentence-transformers==6.2.0",
+    "transformers==5.20.2",
+    "torch==2.14.1",
+    "scipy>=1.15,<1.18",
+    "waitress==3.0.2",
+]
+
+[dependency-groups]
+dev = [
+    "pytest",
+    "hypothesis",
+    "rapidfuzz",
+    "reportlab",
+]
+
+[tool.uv.sources]
+pt-core-news-sm = { url = "https://github.com/explosion/spacy-models/releases/download/pt_core_news_sm-3.8.0/pt_core_news_sm-3.8.0-py3-none-any.whl" }
+torch = { index = "pytorch-cpu" }
+
+[[tool.uv.index]]
+name = "pytorch-cpu"
+url = "https://download.pytorch.org/whl/cpu"
+explicit = true
+
+[tool.uv]
+# sem instalação editável: o .pth com caminho não ASCII quebra o Python 3.11 no Windows
+package = false
+
+[tool.pytest.ini_options]
+addopts = "--hypothesis-seed=20261024"
+testpaths = ["tests"]
+pythonpath = ["src"]
+markers = ["integration: precisa de recurso externo (modelo spaCy, arquivos gerados)"]
