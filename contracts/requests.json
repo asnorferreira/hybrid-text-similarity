@@ -1,0 +1,13 @@
+{
+  "valid": [{"contract_version":"1.0","source":{"text":"A pesquisa compara textos."},"suspect":{"text":"A pesquisa compara textos."},"mode":"hybrid"}],
+  "invalid": [
+    {"contract_version":"2.0","source":{"text":"A"},"suspect":{"text":"B"}},
+    {"contract_version":"1.0","source":{"text":"A"}},
+    {"contract_version":"1.0","source":{"text":12},"suspect":{"text":"B"}},
+    {"contract_version":"1.0","source":{"text":"A","r":0.5},"suspect":{"text":"B"}},
+    {"contract_version":"1.0","source":{"text":"A"},"suspect":{"text":"B"},"r":0.5},
+    {"contract_version":"1.0","source":{"text":"A"},"suspect":{"text":"B"},"origin":"gerador"},
+    {"contract_version":"1.0","source":{"text":""},"suspect":{"text":"B"}},
+    {"contract_version":"1.0","source":{"text":"A"},"suspect":{"text":"B"},"mode":"inventado"}
+  ]
+}
