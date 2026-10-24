@@ -1,0 +1,9 @@
+hybrid-text-similarity
+Copyright 2026 Asnor Zelaquett Ferreira Quirino Silva
+
+O código deste projeto é disponibilizado sob a Apache License, Version 2.0.
+O texto da licença está em LICENSE.
+
+Dados e modelos têm licenças próprias. O corpus provisório da Wikipédia em
+português tem suas fontes, revisões, licença e atribuição registradas em
+core/data/refcorpus/manifest.json. Este aviso não altera essas licenças.
