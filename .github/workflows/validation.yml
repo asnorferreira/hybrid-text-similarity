@@ -1,0 +1,85 @@
+name: Validate S2
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+    types:
+      - opened
+
+permissions:
+  contents: read
+
+concurrency:
+  group: validation-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  validate:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    env:
+      COMPOSE_PROJECT_NAME: hts-ci-${{ github.run_id }}-${{ github.run_attempt }}
+      COMPOSE_FILE: docker-compose.ci.yml
+      COMPOSE_ENV_FILES: core/artifacts/ci/empty.env
+      CI_EVENT_NAME: ${{ github.event_name }}
+      CI_EVENT_SHA: ${{ github.sha }}
+      CI_HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Prepare isolated directories
+        run: |
+          mkdir -p core/artifacts/ci/{model,raw,fixtures,results}
+          touch core/artifacts/ci/empty.env
+          chmod 777 core/artifacts/ci/results
+          docker compose config --quiet
+      - name: Build locked Python and Node environments
+        run: docker compose build core web
+      - name: Restore frozen corpus and verify hashes without rebuilding IDF
+        run: |
+          docker compose run --rm --no-deps --user "$(id -u):$(id -g)" prepare python -m hts_core.cli restaurar-corpus
+          docker compose run --rm --no-deps prepare python scripts/identidade_idf.py --out /tmp/ci-idf-observado.json
+      - name: Prepare fixed semantic model and public development fixtures
+        run: |
+          docker compose run --rm --no-deps --user "$(id -u):$(id -g)" prepare python scripts/prepare_model.py
+          docker compose run --rm --no-deps --user "$(id -u):$(id -g)" prepare python scripts/gerar_fixtures_ci.py --out /fixtures
+      - name: Core suite with prepared resources and offline inference
+        run: |
+          docker compose run --rm --no-deps core python -m pytest -q --junitxml=/results/core.xml
+          python3 scripts/ci/check_junit.py core/artifacts/ci/results/core.xml
+      - name: Start isolated integration services
+        run: docker compose up -d --wait --wait-timeout 180 mongo core web
+      - name: Web tests and typecheck
+        run: |
+          docker compose exec -T web npm test
+          docker compose exec -T web npm run typecheck
+      - name: Real files, APIs, Mongo persistence and idempotent seeds
+        run: |
+          docker compose exec -T web npm run integration
+          docker compose exec -T web node --import tsx scripts/integration-failure.ts
+      - name: Record technical versions and execution identity
+        run: |
+          docker compose exec -T core python -c "import json,platform,importlib.metadata as m; print(json.dumps({'python':platform.python_version(),'packages':{n:m.version(n) for n in ['flask','pydantic','spacy','pt-core-news-sm','sentence-transformers','torch','transformers']}}))" > core/artifacts/ci/results/runtime-core.json
+          docker compose exec -T web node -p "JSON.stringify({node:process.version,next:require('next/package.json').version})" > core/artifacts/ci/results/runtime-web.json
+          python3 scripts/ci/summarize.py
+      - name: Service status for diagnosis
+        if: always()
+        run: docker compose ps --all
+      - name: Preserve technical test artifacts
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: technical-validation-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            core/artifacts/ci/results/core.xml
+            core/artifacts/ci/results/runtime-core.json
+            core/artifacts/ci/results/runtime-web.json
+            core/artifacts/ci/results/technical.json
+          if-no-files-found: warn
+          retention-days: 7
