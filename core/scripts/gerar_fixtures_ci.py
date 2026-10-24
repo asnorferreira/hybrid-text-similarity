@@ -23,14 +23,17 @@ def pdf_bytes():
     return bytes(data)
 
 
-def docx_bytes():
+def docx_bytes(malformed=False):
     parts={'[Content_Types].xml':'<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/></Types>',
            '_rels/.rels':'<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/></Relationships>',
            'word/document.xml':'<w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:body><w:p><w:r><w:t>A informação chegou.</w:t></w:r></w:p><w:p><w:r><w:t>O guarda-chuva chegou.</w:t></w:r></w:p><w:sectPr/></w:body></w:document>'}
+    if malformed:
+        parts['word/document.xml'] = '<broken'
     stream=io.BytesIO()
     with zipfile.ZipFile(stream,'w',compression=zipfile.ZIP_STORED) as archive:
         for name, text in sorted(parts.items()):
             info=zipfile.ZipInfo(name,date_time=(1980,1,1,0,0,0))
+            info.create_system=3
             info.external_attr=0o600<<16
             archive.writestr(info,text.encode('utf-8'))
     return stream.getvalue()
@@ -39,8 +42,8 @@ def docx_bytes():
 def generate(folder):
     folder=Path(folder)
     folder.mkdir(parents=True,exist_ok=True)
-    files={'tipo1-perda.pdf':pdf_bytes(),'texto.docx':docx_bytes()}
-    manifest={'development_only':True,'generator':'gerar_fixtures_ci.py v1; PDF explícito e OOXML/ZIP com timestamps fixos',
+    files={'tipo1-perda.pdf':pdf_bytes(),'texto.docx':docx_bytes(),'corrompido.docx':docx_bytes(malformed=True)}
+    manifest={'development_only':True,'generator':'gerar_fixtures_ci.py v2; ZIP Unix explícito preserva bytes Linux históricos; XML inválido acrescentado',
               'source':['O algoritmo funciona.'],'suspect':['A informação chegou.','O guarda-chuva chegou.'],
               'sha256':{name:hashlib.sha256(data).hexdigest() for name,data in files.items()}}
     files['expected.json']=(json.dumps(manifest,ensure_ascii=False,indent=2)+'\n').encode('utf-8')
