@@ -41,6 +41,10 @@ def _build_idf(args: argparse.Namespace) -> None:
 
 
 def main() -> None:
+    if sys.argv[1:2] == ['experiment']:
+        from hts_core.cli.experiment import main as experiment_main
+        experiment_main(sys.argv[2:])
+        return
     if sys.argv[1:2] == ['dataset']:
         from hts_core.cli.dataset import main as dataset_main
         dataset_main(sys.argv[2:])

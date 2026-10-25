@@ -1,11 +1,23 @@
 # hybrid-text-similarity
 
+<!-- S5A-CURRENT -->
+## Estado vigente — S5A, 2026-10-25
+
+S5A concluída no alcance técnico independente; protocolo candidato e infraestrutura verificados, sem treinamento/calibração/carga/avaliação preditiva do teste. S4 permanece encerrada para derivação, robustez e reprodução operacional da versão `fccdffc984dca0b30d9c044ee62bee32eb52b3b4a828fe454e6a17de0602fd26`, não para gabarito semântico independente ou corpus universal limpo.
+
+A infraestrutura CLI de preparação está disponível via `python -m hts_core.cli experiment --help`; os comandos não treinam nem liberam o teste. A referência da S4 e seus pacotes permanecem preservados.
+
+[Protocolo e contratos candidatos](docs/08-protocolo-s5a.md), [relatório S5A](TCC/evidencias/codex-s5a-01/relatorio-final.md), [matriz de prontidão](TCC/evidencias/codex-s5a-01/matriz-prontidao.md), [checkpoint](TCC/evidencias/codex-s5a-01/checkpoint.md). Os registros seguintes são históricos das suas execuções; suas proibições de início automático de S5 referem-se àquele alcance. Nesta sessão somente S5A foi autorizada; S5B–D continuam não executadas.
+
+Entrega S4: kit base+dataset separado+**adendo-retomada-final-02.zip definitivo**, com recibos externos. adendo-retomada-final-01.zip é tentativa anterior preservada. Não usar o 01 como adendo definitivo nem regenerar ZIPs antigos. A embalagem documental S5A é adicional, com identidade própria.
+<!-- /S5A-CURRENT -->
+
 <!-- S4-CLOSURE-CURRENT -->
-## Estado vigente — fechamento dirigido S4, 2026-10-25
+## Registro histórico — fechamento dirigido S4, 2026-10-25
 
 S4 encerrada para construção/entrega operacional com curadoria de extração `fccdffc984dca0b30d9c044ee62bee32eb52b3b4a828fe454e6a17de0602fd26`: 59 fontes/grupos, splits 41/9/9; 783 pares, 665 conteúdos, 6093 sentenças, 132 formatos sobre 44 conteúdos. Avaliação IA do próprio gerador, sem independência: 66 pares selecionados; demais não avaliados em conteúdo. Humano não realizado; sentenças apenas estruturalmente validadas; semantic_training_ready=false. IDF de treino: 41 documentos, 13673 termos; identidade `9ddb353e50c050f58cc3417f8a41763867550730e7c18c56851d4f6dd74680c6`.
 
-Histórico `ee13c978…` e seus dados/evidências preservados. [Relatório vigente](TCC/evidencias/codex-s4-fechamento-01/relatorio-final.md), [contratos e condições H1–H3](TCC/evidencias/codex-s4-fechamento-01/contratos.md), [curadoria](TCC/evidencias/codex-s4-fechamento-01/politica-curadoria.md) e [checkpoint](TCC/evidencias/codex-s4-fechamento-01/checkpoint.md). Os relatos anteriores abaixo são históricos; prompts futuros permanecem sujeitos às condições vigentes. O mínimo permanece1 por célula, sem suficiência estatística; revisão/validação não são equivalência semântica. Curadoria usa raw fixado, templates limitados e exclusões registradas; não certifica toda afirmação da fonte. Defeitos originais de linguagem e apresentação contextual árabe permanecem delimitados no datasheet; clean_text_corpus_ready=false; não usar como corpus universal de texto limpo. IDF reconstruído somente de treino e separado do IDF da aplicação. Não migrar a aplicação automaticamente. H1 exige mapeamento/gabarito avaliativo; H2 construto/unidade/anotação independente/protocolo; H3 meta/carga/hardware/protocolo. São propostas científicas pendentes, sem aprovação presumida. Não iniciar S5, treinar, calibrar ou medir desempenho no teste. CI histórico é separado das verificações locais; gatilhos preservados.
+Histórico `ee13c978…` e seus dados/evidências preservados. [Relatório S4 da época](TCC/evidencias/codex-s4-fechamento-01/relatorio-final.md), [contratos e condições H1–H3](TCC/evidencias/codex-s4-fechamento-01/contratos.md), [curadoria](TCC/evidencias/codex-s4-fechamento-01/politica-curadoria.md) e [checkpoint](TCC/evidencias/codex-s4-fechamento-01/checkpoint.md). Os relatos anteriores abaixo são históricos; prompts futuros permanecem sujeitos às condições vigentes. O mínimo permanece1 por célula, sem suficiência estatística; revisão/validação não são equivalência semântica. Curadoria usa raw fixado, templates limitados e exclusões registradas; não certifica toda afirmação da fonte. Defeitos originais de linguagem e apresentação contextual árabe permanecem delimitados no datasheet; clean_text_corpus_ready=false; não usar como corpus universal de texto limpo. IDF reconstruído somente de treino e separado do IDF da aplicação. Não migrar a aplicação automaticamente. H1 exige mapeamento/gabarito avaliativo; H2 construto/unidade/anotação independente/protocolo; H3 meta/carga/hardware/protocolo. São propostas científicas pendentes, sem aprovação presumida. Não iniciar S5, treinar, calibrar ou medir desempenho no teste. CI histórico é separado das verificações locais; gatilhos preservados.
 Os ZIPs do dataset e do kit são entregas locais privadas. O clone público não contém esses dados, cache ou documentação TCC; obtenha o pacote local e siga o inventário/instruções de restauração. Nenhuma contratação de IA é necessária para consumir as saídas preservadas.
 
 <!-- /S4-CLOSURE-CURRENT -->
