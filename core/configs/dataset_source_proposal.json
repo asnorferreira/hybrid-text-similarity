@@ -1,0 +1,11 @@
+{
+  "status": "provisional_scale_author_response_s4",
+  "purpose": "source_preparation_not_final_dataset",
+  "themes": {
+    "biologia": ["Célula", "Mitocôndria", "Ribossomo", "DNA", "RNA", "Proteína", "Enzima", "Bactéria", "Archaea", "Fungo", "Alga", "Líquen", "Musgo", "Samambaia", "Gimnosperma", "Angiosperma", "Polinização", "Respiração celular", "Cadeia alimentar", "Seleção natural"],
+    "geografia": ["Cordilheira dos Andes", "Himalaia", "Alpes", "Deserto do Saara", "Deserto de Atacama", "Rio Nilo", "Rio Danúbio", "Rio Yangtzé", "Lago Baikal", "Lago Titicaca", "Oceano Pacífico", "Oceano Índico", "Antártida", "Islândia", "Madagascar", "Nova Zelândia", "Península Ibérica", "Mar Mediterrâneo", "Monte Kilimanjaro", "Grande Barreira de Coral"],
+    "artes_e_cultura": ["Pintura rupestre", "Cerâmica", "Mosaico", "Xilogravura", "Aquarela", "Origami", "Caligrafia", "Tapeçaria", "Escultura", "Arquitetura gótica", "Renascimento", "Barroco", "Impressionismo", "Surrealismo", "Teatro de sombras", "Marionete", "Balé", "Capoeira", "Frevo", "Maracatu"]
+  },
+  "theme_origin": "project_chosen_variety_author_requested_not_Wikipedia_categories",
+  "limits": "Titles are lookup candidates, not claims that all pages/revisions exist or are eligible. Freeze resolved plan before collection; preserve failures."
+}

@@ -1,5 +1,6 @@
 import argparse
 import json
+import sys
 from pathlib import Path
 
 import yaml
@@ -40,6 +41,10 @@ def _build_idf(args: argparse.Namespace) -> None:
 
 
 def main() -> None:
+    if sys.argv[1:2] == ['dataset']:
+        from hts_core.cli.dataset import main as dataset_main
+        dataset_main(sys.argv[2:])
+        return
     parser = argparse.ArgumentParser(prog="hts")
     sub = parser.add_subparsers(required=True)
 

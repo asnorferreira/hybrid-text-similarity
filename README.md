@@ -1,5 +1,13 @@
 # hybrid-text-similarity
 
+## Estado operacional da S4
+
+Versão sintética local congelada para derivação textual e robustez: 59 fontes/grupos, 735 pares e132 variantes de formato sobre44 conteúdos. Avaliação automatizada por IA do próprio gerador, sem revisão humana e com `semantic_training_ready=false`; não comprova plágio nem libera H2/treinamento semântico. Dados/cache/avaliações e instruções completas são entregues separadamente em pacote privado local, fora do Git/CI.
+
+Windows e Linux:337 testes do core aprovados no estado local; fumaça com core/web/Mongo realizada somente com dados de desenvolvimento. Não são resultados científicos nem CI remoto destas alterações. IDF de treino S4 não ativado na aplicação. O pacote inclui restauração, reconstrução por raw/cache fixos e receita produtora explicitamente distinta por duas proteções de imutabilidade posteriores; não exige API/assinatura para reproduzir. Preparo inicial de dependências/modelos pode exigir rede; recursos locais têm inventário/hashes. Não há hardware mínimo medido nem instalação nova offline certificada. S5 não iniciada.
+
+As seções seguintes mantêm contexto e comandos de desenvolvimento; instruções históricas são subordinadas a esta finalidade e às instruções privadas que acompanham a versão entregue.
+
 Comparação local de dois arquivos PT-BR (PDF com texto, DOCX, TXT), por sentenças. O índice de similaridade do projeto vai de 0 a 100; não é Pearson/Spearman nem prova de plágio. A S3 acrescenta cadastro/login local, autorização por proprietário, interface integrada, histórico próprio e impressão do relatório. Testes de desenvolvimento não validam hipóteses científicas.
 
 Python 3.11.9, uv 0.9.5, Node 24.22.1 LTS. Dependências efetivas nos locks. Código Apache-2.0; corpus/modelos têm atribuições/licenças próprias. Não redistribuir pesos ou dados como se fossem abrangidos pela licença do código.
@@ -18,6 +26,8 @@ docker compose up -d
 ```
 
 Use o Python de `core/.venv/Scripts/python.exe` quando houver outro interpretador no PATH. O cache fica em `core/models/`, fora do Git; a revisão fixa consta no adaptador e em `hts-model.json`. A inferência do container fica offline. Alterar a revisão exige decisão registrada.
+
+O lexical também exige os raw do corpus provisório, conferidos contra `core/data/refcorpus/manifest.json`. Em uma cópia nova sem esses arquivos, use o recurso local verificado do pacote de entrega ou, com rede, execute a partir de `core/`: `python -m hts_core.cli restaurar-corpus --corpus data/refcorpus`. Esse comando grava raw após conferir revisão/hash; use apenas no destino novo/ausente, preservando arquivos locais existentes. Não execute `construir-idf` para restaurar: a tabela histórica já está versionada. Rede é necessária no preparo de dependências/modelo se os caches não estiverem disponíveis, sem exigir assinatura Codex ou API de geração.
 
 Abra `http://127.0.0.1:3000` usando esse endereço exato, crie uma conta de desenvolvimento (senha de 12 a 128 unidades UTF-16) e envie os dois arquivos ou cole dois textos. Sem verificação de e-mail, recuperação de senha ou provedor externo. A sessão dura até oito horas, com cookie HttpOnly/SameSite Strict; Secure em HTTPS. HTTP é exceção local restrita. Não há sessão em localStorage.
 
@@ -41,7 +51,41 @@ Limites e limiares em `core/configs/comparison.json`; o hash de configuração i
 
 Testes e seeds são desenvolvimento, sem validação de hipóteses ou desempenho científico. Não há OCR, busca online, acervo/FAISS ou deploy. Evidências privadas em TCC; não executar operações Git de publicação automaticamente.
 
-## Validação S3 e CI
+## Dataset operacional S4 e CI
+
+A S4 acrescenta pipeline local de dados sintéticos e testes pequenos de desenvolvimento, incluídos na suíte core. O grupo `dataset` instala somente o driver Mongo necessário; geração pela sessão Codex usa saídas preservadas. Gemini/google-genai não é requisito obrigatório. O grupo opcional `llm-api` é histórico/preparado e não é instalado pelo Docker/CI padrão; nenhuma API paga está autorizada.
+
+Comandos de desenvolvimento, a partir de `core/` (usar destinos novos; artefatos existentes não são sobrescritos):
+
+```powershell
+uv sync --frozen --group dev --group dataset
+$env:PYTHONPATH = "src"
+uv run --frozen --group dataset python -m hts_core.cli dataset --help
+uv run --frozen --group dataset python -m pytest tests/test_dataset_s4.py -q
+uv run --frozen --group dataset python -m hts_core.cli dataset piloto --config configs/dataset_pilot.json --corpus data/refcorpus --out artifacts/my-pilot
+uv run --frozen --group dataset python -m hts_core.cli dataset validar --dataset artifacts/my-pilot
+uv run --frozen --group dataset python -m hts_core.cli dataset revisao --dataset artifacts/my-pilot --seed 20261024 --pilot-count 8 --out artifacts/my-review
+```
+
+O corpus provisório já foi exposto no desenvolvimento; esse comando não produz teste experimental. Coleta, preparação de fontes, pares, formatos, cache, revisão e IDF têm artefatos/identidades separados. O validador confere integridade, grupos/splits, proveniência e frações r; não certifica preservação semântica. `r_by_source` conserva numeradores/denominadores e admite multiorigem. PDF/DOCX/TXT do mesmo conteúdo não são observações independentes. Dados/raw/cache/revisão/exports ficam privados em `core/artifacts/`, fora do Git e do contexto Docker. Não enviar ao CI dados finais, chaves ou geração paga.
+
+O novo IDF usa exclusivamente fontes de treino e não substitui o IDF provisório da demonstração. Importação Mongo exige namespace `hts_dataset_`, somente pelo core; não usa coleções de usuários. Idempotência é por versão/ID, conteúdo real e hash; divergências deixam `integrity_conflict`. Falha parcial conserva `importing` e admite retomada, sem transação ou exclusão. Um piloto selado continua sendo desenvolvimento.
+
+O complemento S4 separa congelamento técnico operacional de prontidão científica. `frozen_operational_derivation` destina-se a derivação textual e robustez de transformações, com avaliação IA identificada, dependente do gerador, e `semantic_training_ready=false`. Revisão humana não foi realizada. C6 é reescrita guiada por frase/elementos, sem classe semântica automática. C3 é composição de comprimento fixo, identificador histórico `insert`, sem alegar inserção em documento maior. r é fração de derivação por fonte, não gabarito semântico. Não há treino, calibração ou avaliação preditiva no teste nesta S4; H1–H3 não foram validadas.
+
+O professor recebe separadamente o pacote privado local de dados/cache e seu manifesto; esses arquivos não estão no GitHub. Após restaurar esse pacote, exemplos a partir de `core/`, com `PYTHONPATH=src` e dependências do lock já instaladas:
+
+```powershell
+python -m hts_core.cli dataset importar --bundle artifacts/entrega/dataset.zip --out artifacts/restored-01
+python -m hts_core.cli dataset cobertura --dataset artifacts/restored-01
+python scripts/rebuild_dataset_operational.py --collection artifacts/entrega/inputs/collection --plan artifacts/entrega/inputs/fixed-plan.json --config configs/dataset_operational.json --cache artifacts/entrega/cache --exclusions artifacts/entrega/inputs/content-exclusions.json --out artifacts/rebuilt-01
+```
+
+Use o interpretador do ambiente do projeto. Em Linux, definir `export PYTHONPATH=src`; em PowerShell, `$env:PYTHONPATH="src"`. Destinos precisam ser novos. Reconstrução usa raw/cache/configuração e exclusões documentadas, não nova geração LLM, e não exige assinatura Codex ou API. Cache rejeitado fica preservado; exclusão por avaliação gera versão nova e não é erro técnico de cache. Para preparar avaliações, `dataset avaliacao-ia`; para importar respostas reais, `dataset importar-avaliacao-ia`. Congelamento operacional aceita `--reproduction` com o relatório verificado e usa a autorização já registrada; não exige que o autor edite JSON complexo ou certifique código. Pacote humano é separado e permanece não realizado se não preenchido.
+
+Preparo inicial pode exigir rede para dependências, corpus e modelos; inferência usa o modelo local fixado, e a reconstrução do dataset usa o cache entregue. Falta de raw/cache/fonte/modelo/driver exige preparar o recurso indicado, sem substituições silenciosas. Fontes Noto Sans e Noto CJK têm arquivos oficiais OFL separados em `core/assets/fonts/`; símbolos não são removidos para aprovar PDF. Não há requisito mínimo de hardware medido nem garantia de que qualquer máquina basta. Versões, plataformas realmente executadas, contagens, limitações e hashes constam no datasheet privado de cada entrega.
+
+O CI remoto anterior não valida alterações locais deste complemento. Os gatilhos e a política de privacidade permanecem iguais; as execuções locais atuais são registradas nas evidências privadas. Os parágrafos seguintes preservam o contexto histórico da implantação do workflow.
 
 O workflow atual prepara ambientes fixos, restaura recursos rastreáveis e executa core, testes/tipos web, integração/persistência, negativas de segurança e Playwright com serviços reais, incluindo modelo ausente e core parado. Browser usa Playwright1.64.1/Chromium fixado; Tailwind/PostCSS4.3.3 estão no lock. Auditorias npm/pip consultam avisos conhecidos; pacotes fora do índice podem não ser cobertos e precisam de avaliação explícita. Ausência de alertas não prova ausência de vulnerabilidades.
 

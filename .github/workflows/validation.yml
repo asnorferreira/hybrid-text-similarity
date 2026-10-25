@@ -1,4 +1,4 @@
-name: Validate S3
+name: Validate S4
 
 on:
   push:
