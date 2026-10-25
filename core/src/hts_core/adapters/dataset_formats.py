@@ -43,14 +43,22 @@ def render(text, kind):
     font = TTFont('HTSDatasetNotoSans', str(font_path))
     missing = sorted({ord(c) for c in text if not c.isspace() and ord(c) not in font.face.charToGlyph})
     fallback = None
+    arabic = None
     if missing:
-        fallback_path = font_path.with_name('NotoSansCJKsc-VF.ttf')
-        if digest(fallback_path.read_bytes()) != '990c807e79c25662a5a9ecf7f971baeb2bf2eab9a559e5ecf15cdfdb8561d21f':
+        fallback_path = font_path.with_name('NotoSansCJKsc-Regular-HTS.ttf')
+        if digest(fallback_path.read_bytes()) != '568d44ed35df4ffdd53ce99dab039b2c0b60c291847574e9b46f50415c47ce7b':
             raise ValueError('hash da fonte CJK divergente')
         fallback = TTFont('HTSDatasetNotoCJK', str(fallback_path))
         missing = [c for c in missing if c not in fallback.face.charToGlyph]
         if missing:
-            raise ValueError('fontes PDF não cobrem todos os caracteres: ' + ','.join(f'U+{c:04X}' for c in missing))
+            arabic_path = font_path.with_name('IBMPlexSansArabic-Regular.ttf')
+            if digest(arabic_path.read_bytes()) != '6f611412270a132bbac838da9259d4c68569b4175f3b3b8fa3fa36a30b56dab9':
+                raise ValueError('hash da fonte árabe divergente')
+            arabic = TTFont('HTSDatasetNotoArabic', str(arabic_path))
+            missing = [c for c in missing if c not in arabic.face.charToGlyph]
+            if missing:
+                raise ValueError('fontes PDF não cobrem todos os caracteres: ' + ','.join(f'U+{c:04X}' for c in missing))
+            pdfmetrics.registerFont(arabic)
         pdfmetrics.registerFont(fallback)
     pdfmetrics.registerFont(font)
     document = SimpleDocTemplate(stream, invariant=1, title='', author='', subject='', creator='hts format writer',
@@ -59,16 +67,23 @@ def render(text, kind):
     if fallback:
         from itertools import groupby
         parts = []
-        for cjk, chars in groupby(text, key=lambda c: not c.isspace() and ord(c) not in font.face.charToGlyph):
+        def font_for(char):
+            if char.isspace() or ord(char) in font.face.charToGlyph:
+                return None
+            return 'HTSDatasetNotoCJK' if ord(char) in fallback.face.charToGlyph else 'HTSDatasetNotoArabic'
+        for font_name, chars in groupby(text, key=font_for):
             part = escape(''.join(chars))
-            parts.append('<font name="HTSDatasetNotoCJK">' + part + '</font>' if cjk else part)
+            parts.append('<font name="' + font_name + '">' + part + '</font>' if font_name else part)
         content = ''.join(parts)
     else:
         content = escape(text)
     document.build([Paragraph(content, style)])
     return stream.getvalue(), {'font': 'Noto Sans Regular; upstream OFL-1.1 preserved in assets/fonts/OFL.txt', 'font_sha256': digest(font_path.read_bytes()),
-                               'fallback': 'NotoSansCJKsc-VF, OFL-CJK.txt; default variable instance' if fallback else None,
-                               'fallback_sha256': '990c807e79c25662a5a9ecf7f971baeb2bf2eab9a559e5ecf15cdfdb8561d21f' if fallback else None,
+                               'fallback': 'NotoSansCJKsc-Regular-HTS, OFL-CJK.txt; static wght=400; manifest-cjk-static.json' if fallback else None,
+                               'fallback_sha256': '568d44ed35df4ffdd53ce99dab039b2c0b60c291847574e9b46f50415c47ce7b' if fallback else None,
+                               'arabic_font_sha256': '6f611412270a132bbac838da9259d4c68569b4175f3b3b8fa3fa36a30b56dab9' if arabic else None,
+                               'arabic_font': 'IBM Plex Sans Arabic Regular; OFL-PlexArabic.txt; manifest-plex-arabic.json' if arabic else None,
+                               'arabic_presentation': 'Unicode glyphs; contextual shaping/bidi not implemented' if arabic else None,
                                'invariant': True, 'identity': 'container bytes and canonical content distinct'}
 
 
