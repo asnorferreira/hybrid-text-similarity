@@ -13,33 +13,28 @@ def code_identity():
     return identity({p.relative_to(root).as_posix(): digest(p.read_bytes()) for p in sorted(root.rglob('*.py'))})
 
 
-def context_for(config, phase):
+def context_for(config, phase, candidates=None):
+    if candidates is not None:
+        from hts_core.adapters.experiment_protocol import validate_candidates
+        validate_candidates(candidates, config)
     return {'protocol_identity': validate_protocol(config), 'dataset_version': config['dataset']['version'],
             'annotation_identity': 'none_no_scientific_targets', 'task': 'preparation', 'unit': 'not_training',
-            'model_identity': 'none_no_model_loaded', 'config_identity': identity(config),
+            'model_identity': 'none_no_model_loaded', 'config_identity': identity(config) if candidates is None else identity({'protocol': config, 'candidates': candidates}),
             'code_identity': code_identity(), 'seed': config['seeds'][0], 'phase': phase}
 
 
-def prepare(protocol, dataset, idf, destination):
+def prepare(protocol, dataset, idf, destination, candidates=None):
     config = read_json(protocol)
     validate_protocol(config)
+    proposals = read_json(candidates) if candidates is not None else None
+    context = context_for(config, 'preflight', proposals)
     out = Path(destination)
     out.mkdir(parents=True, exist_ok=False)
-    context = context_for(config, 'preflight')
     attempt_event(out/'attempts', 0, context, 'started', {'operation': 'preflight_not_prediction'})
     try:
         data = inspect_dataset(dataset, config)
-        table, descriptor = read_json(Path(idf)/'idf.json'), read_json(Path(idf)/'construction.json')
-        train = [s for s in data['sources'] if s['split'] == 'train']
-        expected = [{k: s[k] for k in ('id', 'revision', 'raw_sha256', 'normalized_sha256')} for s in train]
-        if descriptor['training_sources'] != expected or descriptor['allowed_split'] != 'train' or table['n_docs'] != len(train):
-            raise ValueError('IDF inclui entradas diferentes do treino')
-        if descriptor['identity'] != table['version'] or identity({k: v for k, v in descriptor.items() if k != 'identity'}) != descriptor['identity']:
-            raise ValueError('identidade do descritor IDF divergente')
-        if table['version'] != config['dataset']['idf_identity'] or identity({k: v for k, v in table.items() if k != 'version'}) != descriptor['table_content_sha256']:
-            raise ValueError('tabela IDF difere do protocolo/descritor')
-        if table['formula'] != 'ln((1+N)/(1+df))+1' or any(type(n) is not int or not 1 <= n <= len(train) for n in table['df'].values()):
-            raise ValueError('fórmula/df inválidos')
+        from hts_core.adapters.idf_contract import validate_training_idf_contract
+        idf_report = validate_training_idf_contract(dataset, idf, config['dataset']['idf_identity'])
         report = {'schema': 'hts-preflight-1', 'context': context, 'dataset_version': data['manifest']['version'],
                   'source_splits': dict(Counter(s['split'] for s in data['sources'])),
                   'pair_splits': dict(Counter(p['split'] for p in data['pairs'])),
@@ -50,8 +45,8 @@ def prepare(protocol, dataset, idf, destination):
                   'tasks': {task: {'status': 'blocked_for_experiment', 'blockers': spec['blockers'],
                                    'unit': spec['unit'], 'approved_contract_id': spec['approved_contract_id']}
                             for task, spec in config['tasks'].items()},
-                  'idf': {'version': table['version'], 'n_docs': table['n_docs'], 'terms': len(table['df']),
-                          'scope': 'descriptor_content_and_training_source_binding; no fresh lexical recomputation'},
+                  'idf': idf_report, 'candidate_proposals_identity': identity(proposals) if proposals is not None else None,
+                  'candidate_proposals_status': 'not_adopted_no_training_release',
                   'prediction_executed': False, 'training_executed': False, 'final_test_opened_for_performance': False}
         save_json_new(out/'preflight.json', report)
         save_checkpoint(out/'checkpoint.json', context, {'status': 'preflight_complete', 'report_identity': identity(report)})
