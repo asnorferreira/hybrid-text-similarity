@@ -42,14 +42,33 @@ def render(text, kind):
         raise ValueError('hash da fonte Unicode divergente')
     font = TTFont('HTSDatasetNotoSans', str(font_path))
     missing = sorted({ord(c) for c in text if not c.isspace() and ord(c) not in font.face.charToGlyph})
+    fallback = None
     if missing:
-        raise ValueError('fonte PDF não cobre todos os caracteres: ' + ','.join(f'U+{c:04X}' for c in missing))
+        fallback_path = font_path.with_name('NotoSansCJKsc-VF.ttf')
+        if digest(fallback_path.read_bytes()) != '990c807e79c25662a5a9ecf7f971baeb2bf2eab9a559e5ecf15cdfdb8561d21f':
+            raise ValueError('hash da fonte CJK divergente')
+        fallback = TTFont('HTSDatasetNotoCJK', str(fallback_path))
+        missing = [c for c in missing if c not in fallback.face.charToGlyph]
+        if missing:
+            raise ValueError('fontes PDF não cobrem todos os caracteres: ' + ','.join(f'U+{c:04X}' for c in missing))
+        pdfmetrics.registerFont(fallback)
     pdfmetrics.registerFont(font)
     document = SimpleDocTemplate(stream, invariant=1, title='', author='', subject='', creator='hts format writer',
                                  leftMargin=50, rightMargin=50, topMargin=50, bottomMargin=50)
     style = ParagraphStyle('content', fontName='HTSDatasetNotoSans', fontSize=11, leading=15)
-    document.build([Paragraph(escape(text), style)])
+    if fallback:
+        from itertools import groupby
+        parts = []
+        for cjk, chars in groupby(text, key=lambda c: not c.isspace() and ord(c) not in font.face.charToGlyph):
+            part = escape(''.join(chars))
+            parts.append('<font name="HTSDatasetNotoCJK">' + part + '</font>' if cjk else part)
+        content = ''.join(parts)
+    else:
+        content = escape(text)
+    document.build([Paragraph(content, style)])
     return stream.getvalue(), {'font': 'Noto Sans Regular; upstream OFL-1.1 preserved in assets/fonts/OFL.txt', 'font_sha256': digest(font_path.read_bytes()),
+                               'fallback': 'NotoSansCJKsc-VF, OFL-CJK.txt; default variable instance' if fallback else None,
+                               'fallback_sha256': '990c807e79c25662a5a9ecf7f971baeb2bf2eab9a559e5ecf15cdfdb8561d21f' if fallback else None,
                                'invariant': True, 'identity': 'container bytes and canonical content distinct'}
 
 
@@ -57,6 +76,12 @@ def add_formats(folder, destination, limit=None):
     from hts_core.adapters.dataset_validation import validate_data
     folder, destination = Path(folder), Path(destination)
     manifest = verify_seal(folder)
+    if manifest['metadata']['purpose'].startswith('frozen'):
+        raise PermissionError('versão congelada não aceita novos formatos; reconstruir candidato em destino novo')
+    if manifest['metadata']['purpose'] not in {'pilot', 'experimental_candidate', 'operational_derivation'}:
+        raise PermissionError('formatos exigem versão candidata ou piloto')
+    if (folder/'formats.jsonl').exists():
+        raise ValueError('formatos existentes são imutáveis; usar a versão anterior aos formatos')
     validate_data(folder)
     destination.mkdir(parents=True, exist_ok=False)
     for name in manifest['files']:
@@ -73,6 +98,12 @@ def add_formats(folder, destination, limit=None):
         if candidates and candidates[0] not in chosen:
             chosen.append(candidates[0])
     chosen += [cid for cid in sorted(grouped) if cid not in chosen]
+    config = __import__('json').loads((folder/'config.json').read_bytes())
+    if config['purpose'] == 'operational_derivation':
+        from hts_core.adapters.dataset_operational import selected_format_contents
+        if limit is not None:
+            raise ValueError('cobertura operacional vem da especificação; não truncar com limit')
+        chosen = selected_format_contents([p for rows in grouped.values() for p in rows])
     for cid in chosen[:limit]:
         pairs = grouped[cid]
         pair = pairs[0]
