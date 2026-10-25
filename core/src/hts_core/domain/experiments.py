@@ -107,6 +107,20 @@ def dependency_components(sources, pairs):
     return {p['id']: find(group[p['source_id']]) for p in pairs}
 
 
+def latency_acceptance(attempts, p95_goal_seconds, maximum_failure_rate):
+    for value in (p95_goal_seconds, maximum_failure_rate):
+        if type(value) not in (int, float) or not math.isfinite(value):
+            raise ValueError('critérios de latência devem ser finitos, sem booleanos')
+    if p95_goal_seconds <= 0 or not 0 <= maximum_failure_rate <= 1:
+        raise ValueError('critério de latência fora do limite')
+    report = latency_report(attempts)
+    quantiles = report['successful_seconds']
+    return {**report, 'accepted': quantiles is not None and quantiles['p95'] <= p95_goal_seconds
+            and report['failure_rate'] <= maximum_failure_rate,
+            'p95_goal_seconds': p95_goal_seconds, 'maximum_failure_rate': maximum_failure_rate,
+            'criterion': 'conditional_success_p95_and_failure_rate_jointly; all_attempts_in_denominator'}
+
+
 def cluster_bootstrap_difference(truth, first, second, groups, labels, seed, repetitions=1000):
     metrics.confusion_matrix(truth, first, labels)
     metrics.confusion_matrix(truth, second, labels)
