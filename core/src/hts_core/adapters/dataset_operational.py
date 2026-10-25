@@ -4,6 +4,71 @@ from pathlib import Path
 from hts_core.adapters.dataset_store import digest, identity, inside, read_json, read_jsonl, seal, verify_seal, write_json, write_jsonl, write_new
 
 
+def check_generated_policy(policy):
+    fields = {'selection', 'methods', 'source_sentences', 'c6_sentences', 'attempts_per_item',
+              'maximum_sources', 'maximum_records', 'minimum_pairs_per_method_split_theme'}
+    if not isinstance(policy, dict) or set(policy) != fields:
+        raise ValueError('generated_policy: campos obrigatórios ausentes/desconhecidos')
+    for key in fields - {'selection', 'methods'}:
+        if type(policy[key]) is not int or policy[key] < 1:
+            raise ValueError(f'generated_policy.{key}: inteiro positivo obrigatório; booleanos não são inteiros')
+    if policy['selection'] != 'smallest_source_id_per_split_theme_then_next_source_for_documented_rejection_v2':
+        raise ValueError('seleção gerada desconhecida')
+    if policy['methods'] != ['llm_direct', 'backtranslation', 'phrase_guided_rewrite']:
+        raise ValueError('métodos gerados desconhecidos/duplicados')
+    if policy['c6_sentences'] != 1 or policy['attempts_per_item'] != 1:
+        raise ValueError('contrato atual suporta uma frase C6 e uma tentativa por entrada/método')
+
+
+def verify_generated_coverage(sources, pairs, policy, version, purpose):
+    check_generated_policy(policy)
+    if len({p['id'] for p in pairs}) != len(pairs):
+        raise ValueError('IDs de par duplicados; unidade de cobertura é par distinto por ID')
+    themes = {s['theme'] for s in sources}
+    by_id = {s['id']: s for s in sources}
+    counts = Counter((p['method'], by_id[p['source_id']]['theme'], p['split']) for p in pairs
+                     if p['synthetic_type'] in {'C5', 'C6'} and p['method'] in policy['methods'])
+    minimum = policy['minimum_pairs_per_method_split_theme']
+    for split in ('train', 'validation', 'test'):
+        for theme in sorted(themes):
+            for method in policy['methods']:
+                actual = counts[method, theme, split]
+                if actual < minimum:
+                    raise ValueError(f'célula método={method}, tema={theme}, split={split}: mínimo={minimum}, real={actual}; versão={version}, finalidade={purpose}; unidade=par distinto por ID')
+    return counts
+
+
+def verify_generation_contract(folder, sources, policy):
+    from hts_core.adapters.dataset_llm import validate_lineage
+    records = [read_json(p) for p in sorted((Path(folder)/'cache').glob('*.json'))]
+    by_key = {r['cache_key']: r for r in records}
+    by_source = {s['id']: s for s in sources}
+    attempts, used = Counter(), set()
+    exclusions = read_json(Path(folder)/'content-exclusions.json') if (Path(folder)/'content-exclusions.json').exists() else []
+    excluded = {e['request_id'] for e in exclusions}
+    for record in records:
+        _, source = validate_lineage(record, by_key, by_source)
+        spec = record['request']
+        root = by_key[spec['context']['parent_cache_key']]['request'] if spec['method'] == 'translate_to_pt' else spec
+        count = policy['c6_sentences'] if spec['method'] == 'phrase_guided_rewrite' else policy['source_sentences']
+        expected = [{'id': r['id'], 'text': r['text']} for r in source['sentences'][:count]]
+        if root['input'] != expected:
+            raise ValueError('entrada gerada deve usar o prefixo e a quantidade de sentenças contratados')
+        key = (source['id'], spec['method'], identity(spec['input']))
+        attempts[key] += 1
+        used.add(source['id'])
+        cell = sorted(s['id'] for s in sources if s['split'] == source['split'] and s['theme'] == source['theme'])
+        if source['id'] != cell[0]:
+            selection_method = 'backtranslation' if spec['method'] in {'translate_to_en', 'translate_to_pt'} else spec['method']
+            prior = [e for e in exclusions if e['item']['source_id'] == cell[0] and e['item']['method'] == selection_method]
+            if len(cell) < 2 or source['id'] != cell[1] or not prior:
+                raise ValueError('fonte geradora fora da seleção/fallback documentado')
+    if any(n > policy['attempts_per_item'] for n in attempts.values()):
+        raise ValueError('limite de tentativas por entrada/método ultrapassado')
+    if len(used) > policy['maximum_sources'] or len(records) > policy['maximum_records']:
+        raise ValueError('limite de fontes/registros geradores ultrapassado')
+
+
 def verify_source_origin(source, folder):
     folder = Path(folder)
     upstream = read_json(folder/'upstream-manifest.json')
@@ -59,6 +124,17 @@ def build_operational(preparation, collection, configuration, destination):
         source['license_status'] = 'source_verified'
         source['exposure'] = 'construction_inspected_no_predictive_use'
     write_json(destination/'config.json', config)
+    if config.get('record_contract') == 'assessment_v2':
+        write_json(destination/'record-contract.json', {
+            'version': 'assessment_v2', 'dataset_state': 'manifest.metadata.state/purpose',
+            'human_review': 'not_performed means no human response; legacy pending means historical construction only',
+            'sentence_validation': 'structural means verified segmentation/operation/lineage; no individual content or semantic assessment',
+            'pair_assessment': 'content_assessment is individual; not_assessed has no response; accept/reject/ambiguous/not_evaluable refer to whole pair only',
+            'reference': 'review_identity identifies review.json; review_dataset_version is its candidate; response_id matches one response and item; validated against actual texts and operations',
+            'construction': 'construction-pairs.jsonl preserves pre-assessment records for reconstruction; freeze only changes content_assessment',
+            'legacy_generation_semantic_quality': 'historical construction marker human_pending, never a current review status or semantic target',
+            'semantic_training_ready': False, 'assessment_independence': False,
+            'coverage_unit': 'distinct pair ID per generated method/theme/split; minimum coverage is not statistical sufficiency'})
     write_json(destination/'pipeline.json', pipeline_descriptor())
     write_jsonl(destination/'sources.jsonl', sources)
     pairs, rejected = generate_pairs(sources, config)
@@ -150,6 +226,8 @@ def verify_operational_requirements(folder, authorization):
     themes = {s['theme'] for s in sources}
     generated = [p for p in pairs if p['synthetic_type'] in {'C5', 'C6'}]
     policy = config['generated_policy']
+    verify_generated_coverage(sources, pairs, policy, manifest['version'], config['purpose'])
+    verify_generation_contract(folder, sources, policy)
     if len({p['source_id'] for p in generated}) > policy['maximum_sources'] or len(list((folder/'cache').glob('*.json'))) > policy['maximum_records']:
         raise ValueError('limite de geração ultrapassado')
     if any(len(p['sentences']) != (policy['c6_sentences'] if p['synthetic_type'] == 'C6' else policy['source_sentences']) for p in generated):
@@ -165,11 +243,6 @@ def verify_operational_requirements(folder, authorization):
         observed = {(p['method'], p['severity']) for p in pairs if p['split'] == split}
         if not set(expected_conditions) <= observed:
             raise ValueError('células operacionais método/severidade/split ausentes')
-        for theme in themes:
-            eligible = {s['id'] for s in sources if s['split'] == split and s['theme'] == theme}
-            for method in config['generated_policy']['methods']:
-                if not any(p['source_id'] in eligible and p['method'] == method for p in pairs):
-                    raise ValueError('cobertura gerada método/tema/split incompleta')
     formats = read_jsonl(folder/'formats.jsonl')
     selected = selected_format_contents(pairs)
     expected = {(cid, kind) for cid in selected for kind in ('pdf', 'docx', 'txt')}
@@ -180,6 +253,9 @@ def verify_operational_requirements(folder, authorization):
     if not proof or proof.get('original_version') != expected_version or proof.get('reconstructed_version') != expected_version or proof.get('hashseeds') != ['1', '917'] or not proof.get('isolated_public_copy'):
         raise ValueError('reprodução isolada não verificada/vinculada à versão')
     payload = {k: v for k, v in manifest['files'].items() if k not in {'review.json', 'freeze-authorization.json'}}
+    if config.get('record_contract') == 'assessment_v2' and manifest['metadata']['purpose'] == 'frozen_operational_derivation':
+        payload.pop('construction-pairs.jsonl')
+        payload['pairs.jsonl'] = manifest['files']['construction-pairs.jsonl']
     if proof.get('file_inventory_sha256') != identity(payload):
         raise ValueError('inventário reconstruído não corresponde aos arquivos do candidato')
     return coverage(folder)
