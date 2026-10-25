@@ -11,7 +11,7 @@ class BinaryCounts:
     fn: int
 
     def __post_init__(self) -> None:
-        if any(not isinstance(n, int) or n < 0 for n in (self.tp, self.fp, self.tn, self.fn)):
+        if any(type(n) is not int or n < 0 for n in (self.tp, self.fp, self.tn, self.fn)):
             raise ValueError("contagens devem ser inteiros não negativos")
 
 
@@ -42,8 +42,9 @@ def pair_count(n: int) -> int:
 
 
 def weighted_mean(values: Sequence[float], weights: Sequence[float]) -> float:
-    if len(values) != len(weights) or not values:
-        raise ValueError("valores e pesos precisam ter o mesmo tamanho, não nulo")
+    _check_pair(values, weights)
+    if any(w < 0 for w in weights):
+        raise ValueError("pesos negativos")
     total = sum(weights)
     if total == 0:
         raise ValueError("soma dos pesos é zero")
@@ -55,6 +56,8 @@ def confusion_matrix(y_true: Sequence[Hashable], y_pred: Sequence[Hashable],
     if not labels or len(set(labels)) != len(labels):
         raise ValueError("rótulos devem ser únicos e não vazios")
     index = {label: i for i, label in enumerate(labels)}
+    if not y_true or len(y_true) != len(y_pred) or any(x not in index for x in [*y_true, *y_pred]):
+        raise ValueError("observações vazias, tamanhos diferentes ou classe fora do contrato")
     matrix = [[0] * len(labels) for _ in labels]
     for t, p in zip(y_true, y_pred, strict=True):
         matrix[index[t]][index[p]] += 1
@@ -88,6 +91,8 @@ def multiclass_accuracy(y_true: Sequence[Hashable], y_pred: Sequence[Hashable]) 
 def _check_pair(x: Sequence[float], y: Sequence[float], minimum: int = 1) -> None:
     if len(x) != len(y) or len(x) < minimum:
         raise ValueError(f"são necessários ao menos {minimum} pares de mesmo tamanho")
+    if any(type(v) not in (int, float) or not math.isfinite(v) for v in [*x, *y]):
+        raise ValueError("valores devem ser números reais finitos, sem booleanos")
 
 
 def mse(y: Sequence[float], y_hat: Sequence[float]) -> float:
@@ -122,6 +127,7 @@ def pearson(x: Sequence[float], y: Sequence[float]) -> float:
 
 
 def average_ranks(values: Sequence[float]) -> list[float]:
+    _check_pair(values, values)
     order = sorted(range(len(values)), key=lambda i: values[i])
     ranks = [0.0] * len(values)
     i = 0
