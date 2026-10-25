@@ -22,6 +22,10 @@ dependencies = [
 ]
 
 [dependency-groups]
+dataset = [
+    "pymongo==4.19.0",
+]
+llm-api = ["google-genai==2.33.0"]
 dev = [
     "pytest",
     "hypothesis",

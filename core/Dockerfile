@@ -11,9 +11,10 @@ ENV UV_PROJECT_ENVIRONMENT=/opt/venv \
 
 WORKDIR /app
 COPY core/pyproject.toml core/uv.lock core/.python-version ./
-RUN uv sync --frozen --group dev
+RUN uv sync --frozen --group dev --group dataset
 
 COPY core/configs ./configs
+COPY core/assets ./assets
 COPY core/scripts ./scripts
 COPY core/data ./data
 COPY core/src ./src

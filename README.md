@@ -43,6 +43,24 @@ Testes e seeds são desenvolvimento, sem validação de hipóteses ou desempenho
 
 ## Validação S3 e CI
 
+A S4 acrescenta pipeline local de dados sintéticos e testes pequenos de desenvolvimento, incluídos na suíte core. O grupo `dataset` instala somente o driver Mongo necessário; geração pela sessão Codex usa saídas preservadas. Gemini/google-genai não é requisito obrigatório. O grupo opcional `llm-api` é histórico/preparado e não é instalado pelo Docker/CI padrão; nenhuma API paga está autorizada.
+
+Comandos de desenvolvimento, a partir de `core/` (usar destinos novos; artefatos existentes não são sobrescritos):
+
+```powershell
+uv sync --frozen --group dev --group dataset
+$env:PYTHONPATH = "src"
+uv run --frozen --group dataset python -m hts_core.cli dataset --help
+uv run --frozen --group dataset python -m pytest tests/test_dataset_s4.py -q
+uv run --frozen --group dataset python -m hts_core.cli dataset piloto --config configs/dataset_pilot.json --corpus data/refcorpus --out artifacts/my-pilot
+uv run --frozen --group dataset python -m hts_core.cli dataset validar --dataset artifacts/my-pilot
+uv run --frozen --group dataset python -m hts_core.cli dataset revisao --dataset artifacts/my-pilot --seed 20261024 --pilot-count 8 --out artifacts/my-review
+```
+
+O corpus provisório já foi exposto no desenvolvimento; esse comando não produz teste experimental. Coleta, preparação de fontes, pares, formatos, cache, revisão e IDF têm artefatos/identidades separados. O validador confere integridade, grupos/splits, proveniência e frações r; não certifica preservação semântica. `r_by_source` conserva numeradores/denominadores e admite multiorigem. PDF/DOCX/TXT do mesmo conteúdo não são observações independentes. Dados/raw/cache/revisão/exports ficam privados em `core/artifacts/`, fora do Git e do contexto Docker. Não enviar ao CI dados finais, chaves ou geração paga.
+
+O novo IDF de preparação usa exclusivamente fontes de treino e não substitui o IDF provisório da demonstração. Importação Mongo exige namespace `hts_dataset_`, somente pelo core; não usa coleções de usuários. Idempotência é por versão/ID, divergências são erros e operações não são transacionais. Piloto selado não é dataset experimental aprovado; revisão humana, protocolo e gabaritos pendentes impedem congelamento. Sem treinamento, calibração ou avaliação preditiva do teste nesta S4.
+
 O workflow atual prepara ambientes fixos, restaura recursos rastreáveis e executa core, testes/tipos web, integração/persistência, negativas de segurança e Playwright com serviços reais, incluindo modelo ausente e core parado. Browser usa Playwright1.64.1/Chromium fixado; Tailwind/PostCSS4.3.3 estão no lock. Auditorias npm/pip consultam avisos conhecidos; pacotes fora do índice podem não ser cobertos e precisam de avaliação explícita. Ausência de alertas não prova ausência de vulnerabilidades.
 
 O [run40118062459](https://github.com/asnorferreira/hybrid-text-similarity/actions/runs/40118062459) foi consultado: success para o estado **S2** head `ecb14086dde926576e9563df32befc9a74e04bcc`, checkout merge `028737cfd50a8b04494571bc1be3e076a1b8a02e`, árvores equivalentes conferidas. Não valida as alterações S3. **Workflow S3 preparado; execução remota S3 não realizada nesta tarefa.**
