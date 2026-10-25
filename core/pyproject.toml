@@ -18,6 +18,8 @@ dependencies = [
     "transformers==5.20.2",
     "torch==2.14.1",
     "scipy>=1.15,<1.18",
+    "scikit-learn==1.9.1",
+    "safetensors==0.8.0",
     "waitress==3.0.2",
 ]
 
