@@ -326,43 +326,21 @@ def evaluation_inputs(folder, split):
 
 def validate_training_idf(folder, idf_folder):
     from hts_core.adapters import nlp
+    from hts_core.adapters.idf_contract import lexical_projection, validate_training_idf_contract
     from hts_core.application.text_pipeline import prepare_sentences
-    validate_data(folder)
-    sources = [s for s in read_jsonl(Path(folder)/'sources.jsonl') if s['split'] == 'train']
-    table = read_json(Path(idf_folder)/'idf.json')
-    descriptor = read_json(Path(idf_folder)/'construction.json')
-    training = {s['id'] for s in sources}
-    _require(set(table) == {'n_docs', 'df', 'formula', 'tf', 'unknown_df', 'vector_normalization', 'version'}, 'schema de tabela IDF divergente')
-    _require(type(table['n_docs']) is int and all(type(v) is int and 1 <= v <= table['n_docs'] for v in table['df'].values()), 'df/N inválidos')
-    _require({s['id'] for s in descriptor['training_sources']} == training, 'dados de teste/validação no IDF')
-    counts = Counter()
-    for source in sources:
-        unique = {t for row in prepare_sentences(source['text'], nlp.analyze, nlp.STOPWORDS) for t in row.lexical}
-        for token in unique:
-            counts[token] += 1
-    _require(table['n_docs'] == len(sources) and table['df'] == dict(counts), 'df/N do IDF divergentes do treino')
-    body = {k: v for k, v in table.items() if k != 'version'}
-    _require(descriptor['table_content_sha256'] == identity(body), 'hash da tabela IDF divergente')
-    descriptor_body = {k: v for k, v in descriptor.items() if k != 'identity'}
-    _require(descriptor['identity'] == table['version'] == identity(descriptor_body), 'identidade de construção IDF divergente')
-    expected_sources = [{k: s[k] for k in ('id', 'revision', 'raw_sha256', 'normalized_sha256')} for s in sources]
-    _require(descriptor['training_sources'] == expected_sources, 'origem/revisão/hash de treino divergente')
-    _require(descriptor['allowed_split'] == 'train' and descriptor['construction_attestation'] is True, 'contrato de ajuste do IDF divergente')
-    _require(descriptor['config'] == read_json(Path(folder)/'config.json'), 'configuração de construção do IDF divergente')
-    _require(descriptor['purpose'] == read_json(Path(folder)/'config.json')['purpose'], 'finalidade de construção IDF divergente')
-    _require(descriptor['input_identity'] == identity([{'id': s['id'], 'text': s['text']} for s in sources]), 'conteúdo de entrada IDF divergente')
-    _require({k: table[k] for k in ('formula', 'tf', 'unknown_df', 'vector_normalization')} == {
-        'formula': 'ln((1+N)/(1+df))+1', 'tf': 'raw_count', 'unknown_df': 0, 'vector_normalization': 'cosine_only'}, 'fórmula/configuração IDF divergente')
     from hts_core.application.dataset_pipeline import pipeline_descriptor
-    _require(descriptor['pipeline'] == pipeline_descriptor(), 'processamento/modelo de construção IDF difere do ambiente atual; reproduzir no código/ambiente identificado')
-    _require((Path(idf_folder)/'execution.json').is_file(), 'registro de execução IDF ausente')
-    execution = read_json(Path(idf_folder)/'execution.json')
-    manifest = verify_seal(folder)
-    allowed_versions = {manifest['version']}
-    if manifest['metadata']['purpose'] == 'frozen_operational_derivation':
-        allowed_versions.add(manifest['metadata']['parent_version'])
-    _require(execution['dataset_version'] in allowed_versions and execution['serialized_table_sha256'] == digest((Path(idf_folder)/'idf.json').read_bytes()), 'execução/bytes do IDF divergentes')
-    from datetime import datetime
-    datetime.fromisoformat(execution['constructed_utc'])
-    _require(bool(execution['platform']), 'ambiente de execução IDF ausente')
-    return {'status': 'training_only_verified', 'sources': len(sources), 'terms': len(counts), 'version': table['version']}
+    validate_data(folder)
+    report = validate_training_idf_contract(folder, idf_folder)
+    descriptor = read_json(Path(idf_folder)/'construction.json')
+    _require(lexical_projection(descriptor['pipeline']) == lexical_projection(pipeline_descriptor()),
+             'produtor lexical/modelo/recursos diferem do ambiente atual; preservar e usar o ambiente identificado')
+    counts = Counter()
+    for source in read_jsonl(Path(folder)/'sources.jsonl'):
+        if source['split'] == 'train':
+            unique = {t for row in prepare_sentences(source['text'], nlp.analyze, nlp.STOPWORDS) for t in row.lexical}
+            counts.update(unique)
+    table = read_json(Path(idf_folder)/'idf.json')
+    _require(table['df'] == dict(counts), 'df do IDF divergente do treino recomputado')
+    return {**report, 'status': 'training_only_verified', 'sources': table['n_docs'],
+            'current_runtime_producer_equivalence': 'verified_lexical_dependencies_only',
+            'lexical_recomputation': 'executed', 'scope': 'A_B_and_C_verified'}
