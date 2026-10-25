@@ -1,0 +1,16 @@
+{
+  "revision": "702964cf46bd1bf33d0745d24bbaac33edf8b8af",
+  "files": {
+    "IBMPlexSansArabic-Regular.ttf": {
+      "url": "https://raw.githubusercontent.com/google/fonts/702964cf46bd1bf33d0745d24bbaac33edf8b8af/ofl/ibmplexsansarabic/IBMPlexSansArabic-Regular.ttf",
+      "sha256": "6f611412270a132bbac838da9259d4c68569b4175f3b3b8fa3fa36a30b56dab9",
+      "bytes": 235924
+    },
+    "OFL-PlexArabic.txt": {
+      "url": "https://raw.githubusercontent.com/google/fonts/702964cf46bd1bf33d0745d24bbaac33edf8b8af/ofl/ibmplexsansarabic/OFL.txt",
+      "sha256": "7e6b2818edbd8f6a01ae80641cc8f16a51080d08fb4e532be3a0b6f74adb07da",
+      "bytes": 4456
+    }
+  },
+  "license": "OFL-1.1"
+}

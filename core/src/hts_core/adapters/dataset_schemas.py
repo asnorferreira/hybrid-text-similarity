@@ -86,7 +86,8 @@ class Pair(Strict):
     r: Fraction
     r_by_source: dict[str, Fraction]
     generation: dict
-    human_review: Literal['pending']
+    human_review: Literal['pending', 'not_performed']
+    content_assessment: dict | None = None
 
 
 class Format(Strict):

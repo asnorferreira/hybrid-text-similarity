@@ -265,7 +265,7 @@ def test_pdf_preserves_literal_cjk_and_greek():
     text = 'O rio 長江 também se escreve 长江. Origâmi: 折り紙. Marioneta: 人形浄瑠璃 e 文楽. Archaea: ἀρχαῖος.'
     data, metadata = render(text, 'pdf')
     assert parse_document('unicode.pdf', data) == text
-    assert metadata['fallback_sha256'] == '990c807e79c25662a5a9ecf7f971baeb2bf2eab9a559e5ecf15cdfdb8561d21f'
+    assert metadata['fallback_sha256'] == '568d44ed35df4ffdd53ce99dab039b2c0b60c291847574e9b46f50415c47ce7b'
     assert render(text, 'pdf')[0] == data
 
 

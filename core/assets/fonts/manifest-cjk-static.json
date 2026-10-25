@@ -1,0 +1,20 @@
+{
+  "source_manifest": "manifest-cjk.json",
+  "source_sha256": "990c807e79c25662a5a9ecf7f971baeb2bf2eab9a559e5ecf15cdfdb8561d21f",
+  "source_axes": [
+    {
+      "axis": "wght",
+      "minimum": 100.0,
+      "default": 100.0,
+      "maximum": 900.0
+    }
+  ],
+  "procedure": "fontTools.varLib.instancer.instantiateVariableFont at wght=400, optimize=True, recalcTimestamp=False; no glyph removal",
+  "tool": "fonttools",
+  "version": "4.60.1",
+  "license": "OFL-CJK.txt; derived static instance, upstream retained",
+  "file": "NotoSansCJKsc-Regular-HTS.ttf",
+  "sha256": "568d44ed35df4ffdd53ce99dab039b2c0b60c291847574e9b46f50415c47ce7b",
+  "bytes": 21659516,
+  "scope": "PDF presentation only; no text changes; this asset is supplied for offline use, no fontTools needed at runtime"
+}

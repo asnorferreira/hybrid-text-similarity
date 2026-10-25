@@ -38,7 +38,7 @@ def operational_fixture(tmp_path_factory):
     folder = clone_unsealed(synthetic, root)
     config = read_json(CORE/'configs/dataset_operational.json')
     old_config = read_json(folder/'config.json')
-    config.update(themes=old_config['themes'], segment_sentences=4, authorization_reference='ARTIFICIAL-UNIT-ONLY')
+    config.update(themes=old_config['themes'], segment_sentences=4, authorization_reference='ARTIFICIAL-UNIT-ONLY', record_contract='assessment_v2')
     (folder/'config.json').write_bytes(canonical(config))
     upstream = read_json(folder/'upstream-manifest.json')
     rights = canonical({'query': {'rightsinfo': {'text': 'project-authored-test-fixture', 'url': 'https://example.invalid/license'}}})
@@ -57,9 +57,14 @@ def operational_fixture(tmp_path_factory):
         s.update(license_status='source_verified', license_reference='https://example.invalid/license', exposure='construction_inspected_no_predictive_use')
         s['provenance_verification'] = verify_source_origin(s, folder)
     replace_jsonl(folder, 'sources.jsonl', sources)
+    from hts_core.application.dataset_pipeline import initialize_pair_states
+    pairs = read_jsonl(folder/'pairs.jsonl')
+    for pair in pairs:
+        initialize_pair_states(pair)
+    replace_jsonl(folder, 'pairs.jsonl', pairs)
     seal(folder, {'purpose': 'operational_derivation', 'config_identity': identity(config)})
     selected = {}
-    for s in sources:
+    for s in sorted(sources, key=lambda s: s['id']):
         selected.setdefault((s['split'], s['theme']), s)
     records = []
     for number, s in enumerate(selected.values()):
@@ -160,6 +165,79 @@ def test_frozen_version_refuses_mutation_before_creating_destination(operational
         else:
             add_formats(tmp_path/'frozen', tmp_path/'invalid-child')
     assert not (tmp_path/'invalid-child').exists()
+
+
+def test_frozen_states_are_individual_and_migration_is_lossless(operational_fixture, tmp_path):
+    folder, review_folder, auth, _ = operational_fixture
+    frozen = tmp_path/'frozen'
+    freeze(folder, review_folder, auth, frozen)
+    assert (frozen/'construction-pairs.jsonl').read_bytes() == (folder/'pairs.jsonl').read_bytes()
+    responses = {r['id'] for r in read_json(review_folder/'review.json')['responses']}
+    pairs = read_jsonl(frozen/'pairs.jsonl')
+    assert {p['id'] for p in pairs if p['content_assessment']['status'] == 'accept'} == responses
+    assert any(p['content_assessment']['status'] == 'not_assessed' for p in pairs)
+    assert all(p['human_review'] == 'not_performed' for p in pairs)
+    assert all(r['validation'] == 'structural' for p in pairs for r in p['sentences'])
+    assert validate_data(frozen)['pairs'] == len(pairs)
+    invalid = clone_unsealed(frozen, tmp_path)
+    pairs[0]['content_assessment']['status'] = 'not_assessed' if pairs[0]['id'] in responses else 'accept'
+    replace_jsonl(invalid, 'pairs.jsonl', pairs)
+    seal(invalid, read_json(frozen/'manifest.json')['metadata'])
+    with pytest.raises(ValueError, match='avaliação individual'):
+        validate_data(invalid)
+
+
+def test_real_requirements_honor_minimum_in_config(operational_fixture, tmp_path):
+    from hts_core.adapters.dataset_operational import verify_operational_requirements
+    folder, _, auth, _ = operational_fixture
+    invalid = clone_unsealed(folder, tmp_path)
+    config = read_json(invalid/'config.json')
+    config['generated_policy']['minimum_pairs_per_method_split_theme'] = 2
+    (invalid/'config.json').write_bytes(canonical(config))
+    seal(invalid, {'purpose': 'operational_derivation'})
+    with pytest.raises(ValueError, match='mínimo=2, real=1'):
+        verify_operational_requirements(invalid, auth)
+
+
+@pytest.mark.parametrize('field,value', [('maximum_sources', 1), ('maximum_records', 1), ('source_sentences', 3)])
+def test_generation_contract_enforces_limits_and_input_count(operational_fixture, field, value):
+    from hts_core.adapters.dataset_operational import verify_generation_contract
+    folder, _, _, _ = operational_fixture
+    policy = deepcopy(read_json(folder/'config.json')['generated_policy'])
+    policy[field] = value
+    with pytest.raises(ValueError, match='limite|quantidade'):
+        verify_generation_contract(folder, read_jsonl(folder/'sources.jsonl'), policy)
+
+
+def test_backtranslation_fallback_requires_final_method_rejection(operational_fixture, tmp_path):
+    from hts_core.adapters.dataset_operational import verify_generation_contract
+    folder, _, _, _ = operational_fixture
+    sources = read_jsonl(folder/'sources.jsonl')
+    cells = {}
+    for source in sorted(sources, key=lambda s: s['id']):
+        cells.setdefault((source['split'], source['theme']), []).append(source)
+    first, replacement = next(cell[:2] for cell in cells.values() if len(cell) > 1)
+    target = clone_unsealed(folder, tmp_path)
+    inputs = [{'id': r['id'], 'text': r['text']} for r in replacement['sentences'][:2]]
+    parent = None
+    for method in ('translate_to_en', 'translate_to_pt'):
+        context = {'parent_cache_key': parent['cache_key']} if parent else None
+        spec = session_candidate_spec(method, inputs, context)
+        raw = json.dumps({'sentences': [{'text': r['text'], 'source_sentence_ids': [r['id']]} for r in inputs]})
+        parent = record_session_candidate(spec, raw, target/'cache', 'ARTIFICIAL-fallback-' + method)
+    policy = read_json(folder/'config.json')['generated_policy']
+    with pytest.raises(ValueError, match='fallback'):
+        verify_generation_contract(target, sources, policy)
+    original = next(read_json(p) for p in (folder/'cache').glob('*.json')
+                    if read_json(p)['request']['method'] == 'translate_to_pt'
+                    and read_json(p)['request']['input'][0]['id'] == first['sentences'][0]['id'])
+    exclusion = {'request_id': original['request_id'], 'item': {'source_id': first['id'], 'method': 'llm_direct'}}
+    (target/'content-exclusions.json').write_bytes(canonical([exclusion]))
+    with pytest.raises(ValueError, match='fallback'):
+        verify_generation_contract(target, sources, policy)
+    exclusion['item']['method'] = 'backtranslation'
+    (target/'content-exclusions.json').write_bytes(canonical([exclusion]))
+    verify_generation_contract(target, sources, policy)
 
 
 @pytest.mark.parametrize('corruption', ['unknown', 'duplicate', 'missing', 'version', 'text', 'selection', 'required_field', 'modality', 'reject', 'ambiguous', 'prompt', 'purpose', 'reproduction', 'reproduction_version', 'forged_coverage', 'forged_text', 'forged_id'])
