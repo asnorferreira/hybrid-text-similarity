@@ -1,0 +1,143 @@
+{
+  "schema": "hts-s5b-1",
+  "status": "adopted_exploratory",
+  "adopted_utc": "2026-10-25T23:07:59.221653+00:00",
+  "authorization": "user S5B request: dependent automated annotation and controlled train/validation; no final test",
+  "dataset_version": "fccdffc984dca0b30d9c044ee62bee32eb52b3b4a828fe454e6a17de0602fd26",
+  "idf_identity": "9ddb353e50c050f58cc3417f8a41763867550730e7c18c56851d4f6dd74680c6",
+  "reference_protocol_identity": "a763d0359a78bd0cdb4dd0bdc689308524c314c0552ed89fc80d99cf52a75d40",
+  "seed": 20261025,
+  "allowed_splits": [
+    "train",
+    "validation"
+  ],
+  "annotation": {
+    "origin": "automated_weak",
+    "generator_relationship": "shared",
+    "shared_dependencies": [
+      "Codex session family used in candidate curation; independence not demonstrated",
+      "same preserved synthetic dataset and project context"
+    ],
+    "procedure_id": "codex-s5b-content-judgment-01",
+    "rubric_id": "s5b-rubric-01"
+  },
+  "h1": {
+    "unit": "sentence_pair",
+    "classes": [
+      "copia_exata",
+      "copia_editada",
+      "parafrase",
+      "sem_correspondencia_detectada"
+    ],
+    "features_by_system": {
+      "lexical": [
+        "lexical_cosine"
+      ],
+      "semantic": [
+        "semantic_cosine_raw"
+      ],
+      "fixed_fusion": [
+        "0.4*lexical_cosine+0.6*max(0,semantic_cosine_raw)"
+      ]
+    },
+    "classifier": {
+      "kind": "multinomial_logistic_regression",
+      "penalty": "l2",
+      "C": 1.0,
+      "max_iter": 1000,
+      "seed": 20261025,
+      "fit_split": "train",
+      "selection_split": "validation",
+      "class_weight": null
+    },
+    "eligibility": "previously_annotated_sentence_pairs; no_winner_selected_alignment; same_rows_for_all_systems",
+    "failures": "preserve_attempts; comparison_incomplete_if_any_prediction_missing; no_success_only_macro_f1"
+  },
+  "h2": {
+    "unit": "sentence_pair",
+    "construct": "degree_of_shared_propositional_content_with_separate_relation_axes",
+    "range": [
+      0,
+      1
+    ],
+    "annotation_schema": "hts-annotations-2",
+    "contradiction_policy": "separate_axis; never_automatic_zero; score_1_forbidden; insufficient_context_unlabeled",
+    "baseline_diagnostics": "(raw_cosine+1)/2; Spearman_uses_raw_cosine_and_is_invariant_to_this_affine_mapping"
+  },
+  "siamese": {
+    "base": "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2",
+    "revision": "e8f8c211226b894fcb81acc59f3b34ba3efd5f42",
+    "license": "Apache-2.0",
+    "sharing": "same_encoder_instance_and_weights_both_branches",
+    "pooling": "existing_complete_nonoverlapping_windows_content_weighted_mean_then_l2",
+    "embedding_dimension": 384,
+    "pair_features": "concat(abs(u-v),u*v)",
+    "dense_dimensions": [
+      768,
+      128,
+      1
+    ],
+    "head": "Linear768x128_LayerNorm128_LeakyReLU_Dropout_Linear128x1_Sigmoid",
+    "layer_norm_epsilon": 1e-05,
+    "leaky_relu_alpha": 0.1,
+    "dropout": 0.1,
+    "loss": "MSELoss",
+    "optimizer": "Adam",
+    "learning_rate": 2e-06,
+    "weight_decay": 1e-05,
+    "long_sentences": "same_complete_window_policy_as_baseline; no_silent_truncation_or_test_exclusion",
+    "input": "two_texts_only; external_targets_separate",
+    "output": "one_finite_scalar_in_0_1_per_sentence_pair",
+    "source_status": "project_proposal_adapted_from_A7; dimensions_base_head_and_budget_not_attributed_to_A7",
+    "encoder_trainable": true
+  },
+  "budget": {
+    "device": "cpu",
+    "threads": 2,
+    "microbatch": 1,
+    "gradient_accumulation": 4,
+    "maximum_epochs": 8,
+    "maximum_optimizer_updates": 2000,
+    "maximum_wall_seconds": 7200,
+    "process_rss_limit_bytes": 3221225472,
+    "attempts": 1,
+    "early_stopping_patience_epochs": 2,
+    "selection": "lowest_validation_MSE_then_earliest_epoch",
+    "stop": "first_budget_or_patience_limit; preserve_partial_status_and_all_attempts; never_extend_after_test",
+    "rationale": "conservative_resource_caps_on_observed_local_CPU; not_predicted_duration_or_guaranteed_feasibility",
+    "checkpoint_disk_limit_bytes": 6442450944,
+    "checkpoint_frequency": "epoch_and_safe_budget_stop; retain latest and selected",
+    "feature_wall_seconds": 600
+  },
+  "statistics": {
+    "scope": "finite_annotated_set_descriptive",
+    "population_intervals": false,
+    "components_per_split": 1,
+    "formats_are_observations": false
+  },
+  "readiness": {
+    "minimum_train_per_class": 2,
+    "minimum_validation_per_class": 1,
+    "minimum_h2_train": 16,
+    "minimum_h2_validation": 8,
+    "minimum_distinct_h2_targets": 3,
+    "training_free_memory_bytes": 4294967296,
+    "inference_free_memory_bytes": 2147483648,
+    "reserve_explanation": "conservative operational limits: encoder storage about 449 MiB; training parameters, gradients and Adam moments about 1.8 GiB before activations/runtime; reserve is chosen, not measured requirement"
+  },
+  "selection": {
+    "h1": "one fixed fit; no tuning; report validation macro_f1",
+    "h2": "lowest_validation_MSE_then_earliest_epoch",
+    "h2_primary": "spearman",
+    "undefined": "null_with_reason_no_zero_substitution"
+  },
+  "test_policy": "closed_no_predictions_no_annotation_no_selection",
+  "application_policy": "no automatic activation; integration requires future explicit stage",
+  "h3": {
+    "status": "protocol_only_no_load_in_S5B",
+    "candidate_reference": "experiment_candidates_s5a.json; H3 separate stage"
+  },
+  "rubric_sha256": "e805b86423b4a6e46e2b3a2f577dd4b8b66419b8b2270cd5eb31a785f6d579a2",
+  "campaign_plan_identity": "8e608aaa9a72c7f80d8689c3484849b4917b61b6c8ca27b0e4d1c7d787fd144a",
+  "selection_identity": "2cd70b1db1401536c0e0740b7cb4c998266e2a806d7278475ae2926a7cabe8ff"
+}
