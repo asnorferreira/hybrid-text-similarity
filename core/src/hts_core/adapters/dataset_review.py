@@ -297,10 +297,28 @@ def freeze(folder, review_folder, authorization, destination):
         raise ValueError('formatos não verificados')
     destination.mkdir(parents=True, exist_ok=False)
     for name in manifest['files']:
-        write_new(destination/name, (folder/name).read_bytes())
+        if name != 'pairs.jsonl' or config.get('record_contract') != 'assessment_v2':
+            write_new(destination/name, (folder/name).read_bytes())
+    if config.get('record_contract') == 'assessment_v2':
+        write_new(destination/'construction-pairs.jsonl', (folder/'pairs.jsonl').read_bytes())
+        pairs = read_jsonl(folder/'pairs.jsonl')
+        for pair in pairs:
+            pair['content_assessment'] = assessment_state(pair['id'], review)
+        write_jsonl(destination/'pairs.jsonl', pairs)
     write_json(destination/'freeze-authorization.json', authorization)
     write_json(destination/'review.json', review)
     return seal(destination, {'purpose': 'frozen_operational_derivation' if operational else 'frozen_derivation_candidate',
                               'parent_version': manifest['version'], 'assessment_modality': review['modality'],
                               'human_review': 'not_performed' if operational else 'individual_self_report',
                               'semantic_training_ready': False, 'semantic_target': 'pending'})
+
+
+def assessment_state(pair_id, review=None):
+    state = {'status': 'not_assessed', 'scope': 'whole_pair_not_individual_sentences',
+             'modality': None, 'review_identity': None, 'review_dataset_version': None, 'response_id': None}
+    if review is not None:
+        response = next((r for r in review['responses'] if r['id'] == pair_id), None)
+        if response is not None:
+            state.update(status=response['decision'], modality=review['modality'], review_identity=review['identity'],
+                         review_dataset_version=review['dataset_version'], response_id=pair_id)
+    return state

@@ -29,6 +29,17 @@ def validate_data(folder, sealed=True):
     _require(sources and (pairs or config['purpose'] == 'source_preparation'), 'dataset vazio')
     _require(len({s['id'] for s in sources}) == len(sources), 'IDs de fonte duplicados')
     _require(len({p['id'] for p in pairs}) == len(pairs), 'IDs de par duplicados')
+    if config.get('record_contract') == 'assessment_v2':
+        from hts_core.adapters.dataset_review import assessment_state
+        frozen = sealed and manifest['metadata']['purpose'] == 'frozen_operational_derivation'
+        review_states = read_json(folder/'review.json') if frozen else None
+        originals = read_jsonl(folder/'construction-pairs.jsonl') if frozen else pairs
+        _require(len(originals) == len(pairs), 'migração de estados perdeu pares')
+        for pair, original in zip(pairs, originals):
+            _require(pair['human_review'] == 'not_performed', 'revisão humana inexistente deve ser not_performed')
+            _require(pair['content_assessment'] == assessment_state(pair['id'], review_states), 'avaliação individual diverge do registro vinculado')
+            _require(all(r['validation'] == 'structural' for r in pair['sentences']), 'avaliação do par não aprova sentenças individualmente')
+            _require({**pair, 'content_assessment': assessment_state(pair['id'])} == original, 'migração alterou conteúdo/operação ou estado candidato')
     by_id = {s['id']: s for s in sources}
     origins, group_splits, page_splits, content_splits = {}, defaultdict(set), defaultdict(set), defaultdict(set)
     distribution = Counter()
@@ -42,8 +53,14 @@ def validate_data(folder, sealed=True):
         for layer in ('raw', 'extracted', 'normalized'):
             _require(digest(inside(folder, source[f'{layer}_file']).read_bytes()) == source[f'{layer}_sha256'], 'hash de fonte divergente')
         _require(inside(folder, source['normalized_file']).read_text(encoding='utf-8') == source['text'], 'texto normalizado divergente')
-        from hts_core.adapters.refcorpus import wikitext_to_text
-        extracted = wikitext_to_text(inside(folder, source['raw_file']).read_text(encoding='utf-8'))
+        from hts_core.adapters.dataset_curation import extract_for_config
+        if config.get('curation_policy'):
+            from hts_core.adapters.dataset_curation import curated_text
+            extracted, ledger = curated_text(inside(folder, source['raw_file']).read_text(encoding='utf-8'))
+            _require(read_json(folder/f"sources/{source['id']}.curation.json") == ledger, 'registro de curadoria diverge do raw')
+            _require(source['title'] not in config.get('source_exclusions', {}), 'fonte explicitamente excluída foi reincluída')
+        else:
+            extracted = extract_for_config(inside(folder, source['raw_file']).read_text(encoding='utf-8'), config)
         _require(extracted.encode() == inside(folder, source['extracted_file']).read_bytes(), 'conversão raw/extracted divergente')
         _require(clean_extracted(extracted) == source['text'], 'normalização não corresponde à extração')
         _require(clean_extracted(source['text']) == source['text'], 'fonte não normalizada')
@@ -169,7 +186,7 @@ def _check_config(config):
                'minimum_sentence_words', 'near_duplicate_threshold', 'shingle_size', 'edit_rates', 'insertion_proportions',
                'patchwork_sources', 'themes', 'limitations', 'approval_reference', 'source_plan_reference', 'review_policy',
                'authorization_reference', 'required_types', 'format_policy', 'generated_policy', 'c3_definition',
-               'c6_definition', 'assessment', 'use_limits', 'content_exclusion_policy'}
+               'c6_definition', 'assessment', 'use_limits', 'content_exclusion_policy', 'record_contract', 'curation_policy', 'source_exclusions'}
     _require(not set(config) - allowed, 'campos desconhecidos na configuração')
     _require(config['purpose'] in {'pilot', 'source_preparation', 'experimental_candidate', 'operational_derivation'}, 'finalidade inválida')
     _require(type(config['seed']) is int, 'seed inválida')
@@ -182,8 +199,20 @@ def _check_config(config):
         _require(values and len(values) == len(set(values)) and all(type(v) in {int, float} and 0 < v < 1 for v in values), 'taxas inválidas')
     _require(config['patchwork_sources'] and all(type(v) is int and 2 <= v <= 4 for v in config['patchwork_sources']), 'origens patchwork inválidas')
     if config['purpose'] == 'operational_derivation':
+        from hts_core.adapters.dataset_operational import check_generated_policy
+        check_generated_policy(config.get('generated_policy'))
+        assessment = config.get('assessment', {})
+        _require(set(assessment) == {'modality', 'independent_of_generator', 'human_review', 'acceptance', 'intense_c2', 'rejections'}
+                 and assessment['modality'] == 'automated_ai' and assessment['independent_of_generator'] is False
+                 and assessment['human_review'] == 'not_performed'
+                 and all(isinstance(assessment[k], str) and assessment[k] for k in ('acceptance', 'intense_c2', 'rejections')),
+                 'modalidade/alcance da avaliação operacional inválidos')
         _require(config.get('authorization_reference') and config.get('required_types') == [f'C{i}' for i in range(8)], 'especificação operacional incompleta')
         _require(config.get('review_policy') == 'all_generated_plus_first_id_per_split_method_severity_v1' and config.get('format_policy') == 'first_content_per_split_method_severity_plus_length_extremes_v1', 'políticas operacionais desconhecidas')
+    _require(config.get('record_contract') in {None, 'assessment_v2'}, 'contrato de registros desconhecido')
+    _require(config.get('curation_policy') in {None, 'raw_templates_segment_v1'}, 'política de curadoria desconhecida')
+    if config.get('curation_policy'):
+        _require(config.get('source_exclusions') == {'Cerâmica': 'historical_source_resegmentation_exclusion_preserved'}, 'exclusão histórica de Cerâmica obrigatória nesta política')
 
 
 def _check_rows(rows, text, context):

@@ -24,7 +24,7 @@ def pipeline_descriptor():
              'adapters/refcorpus.py', 'adapters/dataset_schemas.py', 'adapters/dataset_validation.py',
              'adapters/dataset_formats.py', 'adapters/dataset_llm.py', 'adapters/dataset_store.py',
              'adapters/dataset_collect.py', 'adapters/dataset_review.py', 'adapters/dataset_mongo.py',
-             'adapters/dataset_operational.py', 'domain/strings.py', 'cli/dataset.py']
+             'adapters/dataset_operational.py', 'adapters/dataset_curation.py', 'domain/strings.py', 'cli/dataset.py']
     model_root = Path(importlib.util.find_spec(nlp.SPACY_MODEL).origin).parent
     text_hash = lambda p: digest(p.read_bytes().replace(b'\r\n', b'\n'))
     return {'text_hash_policy': 'UTF-8 source/config/lock text CRLF normalized to LF; binary assets unchanged',
@@ -55,11 +55,21 @@ def sentence_records(text, context, ancestors=None, method='source', parameters=
 def normalize_sources(entries, raw_loader, folder, config):
     sources, exclusions = [], []
     for entry in sorted(entries, key=lambda e: (e['pageid'], e['revid'])):
+        if entry['title'] in config.get('source_exclusions', {}):
+            exclusions.append({'id': f"wikipedia-pt-{entry['pageid']}-{entry['revid']}",
+                               'reason': config['source_exclusions'][entry['title']]})
+            continue
         raw = raw_loader(entry)
         if digest(raw) != entry['sha256']:
             raise ValueError('hash de origem divergente')
         sid = f"wikipedia-pt-{entry['pageid']}-{entry['revid']}"
-        extracted = wikitext_to_text(raw.decode('utf-8'))
+        from hts_core.adapters.dataset_curation import extract_for_config
+        if config.get('curation_policy'):
+            from hts_core.adapters.dataset_curation import curated_text
+            extracted, ledger = curated_text(raw.decode('utf-8'))
+            write_json(Path(folder)/f'sources/{sid}.curation.json', ledger)
+        else:
+            extracted = extract_for_config(raw.decode('utf-8'), config)
         normalized = clean_extracted(extracted)
         base = f'sources/{sid}'
         for suffix, data in [('wiki', raw), ('extracted.txt', extracted.encode()), ('normalized.txt', normalized.encode())]:
@@ -84,7 +94,7 @@ def normalize_sources(entries, raw_loader, folder, config):
                         'extracted_file': f'{base}.extracted.txt', 'extracted_sha256': digest(extracted.encode()),
                         'normalized_file': f'{base}.normalized.txt', 'normalized_sha256': digest(normalized.encode()),
                         'text': normalized, 'language': 'pt-BR-expected',
-                        'extraction': 'wikitext_to_text -> clean_extracted; discarded syntax remains in raw; first eligible sentences',
+                        'extraction': config.get('curation_policy', 'wikitext_to_text') + ' -> clean_extracted; discarded syntax remains in raw; first eligible sentences',
                         'theme': config.get('themes', {}).get(entry['title'], 'unspecified'),
                         'theme_origin': 'project_manual_pilot_mapping_not_Wikipedia_category',
                         'inclusion': 'included', 'inclusion_reason': 'minimum eligible segment; no prediction consulted',
@@ -176,7 +186,19 @@ def generate_pairs(sources, config):
                 continue
             components = [_components(donors[i % count])[i // count] for i in range(len(original))]
             add('C4', 'patchwork', str(count), components, {'sources': [s['id'] for s in donors]})
+    if config.get('record_contract') == 'assessment_v2':
+        for pair in pairs:
+            initialize_pair_states(pair)
     return sorted(pairs, key=lambda p: p['id']), rejected
+
+
+def initialize_pair_states(pair):
+    pair['human_review'] = 'not_performed'
+    pair['content_assessment'] = {'status': 'not_assessed', 'scope': 'whole_pair_not_individual_sentences',
+                                  'modality': None, 'review_identity': None, 'review_dataset_version': None,
+                                  'response_id': None}
+    for row in pair['sentences']:
+        row['validation'] = 'structural'
 
 
 def build_local(config, corpus, destination):
@@ -292,6 +314,8 @@ def add_cached_candidates(folder, cache_records, destination, exclusions=None):
                 continue
             if pair['id'] in {p['id'] for p in pairs}:
                 raise ValueError('candidato já presente; não duplicar observação')
+            if config.get('record_contract') == 'assessment_v2':
+                initialize_pair_states(pair)
             pairs.append(pair)
         except (ValueError, KeyError, TypeError) as exc:
             rejected.append({'request_id': record['request_id'], 'reason': str(exc), 'status': 'rejected_not_deleted'})
