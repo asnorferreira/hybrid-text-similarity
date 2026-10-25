@@ -39,11 +39,58 @@ def main():
             finally:
                 database.dataset_pairs.update_one({'_id': key}, {'$set': {'sha256': doc['sha256']}})
             assert conflict
+            assert database.datasets.find_one({'_id': first['version']})['state'] == 'integrity_conflict'
+            database.dataset_pairs.update_one({'_id': key}, {'$set': {'pair': {**doc['pair'], 'text': doc['pair']['text'] + ' deliberate test corruption'}}})
+            try:
+                try:
+                    import_version(args.dataset, database)
+                except ValueError:
+                    body_conflict = True
+                else:
+                    body_conflict = False
+                assert body_conflict
+                assert database.datasets.find_one({'_id': first['version']})['state'] == 'integrity_conflict'
+            finally:
+                database.dataset_pairs.update_one({'_id': key}, {'$set': {'pair': doc['pair'], 'sha256': doc['sha256']}})
             final = import_version(args.dataset, database)
+            partial_database = client[args.database + '_partial']
+            class InterruptingPairs:
+                def __init__(self, collection):
+                    self.collection = collection
+                    self.remaining = 3
+
+                def update_one(self, *args, **kwargs):
+                    if not self.remaining:
+                        raise OSError('controlled client interruption, not a Mongo server outage')
+                    self.remaining -= 1
+                    return self.collection.update_one(*args, **kwargs)
+
+                def __getattr__(self, name):
+                    return getattr(self.collection, name)
+
+            class PartialDatabase:
+                name = partial_database.name
+                datasets = partial_database.datasets
+                dataset_pairs = InterruptingPairs(partial_database.dataset_pairs)
+
+            if partial_database.dataset_pairs.count_documents({}) or partial_database.datasets.count_documents({}):
+                raise ValueError('namespace de interrupção precisa ser novo; preserve a tentativa anterior')
+            try:
+                import_version(args.dataset, PartialDatabase())
+            except OSError:
+                pass
+            else:
+                raise AssertionError('interrupção controlada não ocorreu')
+            partial_count = partial_database.dataset_pairs.count_documents({'version': first['version']})
+            assert partial_count == 3
+            assert partial_database.datasets.find_one({'_id': first['version']})['state'] == 'importing'
+            resumed = import_version(args.dataset, partial_database)
+            assert resumed['pairs'] == first['pairs']
             after = {name: {c: client[name][c].count_documents({}) for c in ('documents', 'comparisons', 'reports')}
                      for name in baseline}
             assert after == baseline
-            print(json.dumps({'first': first, 'second': second, 'conflict_detected': conflict, 'final': final,
+            print(json.dumps({'first': first, 'second': second, 'conflict_detected': conflict, 'body_conflict_detected': body_conflict,
+                              'final': final, 'controlled_client_partial_count': partial_count, 'resumed': resumed,
                               'legacy_counts_before': baseline, 'legacy_counts_after': after,
                               'limitations': 'counts only; no transaction; identified development records retained'}))
     except Exception as exc:
