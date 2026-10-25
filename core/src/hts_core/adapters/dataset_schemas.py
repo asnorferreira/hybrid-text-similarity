@@ -1,6 +1,6 @@
 from typing import Literal
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 
 class Strict(BaseModel):
@@ -8,12 +8,12 @@ class Strict(BaseModel):
 
 
 class Ancestor(Strict):
-    source_id: str
-    sentence_id: str
+    source_id: str = Field(min_length=1)
+    sentence_id: str = Field(min_length=1)
 
 
 class SentenceRecord(Strict):
-    id: str
+    id: str = Field(min_length=1)
     position: int = Field(ge=0)
     text: str = Field(min_length=1)
     semantic: str
@@ -35,7 +35,7 @@ class Source(Strict):
     provider: str
     pageid: int
     revision: int
-    collected_utc: str
+    collected_utc: str = Field(min_length=10)
     license: str
     license_reference: str
     license_status: Literal['historical_declared', 'source_verified', 'fixture']
@@ -57,18 +57,25 @@ class Source(Strict):
     group: str
     split: Literal['train', 'validation', 'test']
     sentences: list[SentenceRecord] = Field(min_length=1)
+    provenance_verification: dict | None = None
 
 
 class Fraction(Strict):
     numerator: int = Field(ge=0)
     denominator: int = Field(gt=0)
 
+    @model_validator(mode='after')
+    def bounded(self):
+        if self.numerator > self.denominator:
+            raise ValueError('fração acima de um')
+        return self
+
 
 class Pair(Strict):
     id: str
     content_id: str
     source_id: str
-    source_ids: list[str]
+    source_ids: list[str] = Field(min_length=1)
     split: Literal['train', 'validation', 'test']
     synthetic_type: Literal['C0', 'C1', 'C2', 'C3', 'C4', 'C5', 'C6', 'C7']
     method: str

@@ -51,7 +51,10 @@ def seal(folder, metadata):
     folder = Path(folder)
     if (folder / 'manifest.json').exists():
         raise FileExistsError('manifesto já existe')
-    files = {p.relative_to(folder).as_posix(): digest(p.read_bytes()) for p in sorted(folder.rglob('*')) if p.is_file()}
+    paths = sorted(folder.rglob('*'))
+    if any(p.is_symlink() for p in paths):
+        raise ValueError('links não permitidos no artefato')
+    files = {p.relative_to(folder).as_posix(): digest(p.read_bytes()) for p in paths if p.is_file()}
     body = {'schema': 'hts-dataset-1', 'metadata': metadata, 'files': files}
     manifest = {**body, 'version': identity(body)}
     write_json(folder / 'manifest.json', manifest)
@@ -60,7 +63,11 @@ def seal(folder, metadata):
 
 def verify_seal(folder):
     folder = Path(folder)
+    if any(p.is_symlink() for p in folder.rglob('*')):
+        raise ValueError('links não permitidos no artefato')
     manifest = read_json(folder / 'manifest.json')
+    if set(manifest) != {'schema', 'metadata', 'files', 'version'} or manifest['schema'] != 'hts-dataset-1':
+        raise ValueError('schema do manifesto inválido')
     body = {k: manifest[k] for k in ('schema', 'metadata', 'files')}
     if manifest['version'] != identity(body):
         raise ValueError('identidade do manifesto divergente')
@@ -76,6 +83,9 @@ def verify_seal(folder):
 def export_bundle(folder, destination):
     folder = Path(folder)
     manifest = verify_seal(folder)
+    if (folder/'sources.jsonl').exists():
+        from hts_core.adapters.dataset_validation import validate_data
+        validate_data(folder)
     with Path(destination).open('xb') as stream, zipfile.ZipFile(stream, 'w', zipfile.ZIP_STORED) as archive:
         for name in sorted([*manifest['files'], 'manifest.json']):
             info = zipfile.ZipInfo(name, date_time=(1980, 1, 1, 0, 0, 0))
@@ -97,4 +107,8 @@ def import_bundle(bundle, destination):
             if info.is_dir() or info.external_attr >> 16 & 0o170000 == 0o120000:
                 raise ValueError('diretórios/links não permitidos no pacote')
             write_new(inside(destination, info.filename), archive.read(info))
-    return verify_seal(destination)
+    manifest = verify_seal(destination)
+    if (destination/'sources.jsonl').exists():
+        from hts_core.adapters.dataset_validation import validate_data
+        validate_data(destination)
+    return manifest

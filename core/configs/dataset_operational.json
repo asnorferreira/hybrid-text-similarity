@@ -1,0 +1,47 @@
+{
+  "purpose": "operational_derivation",
+  "scientific_approval": false,
+  "authorization_reference": "author_s4_integral_complement_sections_8_10_13_2026-10-24",
+  "seed": 20261024,
+  "split_percent": [70, 15, 15],
+  "segment_sentences": 8,
+  "minimum_sentences": 4,
+  "minimum_sentence_words": 5,
+  "near_duplicate_threshold": 0.8,
+  "shingle_size": 5,
+  "edit_rates": [0.05, 0.15, 0.30],
+  "insertion_proportions": [0.25, 0.50, 0.75],
+  "patchwork_sources": [2, 3, 4],
+  "required_types": ["C0", "C1", "C2", "C3", "C4", "C5", "C6", "C7"],
+  "review_policy": "all_generated_plus_first_id_per_split_method_severity_v1",
+  "format_policy": "first_content_per_split_method_severity_plus_length_extremes_v1",
+  "generated_policy": {
+    "selection": "smallest_source_id_per_split_theme_then_next_source_for_documented_rejection_v2",
+    "methods": ["llm_direct", "backtranslation", "phrase_guided_rewrite"],
+    "source_sentences": 2,
+    "c6_sentences": 1,
+    "attempts_per_item": 1,
+    "maximum_sources": 10,
+    "maximum_records": 37,
+    "minimum_pairs_per_method_split_theme": 1
+  },
+  "content_exclusion_policy": "documented_automated_assessment_exclusions_v1",
+  "c3_definition": "fixed_length_composition_focal_prefix_then_donor_prefix_not_insertion_into_longer_document",
+  "c6_definition": "phrase_guided_rewrite_known_derivation_no_automatic_semantic_label",
+  "assessment": {
+    "modality": "automated_ai",
+    "independent_of_generator": false,
+    "human_review": "not_performed",
+    "acceptance": "traceable_operation_and_readable_generated_candidate_without_detected_critical_factual_contradiction; not_semantic_equivalence_certification",
+    "intense_c2": "accept_operation_even_if_readability_or_meaning_degrades; report_degradation",
+    "rejections": "preserve_candidate; no_regeneration_beyond_one_attempt; new_version_for_exclusions"
+  },
+  "use_limits": [
+    "operational_derivation_and_transformation_robustness_only",
+    "semantic_training_ready_false",
+    "not_independent_semantic_gold",
+    "not_statistical_power_claim",
+    "no_predictive_test_execution_in_s4",
+    "application_idf_not_migrated"
+  ]
+}
