@@ -1,15 +1,15 @@
 # hybrid-text-similarity
 
 <!-- S5A-CURRENT -->
-## Estado vigente — S5A, 2026-10-25
+## Estado vigente — complemento S5A, 2026-10-25
 
-S5A concluída no alcance técnico independente; protocolo candidato e infraestrutura verificados, sem treinamento/calibração/carga/avaliação preditiva do teste. S4 permanece encerrada para derivação, robustez e reprodução operacional da versão `fccdffc984dca0b30d9c044ee62bee32eb52b3b4a828fe454e6a17de0602fd26`, não para gabarito semântico independente ou corpus universal limpo.
+Complemento técnico S5A concluído no alcance independente: protocolo, vínculo IDF e importação corrigidos e verificados. S4 permanece encerrada operacionalmente; nenhum treinamento, calibração, carga ou avaliação preditiva do teste. Contratos científicos candidatos não significam liberação de treinamento.
 
-A infraestrutura CLI de preparação está disponível via `python -m hts_core.cli experiment --help`; os comandos não treinam nem liberam o teste. A referência da S4 e seus pacotes permanecem preservados.
+Schemas de preparação corrigidos; protocolo original preservado e suplemento candidato vinculado. Seguir o protocolo e a matriz vigentes, sem início automático de S5B.
 
-[Protocolo e contratos candidatos](docs/08-protocolo-s5a.md), [relatório S5A](TCC/evidencias/codex-s5a-01/relatorio-final.md), [matriz de prontidão](TCC/evidencias/codex-s5a-01/matriz-prontidao.md), [checkpoint](TCC/evidencias/codex-s5a-01/checkpoint.md). Os registros seguintes são históricos das suas execuções; suas proibições de início automático de S5 referem-se àquele alcance. Nesta sessão somente S5A foi autorizada; S5B–D continuam não executadas.
+[protocolo](docs/08-protocolo-s5a.md) | [relatório](TCC/evidencias/codex-s5a-complemento-01/relatorio-final.md) | [matriz](TCC/evidencias/codex-s5a-complemento-01/matriz-prontidao.md) | [checkpoint](TCC/evidencias/codex-s5a-complemento-01/checkpoint.md) | [S5B](docs/09-prompt-s5b.md)
 
-Entrega S4: kit base+dataset separado+**adendo-retomada-final-02.zip definitivo**, com recibos externos. adendo-retomada-final-01.zip é tentativa anterior preservada. Não usar o 01 como adendo definitivo nem regenerar ZIPs antigos. A embalagem documental S5A é adicional, com identidade própria.
+S5A original preservada como histórica em documentacao-anterior.zip na pasta de evidências do complemento e nas evidências codex-s5a-01. Registros abaixo são históricos das suas execuções; não atribuir a eles as correções atuais. Entrega S4: kit base e adendo-retomada-final-02.zip definitivo, com dataset separado; adendo01 é tentativa anterior preservada. ZIPs antigos não foram regenerados.
 <!-- /S5A-CURRENT -->
 
 <!-- S4-CLOSURE-CURRENT -->
