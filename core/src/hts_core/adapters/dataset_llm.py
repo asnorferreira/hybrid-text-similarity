@@ -28,10 +28,37 @@ def request_spec(model, revision, method, sentences, parameters, context=None):
 def validate_cached(record, spec, allow_fixture=False):
     if record['cache_key'] != identity(spec) or record['request'] != spec:
         raise ValueError('cache de outro prompt/modelo/entrada')
-    if record['status'] != 'candidate' or (record['synthetic_fixture'] and not allow_fixture):
+    if type(record['synthetic_fixture']) is not bool or record['status'] != 'candidate' or (record['synthetic_fixture'] and not allow_fixture):
         raise ValueError('resposta falha ou fixture artificial não é geração real')
+    from datetime import datetime
+    datetime.fromisoformat(record['created_utc'])
+    if not re.fullmatch(r'[a-zA-Z0-9_-]{1,100}', record['request_id']):
+        raise ValueError('ID do cache inválido')
+    if spec['provider'] == 'Codex-session':
+        expected_spec = session_candidate_spec(spec['method'], spec['input'], spec['context'])
+    elif spec['provider'] == 'Gemini':
+        expected_spec = request_spec(spec['model'], spec['revision'], spec['method'], spec['input'], spec['parameters'], spec['context'])
+        if not record['synthetic_fixture'] and record.get('resolved_model') != spec['revision']:
+            raise ValueError('revisão efetiva do provedor divergente')
+    else:
+        raise ValueError('interface de geração desconhecida')
+    if expected_spec != spec:
+        raise ValueError('contrato do prompt/interface divergente')
+    if set(record['structured']) != {'sentences'}:
+        raise ValueError('resposta estruturada com campos desconhecidos')
+    if not record['synthetic_fixture']:
+        raw = record['raw']
+        if isinstance(raw, dict) and spec['provider'] == 'Gemini':
+            raw = ''.join(p.get('text', '') for c in raw.get('candidates', []) for p in c.get('content', {}).get('parts', []))
+        if not isinstance(raw, str) or json.loads(raw) != record['structured']:
+            raise ValueError('resposta bruta diverge da estruturada')
     output = record['structured']['sentences']
-    expected = {s['id'] for s in spec['input']}
+    inputs = spec['input']
+    if not inputs or any(set(s) != {'id', 'text'} or not isinstance(s['text'], str) or not s['text'].strip() for s in inputs):
+        raise ValueError('entrada vazia/schema inválido')
+    expected = {s['id'] for s in inputs}
+    if len(expected) != len(inputs):
+        raise ValueError('IDs de entrada duplicados')
     seen = []
     for row in output:
         if set(row) != {'text', 'source_sentence_ids'} or not isinstance(row['text'], str) or not row['text'].strip():
@@ -39,9 +66,70 @@ def validate_cached(record, spec, allow_fixture=False):
         if len(row['source_sentence_ids']) != 1 or not set(row['source_sentence_ids']) <= expected:
             raise ValueError('mapeamento ambíguo/órfão; candidato não aceito automaticamente')
         seen.extend(row['source_sentence_ids'])
-    if set(seen) != expected or len(seen) != len(expected):
+    if seen != [s['id'] for s in inputs]:
         raise ValueError('fusão/divisão/omissão não autorizada neste contrato um a um')
     return output
+
+
+def validate_lineage(record, records, sources, pair=None, visiting=None):
+    visiting = set() if visiting is None else set(visiting)
+    key = record['cache_key']
+    if key in visiting:
+        raise ValueError('ciclo na cadeia do cache')
+    visiting.add(key)
+    spec = record['request']
+    output = validate_cached(record, spec)
+    method = spec['method']
+    if method == 'translate_to_pt':
+        parent_key = (spec.get('context') or {}).get('parent_cache_key')
+        if parent_key not in records:
+            raise ValueError('pai da retrotradução ausente')
+        parent = records[parent_key]
+        if parent['request']['method'] != 'translate_to_en' or parent['request']['provider'] != spec['provider']:
+            raise ValueError('método/interface do pai incompatível')
+        middle, source = validate_lineage(parent, records, sources, visiting=visiting)
+        expected = [{'id': r['source_sentence_ids'][0], 'text': r['text']} for r in middle]
+        if spec['input'] != expected:
+            raise ValueError('entrada intermediária divergente')
+        pair_method = 'backtranslation'
+    else:
+        if method not in {'llm_direct', 'translate_to_en', 'phrase_guided_rewrite'}:
+            raise ValueError('método de geração não autorizado')
+        origins = {r['id']: (s, r) for s in sources.values() for r in s['sentences']}
+        if any(r['id'] not in origins or r['text'] != origins[r['id']][1]['text'] for r in spec['input']):
+            raise ValueError('entrada do cache não corresponde à fonte canônica')
+        source_ids = {origins[r['id']][0]['id'] for r in spec['input']}
+        if len(source_ids) != 1:
+            raise ValueError('entrada deve ter uma única fonte')
+        source = sources[next(iter(source_ids))]
+        positions = [origins[r['id']][1]['position'] for r in spec['input']]
+        if positions != sorted(positions):
+            raise ValueError('ordem de entrada não corresponde à fonte')
+        pair_method = method
+        if method == 'phrase_guided_rewrite':
+            context = spec.get('context') or {}
+            phrase = context.get('source_phrase')
+            keywords = context.get('keywords')
+            if len(spec['input']) != 1 or not context.get('approval_reference') or not phrase or phrase not in spec['input'][0]['text']:
+                raise ValueError('frase C6 sem vínculo com a fonte')
+            if not isinstance(keywords, list) or not keywords or len(keywords) != len(set(keywords)) or any(not k or k not in spec['input'][0]['text'] for k in keywords):
+                raise ValueError('elementos C6 ausentes/externos à fonte')
+            if any(k.casefold() not in output[0]['text'].casefold() for k in keywords):
+                raise ValueError('elementos C6 solicitados não aparecem na resposta')
+    if pair is not None:
+        if pair['method'] != pair_method or pair['source_id'] != source['id'] or pair['split'] != source['split']:
+            raise ValueError('método/fonte/split do par incompatível com cache')
+        if pair['generation']['cache_request_id'] != record['request_id'] or pair['generation']['cache_key'] != key:
+            raise ValueError('referência do par/cache divergente')
+        rows = pair['sentences']
+        if len(rows) != len(output):
+            raise ValueError('resegmentação/omissão entre resposta e par')
+        from hts_core.domain.text import clean_extracted
+        for row, generated in zip(rows, output):
+            expected_ancestors = [{'source_id': source['id'], 'sentence_id': generated['source_sentence_ids'][0]}]
+            if row['ancestors'] != expected_ancestors or row['text'] != clean_extracted(generated['text']):
+                raise ValueError('resposta e ancestrais/texto do par divergentes')
+    return output, source
 
 
 def generate_candidate(spec, cache, limits, transport=None, synthetic_fixture=False):

@@ -1,5 +1,6 @@
 from collections import Counter, defaultdict
 from pathlib import Path
+from functools import lru_cache
 
 from hts_core.adapters.dataset_schemas import Format, Pair, Source
 from hts_core.adapters.dataset_store import digest, identity, inside, read_json, read_jsonl, verify_seal
@@ -15,8 +16,14 @@ def _require(condition, reason):
 def validate_data(folder, sealed=True):
     folder = Path(folder)
     if sealed:
-        verify_seal(folder)
+        manifest = verify_seal(folder)
     config = read_json(folder/'config.json')
+    _check_config(config)
+    if sealed:
+        expected_purpose = {'frozen_operational_derivation': 'operational_derivation', 'frozen_derivation_candidate': 'experimental_candidate'}.get(manifest['metadata']['purpose'], manifest['metadata']['purpose'])
+        _require(config['purpose'] == expected_purpose, 'finalidade config/manifesto divergente')
+        if 'config_identity' in manifest['metadata']:
+            _require(manifest['metadata']['config_identity'] == identity(config), 'configuração/identidade divergentes')
     sources = [Source.model_validate(s).model_dump() for s in read_jsonl(folder/'sources.jsonl')]
     pairs = [Pair.model_validate(p).model_dump() for p in read_jsonl(folder/'pairs.jsonl')] if (folder/'pairs.jsonl').exists() else []
     _require(sources and (pairs or config['purpose'] == 'source_preparation'), 'dataset vazio')
@@ -26,6 +33,10 @@ def validate_data(folder, sealed=True):
     origins, group_splits, page_splits, content_splits = {}, defaultdict(set), defaultdict(set), defaultdict(set)
     distribution = Counter()
     for source in sources:
+        from datetime import datetime
+        datetime.fromisoformat(source['collected_utc'])
+        _require(source['id'] == f"wikipedia-pt-{source['pageid']}-{source['revision']}", 'ID/revisão da fonte divergente')
+        _require(len(source['sentences']) >= config['minimum_sentences'], 'fonte abaixo do mínimo de sentenças')
         group_splits[source['group']].add(source['split'])
         page_splits[(source['provider'], source['pageid'])].add(source['split'])
         for layer in ('raw', 'extracted', 'normalized'):
@@ -43,8 +54,9 @@ def validate_data(folder, sealed=True):
         distribution['source:' + source['split'] + ':' + source['theme']] += 1
         for row in source['sentences']:
             _require(row['id'] not in origins, 'ID de sentença duplicado')
+            _require(not row['ancestors'] and row['transformation'] == 'source', 'fonte com ancestrais/transformação espúrios')
             origins[row['id']] = (source['id'], row)
-        _check_rows(source['sentences'], ' '.join(row['text'] for row in source['sentences']))
+        _check_rows(source['sentences'], ' '.join(row['text'] for row in source['sentences']), source['id'])
     _require(all(len(v) == 1 for v in group_splits.values()), 'grupo em splits diferentes')
     _require(all(len(v) == 1 for v in page_splits.values()), 'mesma página em treino/teste')
     from hts_core.domain.dataset import source_groups, split_groups
@@ -53,16 +65,20 @@ def validate_data(folder, sealed=True):
     expected_split = split_groups(expected_groups, config['seed'], tuple(config['split_percent']))
     _require(all(s['split'] == expected_split[s['id']] for s in sources), 'split difere da alocação por grupos/seed')
     for pair in pairs:
+        from hts_core.domain.dataset import stable_id
+        _require(pair['seed'] == config['seed'], 'seed do par/config divergente')
+        _require(pair['id'] == stable_id(pair['source_id'], pair['synthetic_type'], pair['method'], pair['severity'], str(pair['seed']), pair['content_id']), 'ID do par divergente')
         _require(pair['source_id'] in by_id, 'fonte focal órfã')
         _require(pair['content_id'] == identity({'text': pair['text']}), 'identidade de conteúdo divergente')
         _require(pair['source_id'] in pair['source_ids'], 'fonte focal ausente')
         _require(len(pair['source_ids']) == len(set(pair['source_ids'])), 'fontes repetidas no par')
         _require(all(s in by_id for s in pair['source_ids']), 'fonte órfã')
         _require(all(by_id[s]['split'] == pair['split'] for s in pair['source_ids']), 'fonte do par/patchwork externa ao split')
-        _check_rows(pair['sentences'], pair['text'])
+        _check_rows(pair['sentences'], pair['text'], pair['id'])
         ancestors_union, numerator = set(), 0
         for row in pair['sentences']:
             _require(row['semantic_target'] is None and row['validated_class'] is None, 'gabarito semântico fabricado')
+            _require(row['transformation'] == pair['method'] and row['parameters'] == pair['generation'], 'metadados de sentença/par divergentes')
             ancestry = {(a['source_id'], a['sentence_id']) for a in row['ancestors']}
             _require(ancestry and len(ancestry) == len(row['ancestors']), 'proveniência ausente/duplicada')
             for sid, sentid in ancestry:
@@ -74,16 +90,37 @@ def validate_data(folder, sealed=True):
         expected_r = {sid: {'numerator': sum(any(a['source_id'] == sid for a in row['ancestors']) for row in pair['sentences']),
                            'denominator': len(pair['sentences'])} for sid in pair['source_ids']}
         _require(pair['r_by_source'] == expected_r, 'r por fonte incorreto')
-        _check_transformation(pair, by_id, origins)
+        _check_transformation(pair, by_id, origins, config)
         if pair['synthetic_type'] in {'C5', 'C6'}:
-            from hts_core.adapters.dataset_llm import validate_cached
+            from hts_core.adapters.dataset_llm import validate_lineage
             record = read_json(inside(folder, 'cache/' + pair['generation']['cache_request_id'] + '.json'))
-            output = validate_cached(record, record['request'])
-            _require(record['cache_key'] == pair['generation']['cache_key'], 'cache divergente no candidato')
-            _require(clean_extracted(' '.join(row['text'] for row in output)) == pair['text'], 'conteúdo divergente do cache')
+            records = {}
+            for path in sorted((folder/'cache').glob('*.json')):
+                cached = read_json(path)
+                _require(path.stem == cached['request_id'], 'nome/ID do cache divergente')
+                _require(cached['cache_key'] not in records, 'chaves de cache duplicadas')
+                records[cached['cache_key']] = cached
+            validate_lineage(record, records, by_id, pair)
+            if config['purpose'] == 'operational_derivation':
+                _require(record['request']['provider'] == 'Codex-session', 'interface não prevista na especificação operacional')
+                _require(all(r['intended_class'] is None for r in pair['sentences']), 'C5/C6 operacional sem classe semântica automática')
         content_splits[pair['content_id']].add(pair['split'])
         distribution['pair:' + ':'.join((pair['split'], pair['synthetic_type'], pair['method'], pair['severity']))] += 1
     _require(all(len(v) == 1 for v in content_splits.values()), 'conteúdo derivado atravessa splits')
+    if (folder/'content-exclusions.json').exists():
+        from hts_core.adapters.dataset_operational import excluded_pair_from_cache, validate_content_exclusion
+        exclusions = read_json(folder/'content-exclusions.json')
+        _require(config.get('content_exclusion_policy') == 'documented_automated_assessment_exclusions_v1', 'política de exclusão ausente')
+        _require(len({e['request_id'] for e in exclusions}) == len(exclusions), 'exclusões duplicadas')
+        cache = [read_json(path) for path in sorted((folder/'cache').glob('*.json'))]
+        records_by_key = {r['cache_key']: r for r in cache}
+        records_by_id = {r['request_id']: r for r in cache}
+        for exclusion in exclusions:
+            _require(exclusion['request_id'] in records_by_id, 'cache excluído ausente')
+            record = records_by_id[exclusion['request_id']]
+            excluded = excluded_pair_from_cache(record, records_by_key, by_id, config)
+            validate_content_exclusion(exclusion, excluded, by_id)
+            _require(excluded['id'] not in {p['id'] for p in pairs}, 'candidato rejeitado continua no dataset')
     format_path = folder/'formats.jsonl'
     formats = read_jsonl(format_path) if format_path.exists() else []
     by_content = {p['content_id']: p for p in pairs}
@@ -106,27 +143,81 @@ def validate_data(folder, sealed=True):
         for row in source['sentences']:
             common[row['semantic']].append(source['id'])
     shared = [{'sentence_sha256': digest(text.encode()), 'sources': sorted(set(ids))} for text, ids in common.items() if len(set(ids)) > 1]
+    if sealed and manifest['metadata']['purpose'] in {'frozen_operational_derivation', 'frozen_derivation_candidate'}:
+        from hts_core.adapters.dataset_review import validate_review
+        from hts_core.adapters.dataset_operational import verify_operational_requirements
+        review = validate_review(read_json(folder/'review.json'), folder, manifest['metadata']['parent_version'])
+        authorization = read_json(folder/'freeze-authorization.json')
+        operational = manifest['metadata']['purpose'] == 'frozen_operational_derivation'
+        _require(review['modality'] == ('automated_ai' if operational else 'human_individual') and all(r['decision'] == 'accept' for r in review['responses']), 'revisão congelada rejeitada/modalidade incorreta')
+        _require(all(authorization.get(k) for k in ('approved', 'reference', 'review_scope_accepted', 'source_alerts_resolved', 'cache_verified', 'reproduction_verified')), 'autorização congelada incompleta')
+        if operational:
+            _require(authorization['purpose'] == 'operational_derivation', 'autorização congelada incompatível')
+            verify_operational_requirements(folder, authorization)
     return {'status': 'structurally_valid', 'sources': len(sources), 'groups': len(group_splits), 'pairs': len(pairs),
             'sentences': sum(len(p['sentences']) for p in pairs), 'formats': len(formats),
             'distribution': dict(sorted(distribution.items())), 'near_duplicate_links': near_alerts,
-            'shared_sentence_alerts': shared, 'human_review': 'pending', 'semantic_quality': 'not_certified',
+            'shared_sentence_alerts': shared, 'human_review': 'not_performed' if config['purpose'] == 'operational_derivation' else 'pending',
+            'validation_modality': 'structural_and_provenance',
+            'content_assessment': 'automated_ai_not_independent' if sealed and manifest['metadata']['purpose'] == 'frozen_operational_derivation' else 'separate_record',
+            'semantic_training_ready': False, 'semantic_quality': 'not_certified',
             'limits': 'shingle detector and exact matches do not rule out all semantic overlap'}
 
 
-def _check_rows(rows, text):
+def _check_config(config):
+    allowed = {'purpose', 'scientific_approval', 'seed', 'split_percent', 'segment_sentences', 'minimum_sentences',
+               'minimum_sentence_words', 'near_duplicate_threshold', 'shingle_size', 'edit_rates', 'insertion_proportions',
+               'patchwork_sources', 'themes', 'limitations', 'approval_reference', 'source_plan_reference', 'review_policy',
+               'authorization_reference', 'required_types', 'format_policy', 'generated_policy', 'c3_definition',
+               'c6_definition', 'assessment', 'use_limits', 'content_exclusion_policy'}
+    _require(not set(config) - allowed, 'campos desconhecidos na configuração')
+    _require(config['purpose'] in {'pilot', 'source_preparation', 'experimental_candidate', 'operational_derivation'}, 'finalidade inválida')
+    _require(type(config['seed']) is int, 'seed inválida')
+    _require(config['split_percent'] and len(config['split_percent']) == 3 and all(type(n) is int and n > 0 for n in config['split_percent']) and sum(config['split_percent']) == 100, 'split inválido')
+    _require(type(config['segment_sentences']) is int and type(config['minimum_sentences']) is int and 1 <= config['minimum_sentences'] <= config['segment_sentences'], 'limites de seleção inválidos')
+    _require(type(config['minimum_sentence_words']) is int and config['minimum_sentence_words'] >= 1, 'mínimo de palavras inválido')
+    _require(type(config['shingle_size']) is int and config['shingle_size'] >= 1 and 0 < config['near_duplicate_threshold'] <= 1, 'agrupamento inválido')
+    for key in ('edit_rates', 'insertion_proportions'):
+        values = config[key]
+        _require(values and len(values) == len(set(values)) and all(type(v) in {int, float} and 0 < v < 1 for v in values), 'taxas inválidas')
+    _require(config['patchwork_sources'] and all(type(v) is int and 2 <= v <= 4 for v in config['patchwork_sources']), 'origens patchwork inválidas')
+    if config['purpose'] == 'operational_derivation':
+        _require(config.get('authorization_reference') and config.get('required_types') == [f'C{i}' for i in range(8)], 'especificação operacional incompleta')
+        _require(config.get('review_policy') == 'all_generated_plus_first_id_per_split_method_severity_v1' and config.get('format_policy') == 'first_content_per_split_method_severity_plus_length_extremes_v1', 'políticas operacionais desconhecidas')
+
+
+def _check_rows(rows, text, context):
+    from hts_core.domain.dataset import stable_id
     _require([s['position'] for s in rows] == list(range(len(rows))), 'posições inconsistentes')
     _require(len({s['id'] for s in rows}) == len(rows), 'IDs de sentença repetidos')
+    _require(all(s['id'] == stable_id(context, str(s['position']), s['text']) for s in rows), 'identidade da sentença divergente')
     _require([s['text'] for s in rows] == split_sentences(clean_extracted(text)), 'resegmentação divergente')
     _require(all(s['words'] == word_count(s['text']) for s in rows), 'contagem de palavras divergente')
     _require(all(s['semantic'] == semantic_text(s['text']) for s in rows), 'perfil semântico divergente')
+    _require(all(s['lexical'] == list(_expected_lexical(s['text'])) for s in rows), 'perfil lexical divergente do processamento')
 
 
-def _check_transformation(pair, sources, origins):
+@lru_cache(maxsize=4096)
+def _expected_lexical(text):
+    from hts_core.adapters import nlp
+    from hts_core.domain.preprocess import lexical_tokens
+    return tuple(lexical_tokens(text, nlp.analyze, nlp.STOPWORDS))
+
+
+def _check_transformation(pair, sources, origins, config):
     kind, method = pair['synthetic_type'], pair['method']
     allowed = {'C0': {'negative_easy', 'negative_hard'}, 'C1': {'copy'}, 'C2': {'character_substitution'},
                'C3': {'insert'}, 'C4': {'patchwork'}, 'C5': {'llm_direct', 'backtranslation'},
                'C6': {'phrase_guided_rewrite'}, 'C7': {'reorder'}}
     _require(method in allowed[kind], 'classe/operação incompatíveis')
+    fixed_severity = {'C0': 'easy' if method == 'negative_easy' else 'hard', 'C1': 'none', 'C5': 'uncalibrated', 'C6': 'uncalibrated', 'C7': 'permutation'}
+    _require(kind not in fixed_severity or pair['severity'] == fixed_severity[kind], 'severidade incompatível com método')
+    generation_keys = {'C0': {'donor', 'semantic_dissimilarity'}, 'C1': set(),
+                       'C2': {'requested_rate', 'by_sentence', 'semantic_preservation'},
+                       'C3': {'requested_proportion', 'focal_count', 'total_count', 'donor'},
+                       'C4': {'sources'}, 'C5': {'cache_key', 'cache_request_id', 'semantic_quality'},
+                       'C6': {'cache_key', 'cache_request_id', 'semantic_quality'}, 'C7': {'permutation'}}
+    _require(set(pair['generation']) == generation_keys[kind], 'schema de operação incompleto/desconhecido')
     rows = pair['sentences']
     if kind in {'C1', 'C2', 'C7'}:
         _require(all(a['source_id'] == pair['source_id'] for row in rows for a in row['ancestors']), 'derivação atribuída a outra fonte')
@@ -137,6 +228,8 @@ def _check_transformation(pair, sources, origins):
     if kind == 'C0':
         _require(pair['r']['numerator'] == 0, 'negativo derivado da focal')
         donor = sources[pair['generation']['donor']]
+        _require(donor['group'] != sources[pair['source_id']]['group'], 'negativo da mesma família')
+        _require([r['ancestors'][0]['sentence_id'] for r in rows] == [r['id'] for r in donor['sentences']], 'doador/conteúdo do negativo divergente')
         _require((donor['theme'] == sources[pair['source_id']]['theme']) == (method == 'negative_hard'), 'tema do negativo inválido')
     if kind == 'C1':
         _require(pair['text'] == ' '.join(r['text'] for r in sources[pair['source_id']]['sentences']), 'C1 não é igualdade contratada')
@@ -145,9 +238,13 @@ def _check_transformation(pair, sources, origins):
         original = sources[pair['source_id']]['sentences']
         _require(sorted(order) == list(range(len(original))) and order != list(range(len(original))), 'permutação inválida/sem efeito')
         _require([r['ancestors'][0]['sentence_id'] for r in rows] == [original[i]['id'] for i in order], 'permutação/proveniência divergentes')
+        _require(pair['text'] != ' '.join(r['text'] for r in original), 'permutação textual sem efeito')
     if kind == 'C2':
         infos = pair['generation']['by_sentence']
+        rate = pair['generation']['requested_rate']
+        _require(rate in config['edit_rates'] and pair['severity'] == str(rate), 'taxa/severidade C2 fora da configuração')
         _require(len(infos) == len(rows), 'edições/sentenças divergentes')
+        _require(any(info['realized_count'] > 0 for info in infos), 'edição textual sem efeito')
         for row, info in zip(rows, infos):
             _require(len(row['ancestors']) == 1 and row['ancestors'][0]['sentence_id'] == info['source_sentence_id'], 'edição/proveniência divergente')
             original = origins[info['source_sentence_id']][1]['text']
@@ -156,6 +253,7 @@ def _check_transformation(pair, sources, origins):
                 pos = op['position']
                 _require(0 <= pos < len(output) and pos not in seen, 'posição de edição inválida')
                 _require(op['before'] == original[pos] and op['after'] != op['before'] and len(op['after']) == 1, 'edição sem efeito/incorreta')
+                _require(original[pos].isalpha() and original[pos].islower() and op['operation'] == 'substitute' and op['after'] == ('z' if original[pos] == 'x' else 'x'), 'substituição fora do contrato')
                 seen.add(pos)
                 output[pos] = op['after']
             eligible = sum(c.isalpha() and c.islower() for c in original)
@@ -163,12 +261,26 @@ def _check_transformation(pair, sources, origins):
             _require(info['realized_rate'] == (len(seen) / eligible if eligible else 0), 'taxa realizada inválida')
             _require(''.join(output) == row['text'], 'saída não corresponde às operações')
             _require(len(seen) == min(eligible, int(eligible * info['requested_rate'] + .5)), 'quantidade não corresponde à taxa solicitada')
+            from hts_core.domain.strings import levenshtein_distance
+            _require(info['requested_rate'] == rate and info['effective_levenshtein'] == levenshtein_distance(original, row['text']), 'metadados de edição divergentes')
     if kind == 'C3':
         info = pair['generation']
         _require(0 < pair['r']['numerator'] < len(rows), 'inserção não mistura origens')
         _require(info['total_count'] == len(rows) and info['focal_count'] == pair['r']['numerator'], 'composição C3 divergente')
+        focal, donor = sources[pair['source_id']], sources[info['donor']]
+        proportion = info['requested_proportion']
+        total = min(len(focal['sentences']), len(donor['sentences']))
+        count = int(total * proportion + .5)
+        expected = focal['sentences'][:count] + donor['sentences'][:total-count]
+        _require(proportion in config['insertion_proportions'] and pair['severity'] == str(proportion), 'proporção/severidade C3 divergentes')
+        _require(donor['group'] != focal['group'] and total == len(rows) and [r['ancestors'][0]['sentence_id'] for r in rows] == [r['id'] for r in expected], 'ordem/doador C3 divergentes')
     if kind == 'C4':
-        _require(2 <= len({a['source_id'] for r in rows for a in r['ancestors']}) <= 4, 'patchwork exige 2–4 origens')
+        actual = {a['source_id'] for r in rows for a in r['ancestors']}
+        declared = pair['generation']['sources']
+        _require(2 <= len(actual) <= 4 and set(declared) == actual and len(declared) == len(actual) and pair['severity'] == str(len(actual)) and len(actual) in config['patchwork_sources'], 'patchwork/origens/severidade divergentes')
+        _require(declared[0] == pair['source_id'] and len({sources[s]['group'] for s in declared}) == len(declared), 'famílias patchwork divergentes')
+        expected = [sources[declared[i % len(declared)]]['sentences'][i // len(declared)]['id'] for i in range(len(rows))]
+        _require([r['ancestors'][0]['sentence_id'] for r in rows] == expected, 'alternância patchwork divergente')
     if kind in {'C5', 'C6'}:
         _require('cache_key' in pair['generation'], 'transformação LLM sem cache identificado')
 
@@ -191,6 +303,8 @@ def validate_training_idf(folder, idf_folder):
     table = read_json(Path(idf_folder)/'idf.json')
     descriptor = read_json(Path(idf_folder)/'construction.json')
     training = {s['id'] for s in sources}
+    _require(set(table) == {'n_docs', 'df', 'formula', 'tf', 'unknown_df', 'vector_normalization', 'version'}, 'schema de tabela IDF divergente')
+    _require(type(table['n_docs']) is int and all(type(v) is int and 1 <= v <= table['n_docs'] for v in table['df'].values()), 'df/N inválidos')
     _require({s['id'] for s in descriptor['training_sources']} == training, 'dados de teste/validação no IDF')
     counts = Counter()
     for source in sources:
@@ -202,4 +316,24 @@ def validate_training_idf(folder, idf_folder):
     _require(descriptor['table_content_sha256'] == identity(body), 'hash da tabela IDF divergente')
     descriptor_body = {k: v for k, v in descriptor.items() if k != 'identity'}
     _require(descriptor['identity'] == table['version'] == identity(descriptor_body), 'identidade de construção IDF divergente')
+    expected_sources = [{k: s[k] for k in ('id', 'revision', 'raw_sha256', 'normalized_sha256')} for s in sources]
+    _require(descriptor['training_sources'] == expected_sources, 'origem/revisão/hash de treino divergente')
+    _require(descriptor['allowed_split'] == 'train' and descriptor['construction_attestation'] is True, 'contrato de ajuste do IDF divergente')
+    _require(descriptor['config'] == read_json(Path(folder)/'config.json'), 'configuração de construção do IDF divergente')
+    _require(descriptor['purpose'] == read_json(Path(folder)/'config.json')['purpose'], 'finalidade de construção IDF divergente')
+    _require(descriptor['input_identity'] == identity([{'id': s['id'], 'text': s['text']} for s in sources]), 'conteúdo de entrada IDF divergente')
+    _require({k: table[k] for k in ('formula', 'tf', 'unknown_df', 'vector_normalization')} == {
+        'formula': 'ln((1+N)/(1+df))+1', 'tf': 'raw_count', 'unknown_df': 0, 'vector_normalization': 'cosine_only'}, 'fórmula/configuração IDF divergente')
+    from hts_core.application.dataset_pipeline import pipeline_descriptor
+    _require(descriptor['pipeline'] == pipeline_descriptor(), 'processamento/modelo de construção IDF difere do ambiente atual; reproduzir no código/ambiente identificado')
+    _require((Path(idf_folder)/'execution.json').is_file(), 'registro de execução IDF ausente')
+    execution = read_json(Path(idf_folder)/'execution.json')
+    manifest = verify_seal(folder)
+    allowed_versions = {manifest['version']}
+    if manifest['metadata']['purpose'] == 'frozen_operational_derivation':
+        allowed_versions.add(manifest['metadata']['parent_version'])
+    _require(execution['dataset_version'] in allowed_versions and execution['serialized_table_sha256'] == digest((Path(idf_folder)/'idf.json').read_bytes()), 'execução/bytes do IDF divergentes')
+    from datetime import datetime
+    datetime.fromisoformat(execution['constructed_utc'])
+    _require(bool(execution['platform']), 'ambiente de execução IDF ausente')
     return {'status': 'training_only_verified', 'sources': len(sources), 'terms': len(counts), 'version': table['version']}
