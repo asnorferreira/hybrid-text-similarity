@@ -1,0 +1,67 @@
+{
+  "schema": "hts-experiment-protocol-1",
+  "revision": 1,
+  "status": "candidate",
+  "dataset": {
+    "version": "fccdffc984dca0b30d9c044ee62bee32eb52b3b4a828fe454e6a17de0602fd26",
+    "idf_identity": "9ddb353e50c050f58cc3417f8a41763867550730e7c18c56851d4f6dd74680c6",
+    "idf_policy": "frozen_training_sources_only_for_all_lexical_experiments; application_provisional_unchanged"
+  },
+  "hypotheses": {
+    "H1": "a fusão lexical + semântica tem F1 macro maior que cada motor isolado (ablação, como A6 e A9).",
+    "H2": "o siamês ajustado tem Spearman maior que o SBERT sem ajuste no teste sintético.",
+    "H3": "o sistema mantém a latência p95 dentro de uma meta sob uma carga definida (metas pendentes)."
+  },
+  "tasks": {
+    "H1": {
+      "unit": "sentence_pair",
+      "target": "proposed_relation_class_not_synthetic_type",
+      "metrics": ["macro_f1", "confusion_matrix"],
+      "blockers": ["mapping_and_baseline_classification_rules_not_adopted", "no_validated_evaluative_class_annotations", "single_dependency_component_per_split_requires_uncertainty_design"],
+      "approved_contract_id": null
+    },
+    "H2": {
+      "unit": "sentence_pair",
+      "target": "proposed_independent_semantic_similarity_0_1",
+      "metrics": ["spearman", "pearson", "mae", "mse", "r2"],
+      "blockers": ["semantic_annotation_contract_not_adopted", "no_independent_semantic_targets", "siamese_architecture_and_base_revision_pending", "single_dependency_component_per_split_requires_uncertainty_design"],
+      "approved_contract_id": null
+    },
+    "H3": {
+      "unit": "request",
+      "target": "latency_and_failure_under_predefined_load",
+      "metrics": ["p50", "p95", "failure_rate"],
+      "blockers": ["load_and_numeric_goal_not_adopted", "sampling_and_hardware_protocol_candidate"],
+      "approved_contract_id": null
+    }
+  },
+  "baselines": [
+    {"name": "E1_tfidf", "implementation": "ComparisonService.compare(mode=lexical)", "output": "sentence_cosine_matrix_and_document_index", "configuration": "core/configs/comparison.json", "model_revision": null, "classification_rule": "pending_for_H1"},
+    {"name": "E2_signature", "implementation": "domain.signature", "output": "blake2b64_sum_and_salient_terms", "configuration": "adapted_top30_tfidf_set", "model_revision": null, "classification_rule": "not_a_standalone_classifier"},
+    {"name": "E3_sbert", "implementation": "adapters.semantic.SemanticEncoder", "output": "raw_cosine_and_max0_operational_cosine", "configuration": "complete_nonoverlapping_windows_content_weighted_pooling", "model_revision": "e8f8c211226b894fcb81acc59f3b34ba3efd5f42", "classification_rule": "pending_for_H1"},
+    {"name": "E4_alignment", "implementation": "domain.hybrid.hungarian", "output": "one_to_one_alignment", "configuration": "unweighted_positive_scores_zero_unmatched", "model_revision": null, "classification_rule": "alignment_not_classifier"},
+    {"name": "fixed_fusion", "implementation": "ComparisonService.compare(mode=hybrid)", "output": "index_and_q5_v2_classes", "configuration": "0.6*max(0,cosine)+0.4*lexical; q5-v2 thresholds", "model_revision": "e8f8c211226b894fcb81acc59f3b34ba3efd5f42", "classification_rule": "q5-v2_application_not_validated_H1_ground_truth"},
+    {"name": "learned_fusion", "implementation": null, "output": "proposed_relation_class_probabilities", "configuration": "pending_features_and_labels", "model_revision": null, "classification_rule": "pending"},
+    {"name": "siamese", "implementation": null, "output": "proposed_semantic_scalar", "configuration": "A7_inspired_adaptation_pending", "model_revision": null, "classification_rule": "not_applicable"}
+  ],
+  "seeds": [20261025],
+  "execution": {"stage": "S5A", "modes": ["preflight", "fixture"], "prediction_splits": ["train", "validation"]},
+  "h3": {
+    "proposal": {"http_p95_seconds": 2.0, "concurrency": 1, "warmups": 3, "measured_requests": 30, "timeout_seconds": 30, "cold_start_processes": 3, "formats": ["txt", "docx", "pdf"], "sentence_counts_per_document": [1, 10, 20]},
+    "adopted_goal_seconds": null,
+    "goal_rationale": "project proposal for interactive local use, not article value or measured capacity; requires adoption before performance execution",
+    "measurement": "separate_engine_core_http_application_end_to_end; monotonic_clock; preserve_failures_and_cold_warm_runs; linear_quantiles",
+    "memory": "S5A fixture tracemalloc Python allocations only; future isolated-process sampled RSS separate from Python/native/GPU peaks"
+  },
+  "training": {
+    "architecture": {"kind": "A7_inspired_shared_sentence_encoder_and_regression_head_proposal", "base_model": "neuralmind/bert-base-portuguese-cased_candidate", "base_revision": null, "pooling": null, "dense_dimensions": null, "dropout": null, "leaky_relu_alpha": null, "alignment": "independently_annotated_sentence_pairs; no_prediction_selected_pairs", "long_sentence_policy": null},
+    "reference_parameters": {"source": "A7 Table1 PDFpage9 printed8; reference only, not adopted", "epochs": 8, "learning_rate": 0.000002, "optimizer": "Adam", "max_tokens": 212, "weight_decay": 0.00001, "loss": "MSELoss"},
+    "project_parameters": {"batch_size": null, "candidate_selection": "proposed_validation_MSE_then_earliest_epoch; must_be_adopted", "early_stopping": "pending_budget_and_annotation_design", "weights_export": "future_state_dict_with_bound_manifest_no_weights_created_S5A"},
+    "budget": null,
+    "selection": null,
+    "stop": null,
+    "attempts": 1,
+    "status": "blocked"
+  },
+  "test_policy": {"performance_access": "closed", "release": "requires_later_stage_and_bound_protocol_target_models_config_metrics_seeds_repetitions_authorization"}
+}

@@ -46,10 +46,12 @@ def audit(event, args):
         raise RuntimeError('domain external IO: ' + event)
 sys.dont_write_bytecode = True
 sys.addaudithook(audit)
-from hts_core.domain import lexical, metrics, preprocess, signature, strings, text, vectors, hybrid
+from hts_core.domain import lexical, metrics, preprocess, signature, strings, text, vectors, hybrid, experiments
 v = lexical.ReferenceIdf(2, {'casa': 1}).vector(['casa'])
 assert lexical.cosine(v, v) == 1
 assert metrics.mse([1, 2], [2, 2]) == 0.5
+assert experiments.classification_report(['a'], ['a'], ['a'])['macro_f1'] == 1
+assert experiments.validate_outputs([.5], 1, 'H2') == [.5]
 assert preprocess.semantic_text(' casa  azul ') == 'casa azul'
 assert signature.signature(['casa']) == signature.signature(['casa', 'casa'])
 assert strings.ngram_dice('casa', 'casa') == 1
