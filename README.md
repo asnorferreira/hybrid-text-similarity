@@ -1,7 +1,17 @@
 # hybrid-text-similarity
 
-<!-- S5A-CURRENT -->
-## Estado vigente — complemento S5A, 2026-10-25
+<!-- S5B-CURRENT -->
+## Estado vigente — S5B, 2026-10-25
+
+Engenharia e campanha limitada S5B concluídas no alcance verificado; execução real bloqueada por memória disponível. Fluxo separado de treino, sem ativação na aplicação.
+
+[protocolo](docs/10-protocolo-s5b.md) | [relatório](TCC/evidencias/codex-s5b-01/relatorio-final.md) | [matriz](TCC/evidencias/codex-s5b-01/matriz-entrega.md) | [checkpoint](TCC/evidencias/codex-s5b-01/checkpoint.md)
+
+Os registros anteriores abaixo descrevem os estados de suas respectivas etapas; não são bloqueios vigentes por omissão desta S5B.
+<!-- /S5B-CURRENT -->
+
+<!-- S5A-HISTORICAL -->
+## Registro histórico — complemento S5A, 2026-10-25
 
 Complemento técnico S5A concluído no alcance independente: protocolo, vínculo IDF e importação corrigidos e verificados. S4 permanece encerrada operacionalmente; nenhum treinamento, calibração, carga ou avaliação preditiva do teste. Contratos científicos candidatos não significam liberação de treinamento.
 
@@ -10,7 +20,7 @@ Schemas de preparação corrigidos; protocolo original preservado e suplemento c
 [protocolo](docs/08-protocolo-s5a.md) | [relatório](TCC/evidencias/codex-s5a-complemento-01/relatorio-final.md) | [matriz](TCC/evidencias/codex-s5a-complemento-01/matriz-prontidao.md) | [checkpoint](TCC/evidencias/codex-s5a-complemento-01/checkpoint.md) | [S5B](docs/09-prompt-s5b.md)
 
 S5A original preservada como histórica em documentacao-anterior.zip na pasta de evidências do complemento e nas evidências codex-s5a-01. Registros abaixo são históricos das suas execuções; não atribuir a eles as correções atuais. Entrega S4: kit base e adendo-retomada-final-02.zip definitivo, com dataset separado; adendo01 é tentativa anterior preservada. ZIPs antigos não foram regenerados.
-<!-- /S5A-CURRENT -->
+<!-- /S5A-HISTORICAL -->
 
 <!-- S4-CLOSURE-CURRENT -->
 ## Registro histórico — fechamento dirigido S4, 2026-10-25
