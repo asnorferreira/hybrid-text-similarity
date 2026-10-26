@@ -306,9 +306,15 @@ def test_keyboard_interrupt_keeps_initial_safe_checkpoint(tmp_path):
 
 def test_disk_limit_does_not_select_unsaved_candidate(tmp_path):
     model=tiny(); opt=torch.optim.Adam(model.parameters()); b=budget()
-    weight_bytes=sum(p.numel()*p.element_size() for p in model.state_dict().values())
-    b['checkpoint_disk_limit_bytes']=weight_bytes*4+1024**2+1
-    result=train_loop(model,opt,rows(4,'train'),rows(3,'validation'),b,{},tmp_path/'run',17,resources=resources)
+    b['checkpoint_disk_limit_bytes']=2*1024**2
+    calls=0
+    def disk_growth():
+        nonlocal calls
+        calls+=1
+        if calls==2:
+            (tmp_path/'run/unknown-preserve.bin').write_bytes(b'x'*1024**2)
+        return resources()
+    result=train_loop(model,opt,rows(4,'train'),rows(3,'validation'),b,{},tmp_path/'run',17,resources=disk_growth)
     assert result['status'] == 'partial' and result['stop_reason'] == 'checkpoint_disk_limit'
     assert result['best_checkpoint'] is None and result['best_mse'] is None
     assert result['unpersisted_best_candidate']['mse'] >= 0

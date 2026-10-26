@@ -44,9 +44,21 @@ def restore_rng(state):
     torch.set_rng_state(state['torch'])
 
 
-def save_training_checkpoint(path, model, optimizer, state, bindings):
+def validate_resume_claim(path, claim):
+    from hts_core.adapters.checkpoint_retention import safe_path
+    cp=safe_path(path)
+    root=safe_path(Path(claim['first_destination'])/'training')
+    manifest=json.loads((cp/'manifest.json').read_text(encoding='utf-8'))
+    if cp.parent != root or manifest.get('ownership',{}).get('root') != str(root):
+        raise ValueError('resume checkpoint differs from claimed logical execution root')
+    if manifest.get('bindings') != claim['bindings']:
+        raise ValueError('resume checkpoint differs from claimed bindings')
+
+
+def save_training_checkpoint(path, model, optimizer, state, bindings, ownership=None):
+    from hts_core.adapters.checkpoint_retention import safe_path
     started=time.monotonic()
-    path = Path(path)
+    path = safe_path(path)
     if path.exists():
         raise FileExistsError('checkpoint destination already exists')
     if any(p.grad is not None for p in model.parameters()):
@@ -60,13 +72,23 @@ def save_training_checkpoint(path, model, optimizer, state, bindings):
                 'safe_boundary':'after_optimizer_step_and_zero_grad; no pending accumulation', 'scheduler':None,
                 'serialization':'safetensors weights; own local torch state, weights_only=True on load; hashes are integrity not authentication'}
     manifest['checkpoint_write_seconds']=time.monotonic()-started
+    if ownership is not None:
+        manifest['ownership']=ownership
+    atomic_json(temp/'manifest.json',manifest)
+    before_rng=rng_state()
+    try:
+        load_training_checkpoint(temp,model,optimizer,bindings)
+    finally:
+        restore_rng(before_rng)
+    manifest['checkpoint_write_seconds']=time.monotonic()-started
     atomic_json(temp/'manifest.json',manifest)
     os.replace(temp,path)
     return manifest
 
 
 def load_training_checkpoint(path, model, optimizer, bindings):
-    path = Path(path)
+    from hts_core.adapters.checkpoint_retention import safe_path
+    path = safe_path(path)
     manifest = json.loads((path/'manifest.json').read_text(encoding='utf-8'))
     if (manifest.get('schema') != 'hts-training-checkpoint-1' or manifest.get('bindings') != bindings
             or manifest.get('bindings_identity') != identity(bindings)):
@@ -74,6 +96,7 @@ def load_training_checkpoint(path, model, optimizer, bindings):
     if set(manifest['files']) != {'weights.safetensors','local-state.pt'}:
         raise ValueError('checkpoint components missing or unknown')
     for name, expected in manifest['files'].items():
+        safe_path(path/name)
         if file_hash(path/name) != expected:
             raise ValueError('checkpoint bytes altered: '+name)
     model.load_state_dict(load_file(str(path/'weights.safetensors')), strict=True)
@@ -106,7 +129,8 @@ def train_loop(model, optimizer, train, validation, budget, bindings, destinatio
     actual = [id(p) for group in optimizer.param_groups for p in group['params']]
     if expected != set(actual) or len(actual) != len(set(actual)):
         raise ValueError('optimizer parameters differ from trainable model parameters')
-    out = Path(destination)
+    from hts_core.adapters.checkpoint_retention import safe_path
+    out = safe_path(destination)
     out.mkdir(parents=True, exist_ok=False)
     state = {'epoch':0,'cursor':0,'order':[], 'updates':0,'history':[], 'best_mse':None,'best_checkpoint':None,
              'bad_epochs':0,'elapsed_seconds':0.,'epoch_squared_error':0.,'epoch_samples':0,'status':'running',
@@ -116,6 +140,10 @@ def train_loop(model, optimizer, train, validation, budget, bindings, destinatio
         if state['status'] not in ('interrupted','running'):
             raise ValueError('terminal budget/patience/completed run cannot extend itself by resume')
         state['status']='running'
+    from hts_core.adapters.checkpoint_retention import CheckpointRetention
+    retention=CheckpointRetention(out,bindings,resume)
+    state['checkpoint_retention']=retention.owner
+    state['elapsed_seconds']=max(state['elapsed_seconds'],retention.record.get('logical_elapsed_seconds',0.))
     prior_elapsed = state['elapsed_seconds']
     persisted_best={'checkpoint':state['best_checkpoint'],'mse':state['best_mse']}
     started = clock()
@@ -136,26 +164,23 @@ def train_loop(model, optimizer, train, validation, budget, bindings, destinatio
         return None
 
     def checkpoint_path():
-        n = f"epoch-{state['epoch']:03}-cursor-{state['cursor']:05}-update-{state['updates']:06}"
-        sequence=sum(1 for p in out.glob('epoch-*') if p.is_dir())
-        return out/(n+f'-snapshot-{sequence:04}')
+        return retention.path(state)
 
     def checkpoint():
         state['elapsed_seconds']=elapsed()
         cp = checkpoint_path()
-        weights_size = sum(p.numel()*p.element_size() for p in model.state_dict().values())
-        used = sum(p.stat().st_size for p in out.rglob('*') if p.is_file())
-        if used+weights_size*4+1024**2 > budget['checkpoint_disk_limit_bytes']:
+        if not retention.fits(model,budget['checkpoint_disk_limit_bytes']):
             state['status']='partial'; state['stop_reason']='checkpoint_disk_limit'
             if state['best_checkpoint'] != persisted_best['checkpoint']:
                 state['unpersisted_best_candidate']={'checkpoint':state['best_checkpoint'],'mse':state['best_mse']}
                 state['best_checkpoint']=persisted_best['checkpoint']; state['best_mse']=persisted_best['mse']
             atomic_json(out/'progress.json',state)
             return None
-        save_training_checkpoint(cp,model,optimizer,state,bindings)
+        retention.publish(cp,model,optimizer,state,budget['checkpoint_disk_limit_bytes'])
         persisted_best.update(checkpoint=state['best_checkpoint'],mse=state['best_mse'])
-        atomic_json(out/'latest.json',{'checkpoint':str(cp.resolve()),'manifest_sha256':file_hash(cp/'manifest.json')})
         state['elapsed_seconds']=elapsed()
+        retention.record['logical_elapsed_seconds']=state['elapsed_seconds']
+        retention.commit()
         return cp
 
     try:
