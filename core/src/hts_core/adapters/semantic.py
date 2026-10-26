@@ -37,7 +37,7 @@ def prepare_cache(path=None):
     from huggingface_hub import HfApi, snapshot_download
     target = Path(path) if path else cache_path()
     info = HfApi().model_info(MODEL, revision=REVISION)
-    if info.sha != REVISION or info.card_data.license != 'apache-2.0':
+    if info.sha != REVISION or info.card_data is None or info.card_data.license != 'apache-2.0':
         raise ResourceUnavailable('revisão/licença do modelo diverge do contrato')
     snapshot_download(MODEL, revision=REVISION, local_dir=target, allow_patterns=FILES)
     hashes = {name: digest(target / name) for name in FILES}
@@ -50,6 +50,7 @@ def prepare_cache(path=None):
 class SemanticEncoder:
     def __init__(self, path=None):
         from sentence_transformers import SentenceTransformer
+        from sentence_transformers.base.modules.transformer import Transformer
         import torch
         torch.set_num_threads(int(os.environ.get('HTS_TORCH_THREADS', '2')))
         target = Path(path) if path else cache_path()
@@ -65,7 +66,10 @@ class SemanticEncoder:
             raise ResourceUnavailable('cache semântico ausente, inválido ou incompatível') from exc
         self.model.eval()
         self.tokenizer = self.model.tokenizer
-        self.limit = min(self.model.max_seq_length, self.model[0].auto_model.config.max_position_embeddings,
+        transformer = self.model[0]
+        if not isinstance(transformer, Transformer):
+            raise ResourceUnavailable('pinned encoder has no Transformer module')
+        self.limit = min(self.model.max_seq_length, transformer.auto_model.config.max_position_embeddings,
                          self.tokenizer.model_max_length)
         self.special = self.tokenizer.num_special_tokens_to_add(pair=False)
         self.capacity = self.limit - self.special

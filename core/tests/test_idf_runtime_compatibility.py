@@ -1,3 +1,4 @@
+from typing import Any, cast
 from copy import deepcopy
 
 import pytest
@@ -30,4 +31,4 @@ def test_lock_permission_never_accepts_changed_lexical_dependencies(change):
 
 def test_numeric_permission_rejected():
     with pytest.raises(ValueError,match='boolean'):
-        runtime_lexical_compatibility(fixture_pipeline(),fixture_pipeline(),1)
+        runtime_lexical_compatibility(fixture_pipeline(),fixture_pipeline(),cast(Any, 1))

@@ -62,6 +62,7 @@ def test_retains_latest_and_selected_with_loadable_states(tmp_path):
     initial=publish(m,model,opt,0)
     first=publish(m,model,opt,1,'self')
     assert not initial.exists()
+    last = None
     for epoch in range(2,8):
         last=publish(m,model,opt,epoch,str(first))
         assert {p.name for p in m.root.iterdir() if p.is_dir()}=={first.name,last.name}
@@ -69,6 +70,7 @@ def test_retains_latest_and_selected_with_loadable_states(tmp_path):
             s=runtime.load_training_checkpoint(p,model,opt,m.bindings)
             assert s['epoch'] in (1,epoch)
         assert Path(read(m.root/'latest.json')['checkpoint']).is_dir()
+    assert last is not None
     improved=publish(m,model,opt,8,'self')
     assert not first.exists() and not last.exists()
     assert [p for p in m.root.iterdir() if p.is_dir()]==[improved]
@@ -147,6 +149,8 @@ def test_failed_transition_preserves_previous_good_checkpoint(tmp_path,monkeypat
 def test_rotation_preserves_unknown_or_conflicting_directories(tmp_path,kind):
     m,model,opt=manager(tmp_path)
     old=publish(m,model,opt,0)
+    unknown = None
+    external = None
     if kind=='unknown':
         unknown=m.root/'epoch-unknown'; unknown.mkdir(); (unknown/'keep').write_text('preserve')
     elif kind=='tamper':
@@ -170,11 +174,14 @@ def test_rotation_preserves_unknown_or_conflicting_directories(tmp_path,kind):
         assert old.is_dir() and (external/'keep').read_text()=='preserve'
         return
     publish(m,model,opt,1,'self')
-    if kind=='unknown': assert (unknown/'keep').read_text()=='preserve'
+    if kind=='unknown':
+        assert unknown is not None
+        assert (unknown/'keep').read_text()=='preserve'
     else:
         assert old.is_dir()
         assert m.record['ledger'][-1]['result']=='preserved_conflict'
-    if kind in ('external','symlink'): assert external.is_dir()
+    if kind in ('external','symlink'):
+        assert external is not None and external.is_dir()
 
 
 def test_link_in_destination_rejected_before_creation(tmp_path):

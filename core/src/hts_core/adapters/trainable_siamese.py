@@ -1,3 +1,6 @@
+from contextlib import nullcontext
+from typing import TypedDict
+
 import torch
 from torch import nn
 import torch.nn.functional as F
@@ -46,14 +49,51 @@ class Siamese(nn.Module):
     def __init__(self, encoder, dimension=384, hidden=128, dropout=.1, alpha=.1, epsilon=1e-5, train_encoder=True):
         super().__init__()
         self.encoder = encoder
+        self.train_encoder = train_encoder
         for parameter in encoder.parameters():
             parameter.requires_grad_(train_encoder)
+        if not train_encoder:
+            encoder.eval()
         self.head = nn.Sequential(nn.Linear(2*dimension, hidden), nn.LayerNorm(hidden,eps=epsilon),
                                   nn.LeakyReLU(alpha), nn.Dropout(dropout), nn.Linear(hidden,1), nn.Sigmoid())
 
+    def train(self, mode=True):
+        super().train(mode)
+        if not self.train_encoder:
+            self.encoder.eval()
+        return self
+
     def forward(self, source_text, suspect_text):
-        u, v = self.encoder(source_text), self.encoder(suspect_text)
+        with nullcontext() if self.train_encoder else torch.no_grad():
+            u, v = self.encoder(source_text), self.encoder(suspect_text)
         return self.head(torch.cat((torch.abs(u-v),u*v))).reshape(())
+
+
+class ParameterInfo(TypedDict):
+    shape: list[int]
+    count: int
+
+
+class ParameterProfile(TypedDict):
+    trainable: dict[str, ParameterInfo]
+    trainable_count: int
+    frozen_count: int
+
+
+def parameter_profile(model) -> ParameterProfile:
+    trainable: dict[str, ParameterInfo] = {name:ParameterInfo(shape=list(p.shape),count=p.numel())
+                 for name,p in model.named_parameters() if p.requires_grad}
+    return ParameterProfile(trainable=trainable,trainable_count=sum(v['count'] for v in trainable.values()),
+                frozen_count=sum(p.numel() for p in model.parameters() if not p.requires_grad))
+
+
+def validate_parameter_profile(model, spec):
+    profile = parameter_profile(model)
+    if 'trainable_parameters' in spec:
+        actual = {name:row['shape'] for name,row in profile['trainable'].items()}
+        if actual != spec['trainable_parameters'] or profile['trainable_count'] != spec['trainable_parameter_count']:
+            raise ValueError('trainable parameters differ from adopted protocol')
+    return profile
 
 
 def load_local_trainable(config):
@@ -61,5 +101,7 @@ def load_local_trainable(config):
     adapter = SemanticEncoder()
     encoder = WindowEncoder(adapter.model, adapter.tokenizer, adapter.limit)
     spec = config['siamese']
-    return Siamese(encoder, spec['embedding_dimension'], spec['dense_dimensions'][1], spec['dropout'],
-                   spec['leaky_relu_alpha'], spec['layer_norm_epsilon'], spec['encoder_trainable']), adapter.identity
+    model = Siamese(encoder, spec['embedding_dimension'], spec['dense_dimensions'][1], spec['dropout'],
+                    spec['leaky_relu_alpha'], spec['layer_norm_epsilon'], spec['encoder_trainable'])
+    validate_parameter_profile(model,spec)
+    return model, adapter.identity

@@ -1,5 +1,3 @@
-"""Compara produção com constantes conferidas no PDF e recálculos independentes."""
-
 import argparse
 import json
 from decimal import Decimal, localcontext

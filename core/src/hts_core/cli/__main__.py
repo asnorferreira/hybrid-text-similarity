@@ -14,6 +14,8 @@ def _download(args: argparse.Namespace) -> None:
     from hts_core.adapters.refcorpus import download_corpus, manifest_hash
 
     config = yaml.safe_load(Path(args.config).read_text(encoding="utf-8"))
+    if not isinstance(config, dict) or not isinstance(config.get('titles'), list):
+        raise ValueError('corpus config requires a titles list')
     manifest = download_corpus(config["titles"], Path(args.out))
     print(f"{len(manifest['documents'])} artigos baixados; versão {manifest_hash(manifest)}")
 

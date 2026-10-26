@@ -96,6 +96,7 @@ def test_symmetry_shared_encoder_gradients_and_eval():
     assert a.shape == torch.Size([]) and 0 < a.item() < 1
     torch.testing.assert_close(a,b,rtol=0,atol=0)
     a.backward()
+    assert model.encoder.embedding.weight.grad is not None
     assert model.encoder.embedding.weight.grad[0].abs().sum() > 0
     assert model.encoder.embedding.weight.grad[1].abs().sum() > 0
     assert list(model._modules) == ['encoder','head']
@@ -140,6 +141,7 @@ def test_complete_window_coverage_with_local_tokenizer_only():
     value=encoder('a b a b a b a')
     assert encoder.diagnostics[-1] == {'tokens':7,'window_tokens':[3,3,1],'covered':7}
     value[0].backward()
+    assert encoder.model.embedding.weight.grad is not None
     assert encoder.model.embedding.weight.grad.abs().sum() > 0
 
 

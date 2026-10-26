@@ -9,6 +9,12 @@ from hts_core.adapters.dataset_mongo import import_version
 from hts_core.adapters.dataset_store import canonical, read_jsonl, verify_seal
 
 
+def require_document(value):
+    if not isinstance(value, dict):
+        raise AssertionError('expected Mongo document is absent')
+    return value
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--dataset', required=True)
@@ -27,7 +33,7 @@ def main():
             assert database.datasets.count_documents({'_id': first['version']}) == 1
             pair = read_jsonl(Path(args.dataset)/'pairs.jsonl')[0]
             key = first['version'] + ':' + pair['id']
-            doc = database.dataset_pairs.find_one({'_id': key})
+            doc = require_document(database.dataset_pairs.find_one({'_id': key}))
             database.dataset_pairs.update_one({'_id': key}, {'$set': {'sha256': 'deliberately-corrupt-development-check'}})
             try:
                 try:
@@ -39,7 +45,7 @@ def main():
             finally:
                 database.dataset_pairs.update_one({'_id': key}, {'$set': {'sha256': doc['sha256']}})
             assert conflict
-            assert database.datasets.find_one({'_id': first['version']})['state'] == 'integrity_conflict'
+            assert require_document(database.datasets.find_one({'_id': first['version']}))['state'] == 'integrity_conflict'
             database.dataset_pairs.update_one({'_id': key}, {'$set': {'pair': {**doc['pair'], 'text': doc['pair']['text'] + ' deliberate test corruption'}}})
             try:
                 try:
@@ -49,7 +55,7 @@ def main():
                 else:
                     body_conflict = False
                 assert body_conflict
-                assert database.datasets.find_one({'_id': first['version']})['state'] == 'integrity_conflict'
+                assert require_document(database.datasets.find_one({'_id': first['version']}))['state'] == 'integrity_conflict'
             finally:
                 database.dataset_pairs.update_one({'_id': key}, {'$set': {'pair': doc['pair'], 'sha256': doc['sha256']}})
             final = import_version(args.dataset, database)
@@ -83,7 +89,7 @@ def main():
                 raise AssertionError('interrupção controlada não ocorreu')
             partial_count = partial_database.dataset_pairs.count_documents({'version': first['version']})
             assert partial_count == 3
-            assert partial_database.datasets.find_one({'_id': first['version']})['state'] == 'importing'
+            assert require_document(partial_database.datasets.find_one({'_id': first['version']}))['state'] == 'importing'
             resumed = import_version(args.dataset, partial_database)
             assert resumed['pairs'] == first['pairs']
             after = {name: {c: client[name][c].count_documents({}) for c in ('documents', 'comparisons', 'reports')}

@@ -234,7 +234,7 @@ def test_freeze_rejects_self_hashed_orphan_accept(llm_dataset, tmp_path):
 class MemoryCollection:
     def __init__(self):
         self.rows = {}
-        self.fail_after = None
+        self.fail_after: int | None = None
 
     def find_one(self, query):
         return next((deepcopy(r) for r in self.rows.values() if all(r.get(k) == v for k, v in query.items())), None)

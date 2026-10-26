@@ -69,9 +69,11 @@ def operational_fixture(tmp_path_factory):
     records = []
     for number, s in enumerate(selected.values()):
         inputs = [{'id': r['id'], 'text': r['text']} for r in s['sentences'][:2]]
+        parent = None
         for key, method in [('direct', 'llm_direct'), ('en', 'translate_to_en'), ('back', 'translate_to_pt'), ('c6', 'phrase_guided_rewrite')]:
             given, context = inputs, None
             if key == 'back':
+                assert parent is not None
                 given = [{'id': r['source_sentence_ids'][0], 'text': r['text']} for r in parent['structured']['sentences']]
                 context = {'parent_cache_key': parent['cache_key']}
             if key == 'c6':

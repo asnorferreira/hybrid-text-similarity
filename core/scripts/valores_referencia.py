@@ -1,8 +1,3 @@
-"""Conferência auxiliar: imprime o valor obtido pelo código para as entradas de test_reference_values.py.
-
-Não é fonte de valor esperado; os esperados são constantes do teste, tiradas do PDF e do mapa.
-"""
-
 from tests.domain import test_reference_values as ref
 
 from hts_core.domain.lexical import a1_tfidf_vectors, cosine, idf_a1

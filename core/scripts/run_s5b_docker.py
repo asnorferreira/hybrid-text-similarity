@@ -1,4 +1,3 @@
-"""Windows host launcher; all experiment operations execute in Docker."""
 import argparse
 from datetime import datetime, timezone
 import json
@@ -27,7 +26,7 @@ def stack_state():
 
 
 def main():
-    parser = argparse.ArgumentParser(description=__doc__)
+    parser = argparse.ArgumentParser(description='Executar S5B em Docker.')
     parser.add_argument('operation', choices=('readiness','run'))
     parser.add_argument('--task',choices=('H1','H2'),required=True)
     parser.add_argument('--destination',required=True,help='new relative directory under core/artifacts/s5b-docker-01')

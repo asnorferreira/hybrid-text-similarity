@@ -5,6 +5,7 @@ import json
 from pathlib import Path
 from time import perf_counter
 import tracemalloc
+from typing import Any
 
 from hts_core.adapters.dataset_store import digest, identity, read_json, read_jsonl, verify_seal
 from hts_core.domain.experiments import ModelInput, dependency_components, require_split
@@ -62,7 +63,8 @@ def annotation_examples(bundle, dataset, config, split, audit_only=False):
         raise ValueError('annotations.records: lista exigida')
     pairs = {p['id']: p for p in dataset['pairs']}
     sources = {s['id']: s for s in dataset['sources']}
-    seen, outputs, counts = set(), [], {'labeled': 0, 'ambiguous': 0, 'excluded': 0, 'other_split': 0}
+    seen, outputs = set(), []
+    counts: dict[str, Any] = {'labeled': 0, 'ambiguous': 0, 'excluded': 0, 'other_split': 0}
     text_pairs, selected_text_pairs = {}, set()
     by_split = {s: {'labeled': 0, 'ambiguous': 0, 'excluded': 0} for s in ('train', 'validation', 'test')}
     for row in bundle['records']:

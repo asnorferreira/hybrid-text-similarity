@@ -124,7 +124,7 @@ class CheckpointRetention:
         cp=safe_path(cp)
         if cp != self.path(state):
             raise ValueError('checkpoint destination differs from owned inventory')
-        entry={'path':str(cp),'status':'pending'}
+        entry: dict[str, str | int] = {'path':str(cp),'status':'pending'}
         self.record['entries'].append(entry)
         self.commit()
         manifest=save_training_checkpoint(cp,model,optimizer,state,self.bindings,ownership=self.owner)

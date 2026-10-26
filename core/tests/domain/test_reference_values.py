@@ -1,8 +1,3 @@
-"""Valores de referência do mapa (docs/02), conferidos no PDF; a página de cada um está em TCC/03.
-
-Tolerância absoluta = meia unidade da última casa da referência, publicada ou recalculada.
-"""
-
 import numpy as np
 import pytest
 

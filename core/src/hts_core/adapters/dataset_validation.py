@@ -15,6 +15,7 @@ def _require(condition, reason):
 
 def validate_data(folder, sealed=True):
     folder = Path(folder)
+    manifest = {}
     if sealed:
         manifest = verify_seal(folder)
     config = read_json(folder/'config.json')

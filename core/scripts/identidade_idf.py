@@ -1,5 +1,3 @@
-"""Proposta de identidade complementar; não constrói nem substitui o IDF histórico."""
-
 import argparse
 import hashlib
 import importlib.metadata
@@ -43,7 +41,10 @@ def describe() -> dict:
     for entry in manifest["documents"]:
         if sha256_text((corpus / entry["file"]).read_text(encoding="utf-8")) != entry["sha256"]:
             raise ValueError(f"Hash raw divergente: {entry['file']}")
-    model_root = Path(importlib.util.find_spec(SPACY_MODEL).origin).parent
+    model_spec = importlib.util.find_spec(SPACY_MODEL)
+    if model_spec is None or model_spec.origin is None:
+        raise ImportError('spaCy model module has no filesystem origin')
+    model_root = Path(model_spec.origin).parent
     assets = {p.relative_to(model_root).as_posix(): file_hash(p)
               for p in sorted(model_root.rglob("*"))
               if p.is_file() and "__pycache__" not in p.parts and p.suffix != ".pyc"}
@@ -87,7 +88,7 @@ def describe() -> dict:
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description=__doc__)
+    parser = argparse.ArgumentParser(description='Inspecionar a identidade complementar do IDF histórico.')
     parser.add_argument("--out", type=Path, required=True)
     args = parser.parse_args()
     report = describe()

@@ -1,4 +1,5 @@
 from copy import deepcopy
+from typing import Any, cast
 from dataclasses import asdict
 import json
 from pathlib import Path
@@ -167,7 +168,7 @@ def test_model_input_has_only_text_and_predictor_never_receives_metadata():
     with pytest.raises(ValueError, match='metadados'):
         run_fixture([{'source_text': 'A', 'suspect_text': 'B', 'target': 1, 'id': 'secret'}], lambda **kw: 1)
     with pytest.raises(TypeError):
-        ModelInput('A', 'B', target=1)
+        cast(Any, ModelInput)('A', 'B', target=1)
 
 
 @pytest.mark.parametrize('field,value', [('seeds', [True]), ('seeds', [1, 1]), ('status', 'approved'), ('revision', 0)])

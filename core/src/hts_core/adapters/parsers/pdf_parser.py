@@ -4,6 +4,7 @@ import pdfplumber
 from pdfminer.pdfdocument import PDFPasswordIncorrect, PDFTextExtractionNotAllowed
 from pdfminer.pdfexceptions import PDFException
 from pdfminer.pdfinterp import PDFResourceManager
+from pdfminer.pdffont import PDFSimpleFont
 from pdfminer.pdftypes import list_value, resolve1
 from pdfminer.psparser import PSLiteral, literal_name
 from pdfplumber.utils.exceptions import PdfminerException
@@ -41,7 +42,7 @@ def _default_winansi_soft_hyphen(spec) -> bool:
 class _TextResourceManager(PDFResourceManager):
     def get_font(self, objid, spec):
         font = super().get_font(objid, spec)
-        if _default_winansi_soft_hyphen(spec) and font.cid2unicode.get(173) == " ":
+        if isinstance(font, PDFSimpleFont) and _default_winansi_soft_hyphen(spec) and font.cid2unicode.get(173) == " ":
             # PDF 32000-1:2008, D.2 nota 5: WinAnsi 255 octal é hífen suave.
             font.cid2unicode = {**font.cid2unicode, 173: "\u00ad"}
         return font

@@ -1,5 +1,3 @@
-"""Os 7 algoritmos do A4 (Eqs. 1 a 7). Parâmetros que o artigo não dá estão em TCC/03."""
-
 from collections.abc import Iterable
 
 from hts_core.domain.lexical import cosine, term_frequencies

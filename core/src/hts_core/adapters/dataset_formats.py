@@ -15,6 +15,13 @@ from hts_core.adapters.dataset_store import digest, read_jsonl, seal, verify_sea
 from hts_core.adapters.parsers import parse_document
 
 
+def font_glyphs(font):
+    glyphs = font.face.charToGlyph
+    if glyphs is None:
+        raise ValueError('font glyph map is unavailable')
+    return glyphs
+
+
 def render(text, kind):
     if kind == 'txt':
         return text.encode('utf-8'), {'encoding': 'UTF-8 without BOM', 'newline': 'LF'}
@@ -41,7 +48,7 @@ def render(text, kind):
     if digest(font_path.read_bytes()) != expected_font:
         raise ValueError('hash da fonte Unicode divergente')
     font = TTFont('HTSDatasetNotoSans', str(font_path))
-    missing = sorted({ord(c) for c in text if not c.isspace() and ord(c) not in font.face.charToGlyph})
+    missing = sorted({ord(c) for c in text if not c.isspace() and ord(c) not in font_glyphs(font)})
     fallback = None
     arabic = None
     if missing:
@@ -49,13 +56,13 @@ def render(text, kind):
         if digest(fallback_path.read_bytes()) != '568d44ed35df4ffdd53ce99dab039b2c0b60c291847574e9b46f50415c47ce7b':
             raise ValueError('hash da fonte CJK divergente')
         fallback = TTFont('HTSDatasetNotoCJK', str(fallback_path))
-        missing = [c for c in missing if c not in fallback.face.charToGlyph]
+        missing = [c for c in missing if c not in font_glyphs(fallback)]
         if missing:
             arabic_path = font_path.with_name('IBMPlexSansArabic-Regular.ttf')
             if digest(arabic_path.read_bytes()) != '6f611412270a132bbac838da9259d4c68569b4175f3b3b8fa3fa36a30b56dab9':
                 raise ValueError('hash da fonte árabe divergente')
             arabic = TTFont('HTSDatasetNotoArabic', str(arabic_path))
-            missing = [c for c in missing if c not in arabic.face.charToGlyph]
+            missing = [c for c in missing if c not in font_glyphs(arabic)]
             if missing:
                 raise ValueError('fontes PDF não cobrem todos os caracteres: ' + ','.join(f'U+{c:04X}' for c in missing))
             pdfmetrics.registerFont(arabic)
@@ -68,9 +75,9 @@ def render(text, kind):
         from itertools import groupby
         parts = []
         def font_for(char):
-            if char.isspace() or ord(char) in font.face.charToGlyph:
+            if char.isspace() or ord(char) in font_glyphs(font):
                 return None
-            return 'HTSDatasetNotoCJK' if ord(char) in fallback.face.charToGlyph else 'HTSDatasetNotoArabic'
+            return 'HTSDatasetNotoCJK' if ord(char) in font_glyphs(fallback) else 'HTSDatasetNotoArabic'
         for font_name, chars in groupby(text, key=font_for):
             part = escape(''.join(chars))
             parts.append('<font name="' + font_name + '">' + part + '</font>' if font_name else part)

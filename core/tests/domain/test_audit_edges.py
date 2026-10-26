@@ -1,3 +1,4 @@
+from typing import Any, cast
 import numpy as np
 import pytest
 
@@ -56,7 +57,7 @@ def test_a3_reference_refuses_unresolved_ties_empty_denominator_and_implicit_dir
     with pytest.raises(ValueError, match="denominador vazio"):
         term_difference([], ["a"], 0, 1, direction="doc1_minus_doc2")
     with pytest.raises(TypeError):
-        term_difference(["a"], ["b"], 100, 200)
+        cast(Any, term_difference)(["a"], ["b"], 100, 200)
 
 
 @pytest.mark.parametrize("delta,size,result", [(.099, 110, "muito_similar"), (.1, 110, "relacionado"),

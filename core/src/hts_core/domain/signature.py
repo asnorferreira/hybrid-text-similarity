@@ -1,5 +1,3 @@
-"""E2: termos salientes e assinatura do documento (A3, seções 6 e 7)."""
-
 import hashlib
 from collections.abc import Iterable, Mapping
 

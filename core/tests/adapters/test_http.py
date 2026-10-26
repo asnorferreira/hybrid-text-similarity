@@ -1,3 +1,4 @@
+from tests.http_support import json_object
 import io
 import json
 from concurrent.futures import ThreadPoolExecutor
@@ -53,7 +54,7 @@ def test_http_rejects_bad_contract_and_ground_truth(services):
     for fixture in json.loads((SHARED / 'requests.json').read_text(encoding='utf-8'))['invalid']:
         response = client.post('/v1/compare', json=fixture)
         assert response.status_code == 400
-        assert response.json['state'] == 'invalid_input'
+        assert json_object(response)['state'] == 'invalid_input'
 
 
 def test_real_model_flow_and_best_pair_reuse(services):
@@ -61,8 +62,10 @@ def test_real_model_flow_and_best_pair_reuse(services):
     response = client.post('/v1/compare', json={'contract_version': '1.0', 'source': {'text': 'A pesquisa compara textos.'},
                           'suspect': {'text': 'A pesquisa compara textos. A pesquisa compara textos.'}})
     assert response.status_code == 200
-    result = ComparisonResult.model_validate(response.json)
+    result = ComparisonResult.model_validate(json_object(response))
     assert result.state == 'calculated'
+    assert result.matches is not None and result.alignment is not None
+    assert result.metadata.model is not None
     assert [m.source for m in result.matches] == [0, 0]
     assert [m.decision.label for m in result.matches] == ['copia_exata', 'copia_exata']
     assert len(result.alignment.pairs) == 1 and len(result.alignment.unmatched_suspect) == 1
@@ -74,20 +77,22 @@ def test_missing_model_hybrid_unavailable_but_separate_lexical(services):
     client = create_app(services[1]).test_client()
     payload = {'contract_version': '1.0', 'source': {'text': 'Pesquisa textual.'}, 'suspect': {'text': 'Pesquisa textual.'}}
     response = client.post('/v1/compare', json=payload)
-    assert response.json['state'] == 'resource_unavailable'
-    assert response.json['index'] is None and response.json['matches'] is None
-    assert response.json['lexical_index']['value'] == pytest.approx(100)
+    assert response.status_code == 503
+    assert json_object(response)['state'] == 'resource_unavailable'
+    assert not {'index', 'matches', 'lexical_index'}.intersection(json_object(response))
     payload['mode'] = 'lexical'
     response = client.post('/v1/compare', json=payload)
-    assert response.json['state'] == 'calculated' and response.json['method'] == 'lexical'
-    assert response.json['matrices']['fused'] is None
+    assert response.status_code == 200
+    assert json_object(response)['state'] == 'calculated' and json_object(response)['method'] == 'lexical'
+    assert json_object(response)['lexical_index']['value'] == pytest.approx(100)
+    assert json_object(response)['matrices']['fused'] is None
 
 
 def test_valid_zero_lexical_is_flagged_without_force_100(services):
     client = create_app(services[0]).test_client()
     response = client.post('/v1/compare', json={'contract_version': '1.0', 'source': {'text': 'É o.'}, 'suspect': {'text': 'É o.'}})
     assert response.status_code == 200
-    value = response.json
+    value = json_object(response)
     assert value['matrices']['lexical'] == [[0]]
     assert value['source'][0]['flags'] == ['lexical_zero_vector']
     assert value['index']['value'] == pytest.approx(60)
@@ -97,18 +102,18 @@ def test_valid_zero_lexical_is_flagged_without_force_100(services):
 @pytest.mark.parametrize('text', [' ', '!!!'])
 def test_no_useful_input_is_not_score(services, text):
     response = create_app(services[0]).test_client().post('/v1/compare', json={'contract_version': '1.0', 'source': {'text': text}, 'suspect': {'text': 'Outro texto.'}})
-    assert response.status_code == 422 and response.json['state'] == 'no_useful_content'
+    assert response.status_code == 422 and json_object(response)['state'] == 'no_useful_content'
 
 
 def test_html_looking_text_is_literal_content_not_markup(services):
     response = create_app(services[0]).test_client().post('/v1/compare', json={
         'contract_version': '1.0', 'source': {'text': '<b></b>'}, 'suspect': {'text': '<b></b>'}})
     assert response.status_code == 200
-    assert response.json['source'][0]['raw'] == '<b></b>'
-    assert response.json['source'][0]['semantic'] == '<b></b>'
-    assert response.json['source'][0]['flags'] == ['lexical_zero_vector']
-    assert response.json['lexical_index']['value'] == 0
-    assert response.json['index']['value'] == pytest.approx(60)
+    assert json_object(response)['source'][0]['raw'] == '<b></b>'
+    assert json_object(response)['source'][0]['semantic'] == '<b></b>'
+    assert json_object(response)['source'][0]['flags'] == ['lexical_zero_vector']
+    assert json_object(response)['lexical_index']['value'] == 0
+    assert json_object(response)['index']['value'] == pytest.approx(60)
 
 
 def test_idf_failure_is_not_zero_lexical(tmp_path):
@@ -120,11 +125,11 @@ def test_upload_txt_strict_and_unsupported(services):
     client = create_app(services[0]).test_client()
     def send(name, data):
         return client.post('/v1/extract', data={'contract_version': '1.0', 'file': (io.BytesIO(data), name)})
-    assert send('texto.txt', 'Ação científica.'.encode('utf-8')).json['text'] == 'Ação científica.'
-    assert send('texto.txt', 'Ação científica.'.encode('cp1252')).json['text'] == 'Ação científica.'
-    assert send('invalido.txt', b'Texto \x81 fim.').json['state'] == 'extraction_failed'
-    assert send('binario.bin', b'\x00\xff').json['state'] == 'unsupported_format'
-    assert send('vazio.txt', b'').json['state'] == 'no_useful_content'
+    assert json_object(send('texto.txt', 'Ação científica.'.encode('utf-8')))['text'] == 'Ação científica.'
+    assert json_object(send('texto.txt', 'Ação científica.'.encode('cp1252')))['text'] == 'Ação científica.'
+    assert json_object(send('invalido.txt', b'Texto \x81 fim.'))['state'] == 'extraction_failed'
+    assert json_object(send('binario.bin', b'\x00\xff'))['state'] == 'unsupported_format'
+    assert json_object(send('vazio.txt', b''))['state'] == 'no_useful_content'
 
 
 def test_phase_headers_are_optional_to_body_and_match_executed_stages(services):
@@ -133,7 +138,7 @@ def test_phase_headers_are_optional_to_body_and_match_executed_stages(services):
     for mode in ['lexical', 'hybrid']:
         response = client.post('/v1/compare', json={**body, 'mode': mode})
         assert response.status_code == 200
-        ComparisonResult.model_validate(response.json)
+        ComparisonResult.model_validate(json_object(response))
         stages = {part.strip().split(';dur=')[0]: float(part.strip().split(';dur=')[1])
                   for part in response.headers['Server-Timing'].split(',')}
         expected = {'resources', 'compare', 'preprocess', 'lexical'}
@@ -141,7 +146,7 @@ def test_phase_headers_are_optional_to_body_and_match_executed_stages(services):
             expected |= {'embeddings', 'matrices', 'alignment', 'pairs'}
         assert set(stages) == expected
         assert all(value >= 0 for value in stages.values())
-        assert 'engineering' not in response.json['metadata']
+        assert 'engineering' not in json_object(response)['metadata']
 
 
 def test_character_score_is_computed_once_and_reused_for_classification(services):
@@ -158,7 +163,7 @@ def test_character_score_is_computed_once_and_reused_for_classification(services
     finally:
         sys.setprofile(previous)
     assert response.status_code == 200
-    match = response.json['matches'][0]
+    match = json_object(response)['matches'][0]
     assert match['edit'] == pytest.approx(4 / 5)
     assert match['characters']['levenshtein'] == pytest.approx(4 / 5)
     assert count == 1
@@ -183,5 +188,5 @@ def test_resource_initialization_is_serialized_but_lexical_calculation_is_real(s
     with ThreadPoolExecutor(max_workers=2) as pool:
         responses = list(pool.map(compare, range(2)))
     assert all(response.status_code == 200 for response in responses)
-    assert all(response.json['index']['value'] == pytest.approx(100) for response in responses)
+    assert all(json_object(response)['index']['value'] == pytest.approx(100) for response in responses)
     assert count == 1

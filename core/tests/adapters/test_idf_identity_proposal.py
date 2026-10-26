@@ -7,6 +7,7 @@ import pytest
 
 CORE = Path(__file__).resolve().parents[2]
 _spec = importlib.util.spec_from_file_location("idf_identity_proposal", CORE / "scripts" / "identidade_idf.py")
+assert _spec is not None and _spec.loader is not None
 proposal = importlib.util.module_from_spec(_spec)
 _spec.loader.exec_module(proposal)
 

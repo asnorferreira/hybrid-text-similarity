@@ -3,7 +3,7 @@ from pathlib import PurePosixPath
 import zipfile
 
 import docx
-from lxml import etree
+import lxml.etree as etree
 from lxml.etree import XMLSyntaxError
 
 

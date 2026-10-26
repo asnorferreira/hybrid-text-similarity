@@ -11,6 +11,7 @@ from hts_core.adapters.parsers import parse_document
 
 def package(extra_name=None, extra_bytes=b'', document=None):
     spec = importlib.util.spec_from_file_location('public_docx', Path(__file__).resolve().parents[2] / 'scripts/gerar_fixtures_ci.py')
+    assert spec is not None and spec.loader is not None
     generator = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(generator)
     output = io.BytesIO()

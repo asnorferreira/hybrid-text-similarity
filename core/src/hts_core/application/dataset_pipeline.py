@@ -25,7 +25,10 @@ def pipeline_descriptor():
              'adapters/dataset_formats.py', 'adapters/dataset_llm.py', 'adapters/dataset_store.py',
              'adapters/dataset_collect.py', 'adapters/dataset_review.py', 'adapters/dataset_mongo.py',
              'adapters/dataset_operational.py', 'adapters/dataset_curation.py', 'domain/strings.py', 'cli/dataset.py']
-    model_root = Path(importlib.util.find_spec(nlp.SPACY_MODEL).origin).parent
+    model_spec = importlib.util.find_spec(nlp.SPACY_MODEL)
+    if model_spec is None or model_spec.origin is None:
+        raise ImportError('spaCy model module has no filesystem origin')
+    model_root = Path(model_spec.origin).parent
     text_hash = lambda p: digest(p.read_bytes().replace(b'\r\n', b'\n'))
     return {'text_hash_policy': 'UTF-8 source/config/lock text CRLF normalized to LF; binary assets unchanged',
             'code': {p: text_hash(CORE/'src/hts_core'/p) for p in paths},
