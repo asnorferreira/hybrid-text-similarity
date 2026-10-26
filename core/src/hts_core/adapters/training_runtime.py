@@ -32,7 +32,9 @@ def atomic_json(path, value):
 
 
 def rng_state():
-    state = np.random.get_state()
+    state = np.random.get_state(legacy=True)
+    if not isinstance(state, tuple):
+        raise TypeError('legacy NumPy RNG state must be a tuple')
     return {'python':random.getstate(), 'numpy':(state[0],torch.tensor(state[1].astype(np.int64)),state[2],state[3],state[4]),
             'torch':torch.get_rng_state()}
 
@@ -129,12 +131,14 @@ def train_loop(model, optimizer, train, validation, budget, bindings, destinatio
     actual = [id(p) for group in optimizer.param_groups for p in group['params']]
     if expected != set(actual) or len(actual) != len(set(actual)):
         raise ValueError('optimizer parameters differ from trainable model parameters')
+    from hts_core.adapters.trainable_siamese import parameter_profile
     from hts_core.adapters.checkpoint_retention import safe_path
     out = safe_path(destination)
     out.mkdir(parents=True, exist_ok=False)
     state = {'epoch':0,'cursor':0,'order':[], 'updates':0,'history':[], 'best_mse':None,'best_checkpoint':None,
              'bad_epochs':0,'elapsed_seconds':0.,'epoch_squared_error':0.,'epoch_samples':0,'status':'running',
-             'logical_bindings_identity':identity(bindings),'sampled_peak_rss_bytes':0}
+             'logical_bindings_identity':identity(bindings),'sampled_peak_rss_bytes':0,
+             'parameter_profile':parameter_profile(model)}
     if resume is not None:
         state = load_training_checkpoint(resume,model,optimizer,bindings)
         if state['status'] not in ('interrupted','running'):
@@ -211,9 +215,11 @@ def train_loop(model, optimizer, train, validation, budget, bindings, destinatio
                     (loss/len(indices)).backward()
                     state['epoch_squared_error']+=float(loss.detach())
                     state['epoch_samples']+=1
-                grads=[p.grad for p in model.parameters() if p.requires_grad and p.grad is not None]
-                if not grads or any(not torch.isfinite(g).all() for g in grads):
+                grads=[p.grad for p in model.parameters() if p.requires_grad]
+                if not grads or any(g is None or not torch.isfinite(g).all() for g in grads):
                     raise FloatingPointError('missing or nonfinite gradients')
+                if any(p.grad is not None for p in model.parameters() if not p.requires_grad):
+                    raise FloatingPointError('frozen parameter received a gradient')
                 optimizer.step(); optimizer.zero_grad(set_to_none=True)
                 if any(not torch.isfinite(p).all() for p in model.parameters()):
                     raise FloatingPointError('nonfinite updated parameters')

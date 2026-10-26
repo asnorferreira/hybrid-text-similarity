@@ -85,7 +85,7 @@ def training_entry(protocol, reference, dataset, idf, annotations, campaign, tas
         if task == 'H1':
             if resume is not None:
                 raise ValueError('H1 single fixed fit has no optimizer resume')
-            result=_run_h1(examples,config,bindings,idf,out)
+            result=_run_h1(examples,config,bindings,idf,out,data)
         else:
             import numpy as np
             import torch
@@ -118,7 +118,16 @@ def training_entry(protocol, reference, dataset, idf, annotations, campaign, tas
         raise
 
 
-def _run_h1(examples, config, bindings, idf, out):
+def _h1_features(lexical, semantic, learned):
+    from hts_core.domain.hybrid import bounded
+    l = bounded(lexical)
+    s = bounded(semantic,-1,1)
+    values: dict[str, float | list[float]] = dict(lexical=l,semantic=s,fixed_fusion=.4*l+.6*max(0,s))
+    if learned:values['learned_fusion']=[l,max(0,s)]
+    return values
+
+
+def _run_h1(examples, config, bindings, idf, out, dataset=None):
     import numpy as np
     from hts_core.adapters.semantic import SemanticEncoder
     from hts_core.adapters.nlp import analyze, STOPWORDS
@@ -133,7 +142,7 @@ def _run_h1(examples, config, bindings, idf, out):
     save_json_new(out/'base-model.json',semantic.identity)
     features={}; cache=[]
     for split, rows in examples.items():
-        features[split]={'lexical':[],'semantic':[],'fixed_fusion':[]}
+        features[split]={system:[] for system in config['h1']['features_by_system']}
         for i,row in enumerate(rows):
             if time.monotonic()-started >= config['budget']['feature_wall_seconds']:
                 raise TimeoutError('feature preparation wall limit reached')
@@ -143,7 +152,7 @@ def _run_h1(examples, config, bindings, idf, out):
             l=cosine(lexical.vector(lexical_tokens(a,analyze,STOPWORDS)),lexical.vector(lexical_tokens(b,analyze,STOPWORDS)))
             emb,diagnostics=semantic.encode([a,b])
             s=float(np.clip(emb[0]@emb[1],-1,1))
-            values={'lexical':l,'semantic':s,'fixed_fusion':.4*l+.6*max(0,s)}
+            values=_h1_features(l,s,'learned_fusion' in features[split])
             for system,value in values.items():
                 features[split][system].append(value)
             record={'split':split,'row':i,'trace':row['trace'],'features':values,'token_windows':diagnostics,'bindings':bindings}
@@ -152,9 +161,20 @@ def _run_h1(examples, config, bindings, idf, out):
     classifiers = fit_classifiers(features['train'],features['validation'],[r['target'] for r in examples['train']],
                                   [r['target'] for r in examples['validation']],config['h1'],bindings)
     artifacts = save_fitted_classifiers(classifiers,out,bindings)
+    baselines = {}
+    if config['schema'] == 'hts-s5b-3':
+        from hts_core.adapters.training_baselines import fit_baselines, save_baselines
+        baselines = fit_baselines(examples,features,bindings)
+        artifacts.update(save_baselines(baselines,out,bindings))
     save_json_new(out/'selected-load-verification.json',{'loaded':True,'artifacts':artifacts,'bindings':bindings})
+    calibration = None
+    if config['schema'] == 'hts-s5b-3':
+        from hts_core.application.calibration_execution import run_p1
+        if dataset is None:raise ValueError('P1 requires the frozen validation dataset')
+        calibration = run_p1(dataset,semantic,config,bindings,out/'calibration',started=started)
     return {'status':'complete','training_executed':True,'training_started':True,'training_completed':True,
-            'stop_reason':'three_fixed_fits_completed_and_exports_reloaded','classifiers':classifiers,
+            'stop_reason':('four_fixed_fits_and_two_baselines_reloaded' if baselines else 'three_fixed_fits_completed_and_exports_reloaded'),'classifiers':classifiers,
+            'baselines':baselines,'calibration':calibration,
             'artifacts':artifacts,'train_count':len(examples['train']),'validation_count':len(examples['validation']),
             'selection':config['selection']['h1']}
 

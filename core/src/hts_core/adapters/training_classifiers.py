@@ -20,6 +20,9 @@ def _profile():
 
 
 def validate_export(export, expected_bindings=None):
+    if export.get('schema') == 'hts-logistic-2':
+        from hts_core.adapters.training_classifiers_v2 import validate_export as validate_v2
+        return validate_v2(export, expected_bindings)
     object_fields(export, {'schema','system','classes','coefficients','intercepts','configuration','feature',
                           'preprocessing','sklearn_version','bindings','identity'}, 'classifier')
     if export['schema'] != 'hts-scalar-logistic-1' or export['identity'] != identity({k:v for k,v in export.items() if k != 'identity'}):
@@ -63,6 +66,9 @@ def _feature_array(system, features):
 
 
 def predict_export(export, features, *, expected_bindings=None):
+    if export.get('schema') == 'hts-logistic-2':
+        from hts_core.adapters.training_classifiers_v2 import predict_export as predict_v2
+        return predict_v2(export, features, expected_bindings=expected_bindings)
     validate_export(export, expected_bindings)
     x = _feature_array(export['system'],features)
     coef = np.asarray(export['coefficients'], dtype=float)
@@ -76,6 +82,9 @@ def predict_export(export, features, *, expected_bindings=None):
 
 
 def fit_classifiers(train_features, validation_features, train_targets, validation_targets, spec, bindings):
+    if 'learned_fusion' in spec.get('features_by_system', {}):
+        from hts_core.adapters.training_classifiers_v2 import fit_classifiers as fit_v2
+        return fit_v2(train_features, validation_features, train_targets, validation_targets, spec, bindings)
     from sklearn.exceptions import ConvergenceWarning
     from sklearn.linear_model import LogisticRegression
     import sklearn
@@ -99,16 +108,16 @@ def fit_classifiers(train_features, validation_features, train_targets, validati
             warnings.simplefilter('error',ConvergenceWarning)
             model.fit(x[:,None],train_targets)
         export = {'schema':'hts-scalar-logistic-1','system':system,'classes':model.classes_.tolist(),
-                  'coefficients':model.coef_.tolist(),'intercepts':model.intercept_.tolist(),
+                  'coefficients':np.asarray(model.coef_).tolist(),'intercepts':np.asarray(model.intercept_).tolist(),
                   'configuration':params,'feature':spec['features_by_system'][system],
                   'preprocessing':PREPROCESSING,
                   'sklearn_version':sklearn.__version__,'bindings':bindings}
         export['identity']=identity(export)
         predictions=predict_export(export,v.tolist(),expected_bindings=bindings)
-        if predictions != model.predict(v[:,None]).tolist():
+        if predictions != np.asarray(model.predict(v[:,None])).tolist():
             raise RuntimeError('portable classifier differs from fitted model')
         training_predictions = predict_export(export,x.tolist(),expected_bindings=bindings)
-        result[system]={'model':export,'fit_iterations':model.n_iter_.tolist(),
+        result[system]={'model':export,'fit_iterations':np.asarray(model.n_iter_).tolist(),
                         'training':classification_report(train_targets,training_predictions,spec['classes']),
                         'validation':classification_report(validation_targets,predictions,spec['classes']),
                         'predictions':predictions,'failures':0}
@@ -118,8 +127,10 @@ def fit_classifiers(train_features, validation_features, train_targets, validati
 def save_fitted_classifiers(results, destination, bindings):
     from hts_core.adapters.experiment_io import save_json_new
     from hts_core.adapters.dataset_store import digest
-    if set(results) != {'lexical','semantic','fixed_fusion'}:
-        raise ValueError('all three classifier artifacts required')
+    if set(results) not in ({'lexical','semantic','fixed_fusion'}, {'lexical','semantic','fixed_fusion','learned_fusion'}):
+        raise ValueError('all adopted classifier artifacts required')
+    if any(r['model']['schema']=='hts-logistic-2' for r in results.values()) and set(results) != {'lexical','semantic','fixed_fusion','learned_fusion'}:
+        raise ValueError('revision 3 requires all four classifier artifacts')
     artifacts = {}
     for system, result in results.items():
         export = validate_export(result['model'],bindings)
