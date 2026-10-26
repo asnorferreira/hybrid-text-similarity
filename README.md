@@ -1,13 +1,11 @@
 # hybrid-text-similarity
 
 <!-- S5B-CURRENT -->
-## Estado vigente — auditoria integrada S5A/S5B, 2026-10-25
+## Estado vigente — retomada após travamento, 2026-10-25
 
-**S5B parcial; S5C não liberada.** Stack Mongo/core/web ativa e funcional, ping Mongo autenticado e comunicação web/core verificados. Readiness Docker02 H1/H2 exit0/releasable=false: 797728768/855248896bytes efetivos versus2/4GiB. VM total3763134464bytes impede reservaH2. Nenhum treino real iniciado/concluído, época, update, modelo, checkpoint ou métrica preditiva. Campanha original56observações preservada. Teste final fechado.
+**S5B incompleta; H1/H2 não iniciados. S5C não liberada.** Pacote anterior, inventário, campanha e logs históricos de 215 testes +1 controle +IDF conferidos sem repetir execução. Stack Mongo/core/web ativa e comunicação real verificada; timeouts intermitentes do healthcheck Mongo preservados. Host na última coleta: 751685632 bytes físicos disponíveis; VM: 3763134464 totais/2521923584 disponíveis, coletas separadas. Reservas2/4 GiB preservadas; readiness completo03 é histórico e não foi repetido por inviabilidade já observada. Sem treino/modelos/checkpoints/predições. Causa do travamento não determinada; reinício do editor observado, boot Windows anterior à entrega. Proposta concreta de adequação preparada, sem mudança global aplicada.
 
-Executado/verificado: contratos S5A no alcance das regressões, guard host/VM/cgroup,62testes iniciais;347regressões S5A e87casos afetados verificados com falhas de montagem/snapshot preservadas e repetições restritas. Corrigidos export H1/estado e manifest symlink; carga/retomada somente artificiais. Não somar reexecuções. Decisão operacional: mínimo efetivo e monitor fresco, sem reduzir reservas. Pendente: recursos H1/H2, treinos/modelos reais, referência final compatível; independência limita H2 original, não treino exploratório.
-
-[Relatório](TCC/evidencias/codex-s5b-docker-01/relatorio-final.md) | [matriz](TCC/evidencias/codex-s5b-docker-01/matriz-prontidao-s5c.md) | [checkpoint](TCC/evidencias/codex-s5b-docker-01/checkpoint.json)
+[Relatório atual](TCC/evidencias/codex-s5b-pos-travamento-01/relatorio-retomada.md) | [checkpoint](TCC/evidencias/codex-s5b-pos-travamento-01/checkpoint.json) | [proposta de recursos](TCC/evidencias/codex-s5b-pos-travamento-01/proposta-recursos.md) | [entrega anterior preservada](TCC/evidencias/codex-s5b-conclusao-01/relatorio-final.md)
 <!-- /S5B-CURRENT -->
 
 <!-- S5A-HISTORICAL -->
@@ -135,7 +133,7 @@ Workflow preparado; validação no GitHub ainda não executada.
 
 `.github/workflows/validation.yml` executa em push na `main` e abertura (`opened`) de PR destinado à `main`. Push em outra branch, criação de branch e commits posteriores num PR aberto não disparam execução. Essa política é intencional: um resultado antigo não valida automaticamente commits novos. O workflow precisa estar na branch antes da abertura do PR que o executará. Se o PR já existir, publicar a atualização não cria esse evento; não ampliar gatilhos ou fechar/reabrir PR automaticamente.
 
-As actions estão fixadas por SHA, com `contents: read` e checkout sem credenciais persistidas. A validação usa um único job Ubuntu e os ambientes Docker fixados (Python3.11.9/uv0.9.5 e Node24.22.1), `uv sync --frozen` e `npm ci`, evitando instalar outra pilha nos jobs. O build web executa `npm run build`; depois rodam testes/typecheck e integração real.
+As actions estão fixadas por SHA, com `contents: read` e checkout sem credenciais persistidas. A validação usa um único job Ubuntu e os ambientes Docker fixados (Python 3.11.9/uv0.9.5 e Node24.22.1), `uv sync --frozen` e `npm ci`, evitando instalar outra pilha nos jobs. O build web executa `npm run build`; depois rodam testes/typecheck e integração real.
 
 `docker-compose.ci.yml` é independente do Compose de desenvolvimento: Mongo interno sem porta publicada, namespace `hts_ci_s2`, sem banco externo/credenciais do autor. Recursos ficam em `core/artifacts/ci/`, fora do Git. O CI parte sem `.env`, corpus raw, ambientes ou pesos: restaura as revisões congeladas, verifica hashes sem reconstruir IDF, instala spaCy pelo lock e prepara explicitamente o modelo fixo antes da inferência offline. Falhas nesses passos impedem aprovação; JUnit vazio, com falha ou skip/xfail é rejeitado.
 

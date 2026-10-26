@@ -1,0 +1,15 @@
+{
+  "schema": "hts-s5c-reference-plan-1",
+  "dataset_version": "fccdffc984dca0b30d9c044ee62bee32eb52b3b4a828fe454e6a17de0602fd26",
+  "s5b_protocol_identity": "1bc0736e297e6cd97029db68553d3f1c9825955120005a2b2a3ef9f10ca541d0",
+  "rubric_sha256": "e805b86423b4a6e46e2b3a2f577dd4b8b66419b8b2270cd5eb31a785f6d579a2",
+  "seed": 20261025,
+  "maximum_observations": 24,
+  "batch_size": 8,
+  "extra_nonancestral": 4,
+  "selection": "one_per_method_severity_cell_plus_four_nonancestral",
+  "modality": "automated_weak",
+  "generator_relationship": "shared",
+  "status": "prepared_not_authorized",
+  "test_predictions_authorized": false
+}
