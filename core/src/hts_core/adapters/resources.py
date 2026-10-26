@@ -47,7 +47,10 @@ def idf_resource(path=None):
                       'observed_pipeline': files, 'spacy_model': nlp.model_info(),
                       'runtime': {name: importlib.metadata.version(name) for name in ('spacy', 'numpy', 'mwparserfromhell')},
                       'construction_attestation': False, 'formula': 'tf_count * (ln((1+N)/(1+df))+1); unknown df=0'}
-        model_root = Path(importlib.util.find_spec(nlp.SPACY_MODEL).origin).parent
+        model_spec = importlib.util.find_spec(nlp.SPACY_MODEL)
+        if model_spec is None or model_spec.origin is None:
+            raise ImportError('spaCy model module has no filesystem origin')
+        model_root = Path(model_spec.origin).parent
         descriptor['spacy_assets_sha256'] = {p.relative_to(model_root).as_posix(): hashlib.sha256(p.read_bytes()).hexdigest()
                                            for p in sorted(model_root.rglob('*')) if p.is_file() and '__pycache__' not in p.parts and p.suffix != '.pyc'}
         descriptor['lexical_configuration'] = {'stopwords': sorted(nlp.STOPWORDS), 'disabled': ['parser', 'ner'],
@@ -57,5 +60,5 @@ def idf_resource(path=None):
         descriptor['unicode'] = unicodedata.unidata_version
         descriptor['identity'] = hashlib.sha256(json.dumps(descriptor, sort_keys=True).encode()).hexdigest()
         return table, descriptor
-    except (OSError, ValueError, KeyError, TypeError) as exc:
+    except (OSError, ValueError, KeyError, TypeError, ImportError) as exc:
         raise ResourceUnavailable('IDF ou pipeline lexical indisponível') from exc

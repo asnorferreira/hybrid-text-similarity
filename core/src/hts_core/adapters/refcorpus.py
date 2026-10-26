@@ -1,5 +1,3 @@
-"""Corpus de referência do IDF (guia 0.3): wikitext da Wikipédia em português por revisão (oldid), com manifesto e hash."""
-
 import hashlib
 import json
 import time

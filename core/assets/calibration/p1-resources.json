@@ -1,0 +1,23 @@
+{
+  "schema": "hts-p1-resources-1",
+  "rg01_sha256": "d27c524a2e8e53913ec08cdbc51b73e54bafd7cff4d02ed3e2fbc7e3defa8a8e",
+  "application_idf_identity": "08be5cac366addf22f3e4191dff6215d3a3bc433506a28fb41a37358eb6b4730",
+  "policy_file_sha256": "79c7defc501092c77743266e5610206c6f5f9ed2cf7ed8381d864d46c0a90031",
+  "model_identity": {
+    "content_capacity": 126,
+    "dimension": 384,
+    "identity": "a49bb4785944e34fabd43e9b90bf86b91bf38e6b49177b06ebb8729829a0bc18",
+    "license": "apache-2.0",
+    "limit": 128,
+    "model": "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2",
+    "revision": "e8f8c211226b894fcb81acc59f3b34ba3efd5f42",
+    "runtime": {
+      "sentence-transformers": "6.2.0",
+      "tokenizers": "0.23.3",
+      "torch": "2.14.1+cpu",
+      "transformers": "5.20.2"
+    },
+    "special_tokens": 2
+  },
+  "identity": "c4e13e89b5904107309fa424786dfc7648b9ecf6b73e35368dd9fab95cda13d9"
+}

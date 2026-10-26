@@ -1,0 +1,4127 @@
+{
+  "cases": [
+    {
+      "format": "txt",
+      "id": "NFo-01",
+      "mode": "hybrid",
+      "relation": "R1",
+      "result": {
+        "alignment": {
+          "objective": 1.0,
+          "pairs": [
+            {
+              "score": 1.0,
+              "source": 0,
+              "suspect": 0
+            }
+          ],
+          "unmatched_source": [],
+          "unmatched_suspect": []
+        },
+        "index": {
+          "source_to_suspect": 1.0,
+          "suspect_to_source": 1.0,
+          "value": 100.0
+        },
+        "lexical_index": {
+          "source_to_suspect": 1.0,
+          "suspect_to_source": 1.0,
+          "value": 100.0
+        },
+        "matches": [
+          {
+            "characters": {
+              "jaro": 1.0,
+              "jaro_winkler": 1.0,
+              "levenshtein": 1.0,
+              "ngram": 1.0,
+              "osa": 1.0,
+              "smith_waterman": 1.0,
+              "vsm_cosine": 1.0
+            },
+            "decision": {
+              "label": "copia_exata",
+              "lexical_high": true,
+              "reason": "igualdade_da_representacao_textual"
+            },
+            "edit": 1.0,
+            "fused": 1.0,
+            "lexical": 1.0,
+            "semantic_operational": 1.0,
+            "semantic_raw": 1.0,
+            "source": 0,
+            "suspect": 0
+          }
+        ],
+        "matrices": {
+          "fused": [
+            [
+              1.0
+            ]
+          ],
+          "lexical": [
+            [
+              1.0
+            ]
+          ],
+          "semantic_operational": [
+            [
+              1.0
+            ]
+          ],
+          "semantic_raw": [
+            [
+              1.0
+            ]
+          ]
+        },
+        "method": "hybrid",
+        "semantic_index": {
+          "source_to_suspect": 1.0,
+          "suspect_to_source": 1.0,
+          "value": 100.0
+        },
+        "source": [
+          {
+            "flags": [],
+            "index": 0,
+            "lexical": [
+              "pesquisadora",
+              "comparar",
+              "documento",
+              "português"
+            ],
+            "raw": "A pesquisadora compara os documentos em português.",
+            "semantic": "A pesquisadora compara os documentos em português.",
+            "window": {
+              "content_tokens": 9,
+              "covered_tokens": 9,
+              "window_tokens": [
+                9
+              ],
+              "windows": 1
+            },
+            "words": 7
+          }
+        ],
+        "state": "calculated",
+        "summary": {
+          "counts": {
+            "copia_editada": 0,
+            "copia_exata": 1,
+            "parafrase": 0,
+            "sem_correspondencia_detectada": 0
+          },
+          "denominator": 1,
+          "inserted_segment": "indisponivel_regra_nao_definida",
+          "predominance": "copia_exata",
+          "proportions": {
+            "copia_editada": 0.0,
+            "copia_exata": 1.0,
+            "parafrase": 0.0,
+            "sem_correspondencia_detectada": 0.0
+          }
+        },
+        "suspect": [
+          {
+            "flags": [],
+            "index": 0,
+            "lexical": [
+              "pesquisadora",
+              "comparar",
+              "documento",
+              "português"
+            ],
+            "raw": "A pesquisadora compara os documentos em português.",
+            "semantic": "A pesquisadora compara os documentos em português.",
+            "window": {
+              "content_tokens": 9,
+              "covered_tokens": 9,
+              "window_tokens": [
+                9
+              ],
+              "windows": 1
+            },
+            "words": 7
+          }
+        ]
+      }
+    },
+    {
+      "format": "txt",
+      "id": "NFo-02",
+      "mode": "hybrid",
+      "relation": "R2",
+      "result": {
+        "alignment": {
+          "objective": 0.9906188751044533,
+          "pairs": [
+            {
+              "score": 0.9906188751044533,
+              "source": 0,
+              "suspect": 0
+            }
+          ],
+          "unmatched_source": [],
+          "unmatched_suspect": []
+        },
+        "index": {
+          "source_to_suspect": 0.9906188751044533,
+          "suspect_to_source": 0.9906188751044533,
+          "value": 99.06188751044533
+        },
+        "lexical_index": {
+          "source_to_suspect": 1.0,
+          "suspect_to_source": 1.0,
+          "value": 100.0
+        },
+        "matches": [
+          {
+            "characters": {
+              "jaro": 0.9491156462585034,
+              "jaro_winkler": 0.969469387755102,
+              "levenshtein": 0.98,
+              "ngram": 0.9565217391304348,
+              "osa": 0.98,
+              "smith_waterman": 0.9897959183673469,
+              "vsm_cosine": 1.0
+            },
+            "decision": {
+              "label": "copia_editada",
+              "lexical_high": true,
+              "reason": "semelhanca_estrutural"
+            },
+            "edit": 0.98,
+            "fused": 0.9906188751044533,
+            "lexical": 1.0,
+            "semantic_operational": 0.9843647918407556,
+            "semantic_raw": 0.9843647918407556,
+            "source": 0,
+            "suspect": 0
+          }
+        ],
+        "matrices": {
+          "fused": [
+            [
+              0.9906188751044533
+            ]
+          ],
+          "lexical": [
+            [
+              1.0
+            ]
+          ],
+          "semantic_operational": [
+            [
+              0.9843647918407556
+            ]
+          ],
+          "semantic_raw": [
+            [
+              0.9843647918407556
+            ]
+          ]
+        },
+        "method": "hybrid",
+        "semantic_index": {
+          "source_to_suspect": 0.9843647918407556,
+          "suspect_to_source": 0.9843647918407556,
+          "value": 98.43647918407557
+        },
+        "source": [
+          {
+            "flags": [],
+            "index": 0,
+            "lexical": [
+              "pesquisadora",
+              "comparar",
+              "documento",
+              "português"
+            ],
+            "raw": "A pesquisadora compara os documentos em português.",
+            "semantic": "A pesquisadora compara os documentos em português.",
+            "window": {
+              "content_tokens": 9,
+              "covered_tokens": 9,
+              "window_tokens": [
+                9
+              ],
+              "windows": 1
+            },
+            "words": 7
+          }
+        ],
+        "state": "calculated",
+        "summary": {
+          "counts": {
+            "copia_editada": 1,
+            "copia_exata": 0,
+            "parafrase": 0,
+            "sem_correspondencia_detectada": 0
+          },
+          "denominator": 1,
+          "inserted_segment": "indisponivel_regra_nao_definida",
+          "predominance": "copia_editada",
+          "proportions": {
+            "copia_editada": 1.0,
+            "copia_exata": 0.0,
+            "parafrase": 0.0,
+            "sem_correspondencia_detectada": 0.0
+          }
+        },
+        "suspect": [
+          {
+            "flags": [],
+            "index": 0,
+            "lexical": [
+              "pesquisadora",
+              "comparar",
+              "documento",
+              "português"
+            ],
+            "raw": "A pesquisadora compara os documento em português.",
+            "semantic": "A pesquisadora compara os documento em português.",
+            "window": {
+              "content_tokens": 9,
+              "covered_tokens": 9,
+              "window_tokens": [
+                9
+              ],
+              "windows": 1
+            },
+            "words": 7
+          }
+        ]
+      }
+    },
+    {
+      "format": "txt",
+      "id": "NFo-03",
+      "mode": "hybrid",
+      "relation": "R3",
+      "result": {
+        "alignment": {
+          "objective": 0.9758130666738792,
+          "pairs": [
+            {
+              "score": 0.9758130666738792,
+              "source": 0,
+              "suspect": 0
+            }
+          ],
+          "unmatched_source": [],
+          "unmatched_suspect": []
+        },
+        "index": {
+          "source_to_suspect": 0.9758130666738792,
+          "suspect_to_source": 0.9758130666738792,
+          "value": 97.58130666738792
+        },
+        "lexical_index": {
+          "source_to_suspect": 1.0,
+          "suspect_to_source": 1.0,
+          "value": 100.0
+        },
+        "matches": [
+          {
+            "characters": {
+              "jaro": 0.6480769230769231,
+              "jaro_winkler": 0.6480769230769231,
+              "levenshtein": 0.35416666666666663,
+              "ngram": 0.6341463414634146,
+              "osa": 0.35416666666666663,
+              "smith_waterman": 0.3333333333333333,
+              "vsm_cosine": 1.0
+            },
+            "decision": {
+              "label": "parafrase",
+              "lexical_high": true,
+              "reason": "similaridade_semantica_operacional"
+            },
+            "edit": 0.35416666666666663,
+            "fused": 0.9758130666738792,
+            "lexical": 1.0,
+            "semantic_operational": 0.9596884444564654,
+            "semantic_raw": 0.9596884444564654,
+            "source": 0,
+            "suspect": 0
+          }
+        ],
+        "matrices": {
+          "fused": [
+            [
+              0.9758130666738792
+            ]
+          ],
+          "lexical": [
+            [
+              1.0
+            ]
+          ],
+          "semantic_operational": [
+            [
+              0.9596884444564654
+            ]
+          ],
+          "semantic_raw": [
+            [
+              0.9596884444564654
+            ]
+          ]
+        },
+        "method": "hybrid",
+        "semantic_index": {
+          "source_to_suspect": 0.9596884444564654,
+          "suspect_to_source": 0.9596884444564654,
+          "value": 95.96884444564654
+        },
+        "source": [
+          {
+            "flags": [],
+            "index": 0,
+            "lexical": [
+              "médica",
+              "tratar",
+              "paciente",
+              "hospital"
+            ],
+            "raw": "A médica tratou o paciente no hospital.",
+            "semantic": "A médica tratou o paciente no hospital.",
+            "window": {
+              "content_tokens": 9,
+              "covered_tokens": 9,
+              "window_tokens": [
+                9
+              ],
+              "windows": 1
+            },
+            "words": 7
+          }
+        ],
+        "state": "calculated",
+        "summary": {
+          "counts": {
+            "copia_editada": 0,
+            "copia_exata": 0,
+            "parafrase": 1,
+            "sem_correspondencia_detectada": 0
+          },
+          "denominator": 1,
+          "inserted_segment": "indisponivel_regra_nao_definida",
+          "predominance": "parafrase",
+          "proportions": {
+            "copia_editada": 0.0,
+            "copia_exata": 0.0,
+            "parafrase": 1.0,
+            "sem_correspondencia_detectada": 0.0
+          }
+        },
+        "suspect": [
+          {
+            "flags": [],
+            "index": 0,
+            "lexical": [
+              "hospital",
+              "paciente",
+              "tratar",
+              "médica"
+            ],
+            "raw": "No hospital, o paciente foi tratado pela médica.",
+            "semantic": "No hospital, o paciente foi tratado pela médica.",
+            "window": {
+              "content_tokens": 10,
+              "covered_tokens": 10,
+              "window_tokens": [
+                10
+              ],
+              "windows": 1
+            },
+            "words": 8
+          }
+        ]
+      }
+    },
+    {
+      "format": "txt",
+      "id": "NFo-04",
+      "mode": "hybrid",
+      "relation": "R4",
+      "result": {
+        "alignment": {
+          "objective": 0.0,
+          "pairs": [],
+          "unmatched_source": [
+            0
+          ],
+          "unmatched_suspect": [
+            0
+          ]
+        },
+        "index": {
+          "source_to_suspect": 0.0,
+          "suspect_to_source": 0.0,
+          "value": 0.0
+        },
+        "lexical_index": {
+          "source_to_suspect": 0.0,
+          "suspect_to_source": 0.0,
+          "value": 0.0
+        },
+        "matches": [
+          {
+            "characters": {
+              "jaro": 0.5865562876130173,
+              "jaro_winkler": 0.5865562876130173,
+              "levenshtein": 0.2068965517241379,
+              "ngram": 0.04,
+              "osa": 0.2068965517241379,
+              "smith_waterman": 0.09615384615384616,
+              "vsm_cosine": 0.0
+            },
+            "decision": {
+              "label": "sem_correspondencia_detectada",
+              "lexical_high": false,
+              "reason": "escores_baixos_sem_evidencia_estrutural"
+            },
+            "edit": 0.2068965517241379,
+            "fused": 0.0,
+            "lexical": 0.0,
+            "semantic_operational": 0.0,
+            "semantic_raw": -0.07725671648606662,
+            "source": 0,
+            "suspect": 0
+          }
+        ],
+        "matrices": {
+          "fused": [
+            [
+              0.0
+            ]
+          ],
+          "lexical": [
+            [
+              0.0
+            ]
+          ],
+          "semantic_operational": [
+            [
+              0.0
+            ]
+          ],
+          "semantic_raw": [
+            [
+              -0.07725671648606662
+            ]
+          ]
+        },
+        "method": "hybrid",
+        "semantic_index": {
+          "source_to_suspect": 0.0,
+          "suspect_to_source": 0.0,
+          "value": 0.0
+        },
+        "source": [
+          {
+            "flags": [],
+            "index": 0,
+            "lexical": [
+              "telescópio",
+              "registrar",
+              "imagem",
+              "galáxia",
+              "distante"
+            ],
+            "raw": "O telescópio registra imagens de galáxias distantes.",
+            "semantic": "O telescópio registra imagens de galáxias distantes.",
+            "window": {
+              "content_tokens": 14,
+              "covered_tokens": 14,
+              "window_tokens": [
+                14
+              ],
+              "windows": 1
+            },
+            "words": 7
+          }
+        ],
+        "state": "calculated",
+        "summary": {
+          "counts": {
+            "copia_editada": 0,
+            "copia_exata": 0,
+            "parafrase": 0,
+            "sem_correspondencia_detectada": 1
+          },
+          "denominator": 1,
+          "inserted_segment": "indisponivel_regra_nao_definida",
+          "predominance": "sem_correspondencia_detectada",
+          "proportions": {
+            "copia_editada": 0.0,
+            "copia_exata": 0.0,
+            "parafrase": 0.0,
+            "sem_correspondencia_detectada": 1.0
+          }
+        },
+        "suspect": [
+          {
+            "flags": [],
+            "index": 0,
+            "lexical": [
+              "cozinheira",
+              "misturar",
+              "farinha",
+              "ovo",
+              "preparar",
+              "bolo"
+            ],
+            "raw": "A cozinheira misturou farinha e ovos para preparar o bolo.",
+            "semantic": "A cozinheira misturou farinha e ovos para preparar o bolo.",
+            "window": {
+              "content_tokens": 18,
+              "covered_tokens": 18,
+              "window_tokens": [
+                18
+              ],
+              "windows": 1
+            },
+            "words": 10
+          }
+        ]
+      }
+    },
+    {
+      "format": "txt",
+      "id": "NFo-05",
+      "mode": "lexical",
+      "relation": "R1",
+      "result": {
+        "alignment": null,
+        "index": {
+          "source_to_suspect": 1.0,
+          "suspect_to_source": 1.0,
+          "value": 100.0
+        },
+        "lexical_index": {
+          "source_to_suspect": 1.0,
+          "suspect_to_source": 1.0,
+          "value": 100.0
+        },
+        "matches": null,
+        "matrices": {
+          "fused": null,
+          "lexical": [
+            [
+              1.0
+            ]
+          ],
+          "semantic_operational": null,
+          "semantic_raw": null
+        },
+        "method": "lexical",
+        "semantic_index": null,
+        "source": [
+          {
+            "flags": [],
+            "index": 0,
+            "lexical": [
+              "pesquisadora",
+              "comparar",
+              "documento",
+              "português"
+            ],
+            "raw": "A pesquisadora compara os documentos em português.",
+            "semantic": "A pesquisadora compara os documentos em português.",
+            "window": null,
+            "words": 7
+          }
+        ],
+        "state": "calculated",
+        "summary": null,
+        "suspect": [
+          {
+            "flags": [],
+            "index": 0,
+            "lexical": [
+              "pesquisadora",
+              "comparar",
+              "documento",
+              "português"
+            ],
+            "raw": "A pesquisadora compara os documentos em português.",
+            "semantic": "A pesquisadora compara os documentos em português.",
+            "window": null,
+            "words": 7
+          }
+        ]
+      }
+    },
+    {
+      "format": "txt",
+      "id": "NFo-06",
+      "mode": "lexical",
+      "relation": "R2",
+      "result": {
+        "alignment": null,
+        "index": {
+          "source_to_suspect": 1.0,
+          "suspect_to_source": 1.0,
+          "value": 100.0
+        },
+        "lexical_index": {
+          "source_to_suspect": 1.0,
+          "suspect_to_source": 1.0,
+          "value": 100.0
+        },
+        "matches": null,
+        "matrices": {
+          "fused": null,
+          "lexical": [
+            [
+              1.0
+            ]
+          ],
+          "semantic_operational": null,
+          "semantic_raw": null
+        },
+        "method": "lexical",
+        "semantic_index": null,
+        "source": [
+          {
+            "flags": [],
+            "index": 0,
+            "lexical": [
+              "pesquisadora",
+              "comparar",
+              "documento",
+              "português"
+            ],
+            "raw": "A pesquisadora compara os documentos em português.",
+            "semantic": "A pesquisadora compara os documentos em português.",
+            "window": null,
+            "words": 7
+          }
+        ],
+        "state": "calculated",
+        "summary": null,
+        "suspect": [
+          {
+            "flags": [],
+            "index": 0,
+            "lexical": [
+              "pesquisadora",
+              "comparar",
+              "documento",
+              "português"
+            ],
+            "raw": "A pesquisadora compara os documento em português.",
+            "semantic": "A pesquisadora compara os documento em português.",
+            "window": null,
+            "words": 7
+          }
+        ]
+      }
+    },
+    {
+      "format": "txt",
+      "id": "NFo-07",
+      "mode": "lexical",
+      "relation": "R3",
+      "result": {
+        "alignment": null,
+        "index": {
+          "source_to_suspect": 1.0,
+          "suspect_to_source": 1.0,
+          "value": 100.0
+        },
+        "lexical_index": {
+          "source_to_suspect": 1.0,
+          "suspect_to_source": 1.0,
+          "value": 100.0
+        },
+        "matches": null,
+        "matrices": {
+          "fused": null,
+          "lexical": [
+            [
+              1.0
+            ]
+          ],
+          "semantic_operational": null,
+          "semantic_raw": null
+        },
+        "method": "lexical",
+        "semantic_index": null,
+        "source": [
+          {
+            "flags": [],
+            "index": 0,
+            "lexical": [
+              "médica",
+              "tratar",
+              "paciente",
+              "hospital"
+            ],
+            "raw": "A médica tratou o paciente no hospital.",
+            "semantic": "A médica tratou o paciente no hospital.",
+            "window": null,
+            "words": 7
+          }
+        ],
+        "state": "calculated",
+        "summary": null,
+        "suspect": [
+          {
+            "flags": [],
+            "index": 0,
+            "lexical": [
+              "hospital",
+              "paciente",
+              "tratar",
+              "médica"
+            ],
+            "raw": "No hospital, o paciente foi tratado pela médica.",
+            "semantic": "No hospital, o paciente foi tratado pela médica.",
+            "window": null,
+            "words": 8
+          }
+        ]
+      }
+    },
+    {
+      "format": "txt",
+      "id": "NFo-08",
+      "mode": "lexical",
+      "relation": "R4",
+      "result": {
+        "alignment": null,
+        "index": {
+          "source_to_suspect": 0.0,
+          "suspect_to_source": 0.0,
+          "value": 0.0
+        },
+        "lexical_index": {
+          "source_to_suspect": 0.0,
+          "suspect_to_source": 0.0,
+          "value": 0.0
+        },
+        "matches": null,
+        "matrices": {
+          "fused": null,
+          "lexical": [
+            [
+              0.0
+            ]
+          ],
+          "semantic_operational": null,
+          "semantic_raw": null
+        },
+        "method": "lexical",
+        "semantic_index": null,
+        "source": [
+          {
+            "flags": [],
+            "index": 0,
+            "lexical": [
+              "telescópio",
+              "registrar",
+              "imagem",
+              "galáxia",
+              "distante"
+            ],
+            "raw": "O telescópio registra imagens de galáxias distantes.",
+            "semantic": "O telescópio registra imagens de galáxias distantes.",
+            "window": null,
+            "words": 7
+          }
+        ],
+        "state": "calculated",
+        "summary": null,
+        "suspect": [
+          {
+            "flags": [],
+            "index": 0,
+            "lexical": [
+              "cozinheira",
+              "misturar",
+              "farinha",
+              "ovo",
+              "preparar",
+              "bolo"
+            ],
+            "raw": "A cozinheira misturou farinha e ovos para preparar o bolo.",
+            "semantic": "A cozinheira misturou farinha e ovos para preparar o bolo.",
+            "window": null,
+            "words": 10
+          }
+        ]
+      }
+    },
+    {
+      "format": "docx",
+      "id": "NFo-09",
+      "mode": "hybrid",
+      "relation": "R1",
+      "result": {
+        "alignment": {
+          "objective": 1.0,
+          "pairs": [
+            {
+              "score": 1.0,
+              "source": 0,
+              "suspect": 0
+            }
+          ],
+          "unmatched_source": [],
+          "unmatched_suspect": []
+        },
+        "index": {
+          "source_to_suspect": 1.0,
+          "suspect_to_source": 1.0,
+          "value": 100.0
+        },
+        "lexical_index": {
+          "source_to_suspect": 1.0,
+          "suspect_to_source": 1.0,
+          "value": 100.0
+        },
+        "matches": [
+          {
+            "characters": {
+              "jaro": 1.0,
+              "jaro_winkler": 1.0,
+              "levenshtein": 1.0,
+              "ngram": 1.0,
+              "osa": 1.0,
+              "smith_waterman": 1.0,
+              "vsm_cosine": 1.0
+            },
+            "decision": {
+              "label": "copia_exata",
+              "lexical_high": true,
+              "reason": "igualdade_da_representacao_textual"
+            },
+            "edit": 1.0,
+            "fused": 1.0,
+            "lexical": 1.0,
+            "semantic_operational": 1.0,
+            "semantic_raw": 1.0,
+            "source": 0,
+            "suspect": 0
+          }
+        ],
+        "matrices": {
+          "fused": [
+            [
+              1.0
+            ]
+          ],
+          "lexical": [
+            [
+              1.0
+            ]
+          ],
+          "semantic_operational": [
+            [
+              1.0
+            ]
+          ],
+          "semantic_raw": [
+            [
+              1.0
+            ]
+          ]
+        },
+        "method": "hybrid",
+        "semantic_index": {
+          "source_to_suspect": 1.0,
+          "suspect_to_source": 1.0,
+          "value": 100.0
+        },
+        "source": [
+          {
+            "flags": [],
+            "index": 0,
+            "lexical": [
+              "pesquisadora",
+              "comparar",
+              "documento",
+              "português"
+            ],
+            "raw": "A pesquisadora compara os documentos em português.",
+            "semantic": "A pesquisadora compara os documentos em português.",
+            "window": {
+              "content_tokens": 9,
+              "covered_tokens": 9,
+              "window_tokens": [
+                9
+              ],
+              "windows": 1
+            },
+            "words": 7
+          }
+        ],
+        "state": "calculated",
+        "summary": {
+          "counts": {
+            "copia_editada": 0,
+            "copia_exata": 1,
+            "parafrase": 0,
+            "sem_correspondencia_detectada": 0
+          },
+          "denominator": 1,
+          "inserted_segment": "indisponivel_regra_nao_definida",
+          "predominance": "copia_exata",
+          "proportions": {
+            "copia_editada": 0.0,
+            "copia_exata": 1.0,
+            "parafrase": 0.0,
+            "sem_correspondencia_detectada": 0.0
+          }
+        },
+        "suspect": [
+          {
+            "flags": [],
+            "index": 0,
+            "lexical": [
+              "pesquisadora",
+              "comparar",
+              "documento",
+              "português"
+            ],
+            "raw": "A pesquisadora compara os documentos em português.",
+            "semantic": "A pesquisadora compara os documentos em português.",
+            "window": {
+              "content_tokens": 9,
+              "covered_tokens": 9,
+              "window_tokens": [
+                9
+              ],
+              "windows": 1
+            },
+            "words": 7
+          }
+        ]
+      }
+    },
+    {
+      "format": "docx",
+      "id": "NFo-10",
+      "mode": "hybrid",
+      "relation": "R2",
+      "result": {
+        "alignment": {
+          "objective": 0.9906188751044533,
+          "pairs": [
+            {
+              "score": 0.9906188751044533,
+              "source": 0,
+              "suspect": 0
+            }
+          ],
+          "unmatched_source": [],
+          "unmatched_suspect": []
+        },
+        "index": {
+          "source_to_suspect": 0.9906188751044533,
+          "suspect_to_source": 0.9906188751044533,
+          "value": 99.06188751044533
+        },
+        "lexical_index": {
+          "source_to_suspect": 1.0,
+          "suspect_to_source": 1.0,
+          "value": 100.0
+        },
+        "matches": [
+          {
+            "characters": {
+              "jaro": 0.9491156462585034,
+              "jaro_winkler": 0.969469387755102,
+              "levenshtein": 0.98,
+              "ngram": 0.9565217391304348,
+              "osa": 0.98,
+              "smith_waterman": 0.9897959183673469,
+              "vsm_cosine": 1.0
+            },
+            "decision": {
+              "label": "copia_editada",
+              "lexical_high": true,
+              "reason": "semelhanca_estrutural"
+            },
+            "edit": 0.98,
+            "fused": 0.9906188751044533,
+            "lexical": 1.0,
+            "semantic_operational": 0.9843647918407556,
+            "semantic_raw": 0.9843647918407556,
+            "source": 0,
+            "suspect": 0
+          }
+        ],
+        "matrices": {
+          "fused": [
+            [
+              0.9906188751044533
+            ]
+          ],
+          "lexical": [
+            [
+              1.0
+            ]
+          ],
+          "semantic_operational": [
+            [
+              0.9843647918407556
+            ]
+          ],
+          "semantic_raw": [
+            [
+              0.9843647918407556
+            ]
+          ]
+        },
+        "method": "hybrid",
+        "semantic_index": {
+          "source_to_suspect": 0.9843647918407556,
+          "suspect_to_source": 0.9843647918407556,
+          "value": 98.43647918407557
+        },
+        "source": [
+          {
+            "flags": [],
+            "index": 0,
+            "lexical": [
+              "pesquisadora",
+              "comparar",
+              "documento",
+              "português"
+            ],
+            "raw": "A pesquisadora compara os documentos em português.",
+            "semantic": "A pesquisadora compara os documentos em português.",
+            "window": {
+              "content_tokens": 9,
+              "covered_tokens": 9,
+              "window_tokens": [
+                9
+              ],
+              "windows": 1
+            },
+            "words": 7
+          }
+        ],
+        "state": "calculated",
+        "summary": {
+          "counts": {
+            "copia_editada": 1,
+            "copia_exata": 0,
+            "parafrase": 0,
+            "sem_correspondencia_detectada": 0
+          },
+          "denominator": 1,
+          "inserted_segment": "indisponivel_regra_nao_definida",
+          "predominance": "copia_editada",
+          "proportions": {
+            "copia_editada": 1.0,
+            "copia_exata": 0.0,
+            "parafrase": 0.0,
+            "sem_correspondencia_detectada": 0.0
+          }
+        },
+        "suspect": [
+          {
+            "flags": [],
+            "index": 0,
+            "lexical": [
+              "pesquisadora",
+              "comparar",
+              "documento",
+              "português"
+            ],
+            "raw": "A pesquisadora compara os documento em português.",
+            "semantic": "A pesquisadora compara os documento em português.",
+            "window": {
+              "content_tokens": 9,
+              "covered_tokens": 9,
+              "window_tokens": [
+                9
+              ],
+              "windows": 1
+            },
+            "words": 7
+          }
+        ]
+      }
+    },
+    {
+      "format": "docx",
+      "id": "NFo-11",
+      "mode": "hybrid",
+      "relation": "R3",
+      "result": {
+        "alignment": {
+          "objective": 0.9758130666738792,
+          "pairs": [
+            {
+              "score": 0.9758130666738792,
+              "source": 0,
+              "suspect": 0
+            }
+          ],
+          "unmatched_source": [],
+          "unmatched_suspect": []
+        },
+        "index": {
+          "source_to_suspect": 0.9758130666738792,
+          "suspect_to_source": 0.9758130666738792,
+          "value": 97.58130666738792
+        },
+        "lexical_index": {
+          "source_to_suspect": 1.0,
+          "suspect_to_source": 1.0,
+          "value": 100.0
+        },
+        "matches": [
+          {
+            "characters": {
+              "jaro": 0.6480769230769231,
+              "jaro_winkler": 0.6480769230769231,
+              "levenshtein": 0.35416666666666663,
+              "ngram": 0.6341463414634146,
+              "osa": 0.35416666666666663,
+              "smith_waterman": 0.3333333333333333,
+              "vsm_cosine": 1.0
+            },
+            "decision": {
+              "label": "parafrase",
+              "lexical_high": true,
+              "reason": "similaridade_semantica_operacional"
+            },
+            "edit": 0.35416666666666663,
+            "fused": 0.9758130666738792,
+            "lexical": 1.0,
+            "semantic_operational": 0.9596884444564654,
+            "semantic_raw": 0.9596884444564654,
+            "source": 0,
+            "suspect": 0
+          }
+        ],
+        "matrices": {
+          "fused": [
+            [
+              0.9758130666738792
+            ]
+          ],
+          "lexical": [
+            [
+              1.0
+            ]
+          ],
+          "semantic_operational": [
+            [
+              0.9596884444564654
+            ]
+          ],
+          "semantic_raw": [
+            [
+              0.9596884444564654
+            ]
+          ]
+        },
+        "method": "hybrid",
+        "semantic_index": {
+          "source_to_suspect": 0.9596884444564654,
+          "suspect_to_source": 0.9596884444564654,
+          "value": 95.96884444564654
+        },
+        "source": [
+          {
+            "flags": [],
+            "index": 0,
+            "lexical": [
+              "médica",
+              "tratar",
+              "paciente",
+              "hospital"
+            ],
+            "raw": "A médica tratou o paciente no hospital.",
+            "semantic": "A médica tratou o paciente no hospital.",
+            "window": {
+              "content_tokens": 9,
+              "covered_tokens": 9,
+              "window_tokens": [
+                9
+              ],
+              "windows": 1
+            },
+            "words": 7
+          }
+        ],
+        "state": "calculated",
+        "summary": {
+          "counts": {
+            "copia_editada": 0,
+            "copia_exata": 0,
+            "parafrase": 1,
+            "sem_correspondencia_detectada": 0
+          },
+          "denominator": 1,
+          "inserted_segment": "indisponivel_regra_nao_definida",
+          "predominance": "parafrase",
+          "proportions": {
+            "copia_editada": 0.0,
+            "copia_exata": 0.0,
+            "parafrase": 1.0,
+            "sem_correspondencia_detectada": 0.0
+          }
+        },
+        "suspect": [
+          {
+            "flags": [],
+            "index": 0,
+            "lexical": [
+              "hospital",
+              "paciente",
+              "tratar",
+              "médica"
+            ],
+            "raw": "No hospital, o paciente foi tratado pela médica.",
+            "semantic": "No hospital, o paciente foi tratado pela médica.",
+            "window": {
+              "content_tokens": 10,
+              "covered_tokens": 10,
+              "window_tokens": [
+                10
+              ],
+              "windows": 1
+            },
+            "words": 8
+          }
+        ]
+      }
+    },
+    {
+      "format": "docx",
+      "id": "NFo-12",
+      "mode": "hybrid",
+      "relation": "R4",
+      "result": {
+        "alignment": {
+          "objective": 0.0,
+          "pairs": [],
+          "unmatched_source": [
+            0
+          ],
+          "unmatched_suspect": [
+            0
+          ]
+        },
+        "index": {
+          "source_to_suspect": 0.0,
+          "suspect_to_source": 0.0,
+          "value": 0.0
+        },
+        "lexical_index": {
+          "source_to_suspect": 0.0,
+          "suspect_to_source": 0.0,
+          "value": 0.0
+        },
+        "matches": [
+          {
+            "characters": {
+              "jaro": 0.5865562876130173,
+              "jaro_winkler": 0.5865562876130173,
+              "levenshtein": 0.2068965517241379,
+              "ngram": 0.04,
+              "osa": 0.2068965517241379,
+              "smith_waterman": 0.09615384615384616,
+              "vsm_cosine": 0.0
+            },
+            "decision": {
+              "label": "sem_correspondencia_detectada",
+              "lexical_high": false,
+              "reason": "escores_baixos_sem_evidencia_estrutural"
+            },
+            "edit": 0.2068965517241379,
+            "fused": 0.0,
+            "lexical": 0.0,
+            "semantic_operational": 0.0,
+            "semantic_raw": -0.07725671648606662,
+            "source": 0,
+            "suspect": 0
+          }
+        ],
+        "matrices": {
+          "fused": [
+            [
+              0.0
+            ]
+          ],
+          "lexical": [
+            [
+              0.0
+            ]
+          ],
+          "semantic_operational": [
+            [
+              0.0
+            ]
+          ],
+          "semantic_raw": [
+            [
+              -0.07725671648606662
+            ]
+          ]
+        },
+        "method": "hybrid",
+        "semantic_index": {
+          "source_to_suspect": 0.0,
+          "suspect_to_source": 0.0,
+          "value": 0.0
+        },
+        "source": [
+          {
+            "flags": [],
+            "index": 0,
+            "lexical": [
+              "telescópio",
+              "registrar",
+              "imagem",
+              "galáxia",
+              "distante"
+            ],
+            "raw": "O telescópio registra imagens de galáxias distantes.",
+            "semantic": "O telescópio registra imagens de galáxias distantes.",
+            "window": {
+              "content_tokens": 14,
+              "covered_tokens": 14,
+              "window_tokens": [
+                14
+              ],
+              "windows": 1
+            },
+            "words": 7
+          }
+        ],
+        "state": "calculated",
+        "summary": {
+          "counts": {
+            "copia_editada": 0,
+            "copia_exata": 0,
+            "parafrase": 0,
+            "sem_correspondencia_detectada": 1
+          },
+          "denominator": 1,
+          "inserted_segment": "indisponivel_regra_nao_definida",
+          "predominance": "sem_correspondencia_detectada",
+          "proportions": {
+            "copia_editada": 0.0,
+            "copia_exata": 0.0,
+            "parafrase": 0.0,
+            "sem_correspondencia_detectada": 1.0
+          }
+        },
+        "suspect": [
+          {
+            "flags": [],
+            "index": 0,
+            "lexical": [
+              "cozinheira",
+              "misturar",
+              "farinha",
+              "ovo",
+              "preparar",
+              "bolo"
+            ],
+            "raw": "A cozinheira misturou farinha e ovos para preparar o bolo.",
+            "semantic": "A cozinheira misturou farinha e ovos para preparar o bolo.",
+            "window": {
+              "content_tokens": 18,
+              "covered_tokens": 18,
+              "window_tokens": [
+                18
+              ],
+              "windows": 1
+            },
+            "words": 10
+          }
+        ]
+      }
+    },
+    {
+      "format": "docx",
+      "id": "NFo-13",
+      "mode": "lexical",
+      "relation": "R1",
+      "result": {
+        "alignment": null,
+        "index": {
+          "source_to_suspect": 1.0,
+          "suspect_to_source": 1.0,
+          "value": 100.0
+        },
+        "lexical_index": {
+          "source_to_suspect": 1.0,
+          "suspect_to_source": 1.0,
+          "value": 100.0
+        },
+        "matches": null,
+        "matrices": {
+          "fused": null,
+          "lexical": [
+            [
+              1.0
+            ]
+          ],
+          "semantic_operational": null,
+          "semantic_raw": null
+        },
+        "method": "lexical",
+        "semantic_index": null,
+        "source": [
+          {
+            "flags": [],
+            "index": 0,
+            "lexical": [
+              "pesquisadora",
+              "comparar",
+              "documento",
+              "português"
+            ],
+            "raw": "A pesquisadora compara os documentos em português.",
+            "semantic": "A pesquisadora compara os documentos em português.",
+            "window": null,
+            "words": 7
+          }
+        ],
+        "state": "calculated",
+        "summary": null,
+        "suspect": [
+          {
+            "flags": [],
+            "index": 0,
+            "lexical": [
+              "pesquisadora",
+              "comparar",
+              "documento",
+              "português"
+            ],
+            "raw": "A pesquisadora compara os documentos em português.",
+            "semantic": "A pesquisadora compara os documentos em português.",
+            "window": null,
+            "words": 7
+          }
+        ]
+      }
+    },
+    {
+      "format": "docx",
+      "id": "NFo-14",
+      "mode": "lexical",
+      "relation": "R2",
+      "result": {
+        "alignment": null,
+        "index": {
+          "source_to_suspect": 1.0,
+          "suspect_to_source": 1.0,
+          "value": 100.0
+        },
+        "lexical_index": {
+          "source_to_suspect": 1.0,
+          "suspect_to_source": 1.0,
+          "value": 100.0
+        },
+        "matches": null,
+        "matrices": {
+          "fused": null,
+          "lexical": [
+            [
+              1.0
+            ]
+          ],
+          "semantic_operational": null,
+          "semantic_raw": null
+        },
+        "method": "lexical",
+        "semantic_index": null,
+        "source": [
+          {
+            "flags": [],
+            "index": 0,
+            "lexical": [
+              "pesquisadora",
+              "comparar",
+              "documento",
+              "português"
+            ],
+            "raw": "A pesquisadora compara os documentos em português.",
+            "semantic": "A pesquisadora compara os documentos em português.",
+            "window": null,
+            "words": 7
+          }
+        ],
+        "state": "calculated",
+        "summary": null,
+        "suspect": [
+          {
+            "flags": [],
+            "index": 0,
+            "lexical": [
+              "pesquisadora",
+              "comparar",
+              "documento",
+              "português"
+            ],
+            "raw": "A pesquisadora compara os documento em português.",
+            "semantic": "A pesquisadora compara os documento em português.",
+            "window": null,
+            "words": 7
+          }
+        ]
+      }
+    },
+    {
+      "format": "docx",
+      "id": "NFo-15",
+      "mode": "lexical",
+      "relation": "R3",
+      "result": {
+        "alignment": null,
+        "index": {
+          "source_to_suspect": 1.0,
+          "suspect_to_source": 1.0,
+          "value": 100.0
+        },
+        "lexical_index": {
+          "source_to_suspect": 1.0,
+          "suspect_to_source": 1.0,
+          "value": 100.0
+        },
+        "matches": null,
+        "matrices": {
+          "fused": null,
+          "lexical": [
+            [
+              1.0
+            ]
+          ],
+          "semantic_operational": null,
+          "semantic_raw": null
+        },
+        "method": "lexical",
+        "semantic_index": null,
+        "source": [
+          {
+            "flags": [],
+            "index": 0,
+            "lexical": [
+              "médica",
+              "tratar",
+              "paciente",
+              "hospital"
+            ],
+            "raw": "A médica tratou o paciente no hospital.",
+            "semantic": "A médica tratou o paciente no hospital.",
+            "window": null,
+            "words": 7
+          }
+        ],
+        "state": "calculated",
+        "summary": null,
+        "suspect": [
+          {
+            "flags": [],
+            "index": 0,
+            "lexical": [
+              "hospital",
+              "paciente",
+              "tratar",
+              "médica"
+            ],
+            "raw": "No hospital, o paciente foi tratado pela médica.",
+            "semantic": "No hospital, o paciente foi tratado pela médica.",
+            "window": null,
+            "words": 8
+          }
+        ]
+      }
+    },
+    {
+      "format": "docx",
+      "id": "NFo-16",
+      "mode": "lexical",
+      "relation": "R4",
+      "result": {
+        "alignment": null,
+        "index": {
+          "source_to_suspect": 0.0,
+          "suspect_to_source": 0.0,
+          "value": 0.0
+        },
+        "lexical_index": {
+          "source_to_suspect": 0.0,
+          "suspect_to_source": 0.0,
+          "value": 0.0
+        },
+        "matches": null,
+        "matrices": {
+          "fused": null,
+          "lexical": [
+            [
+              0.0
+            ]
+          ],
+          "semantic_operational": null,
+          "semantic_raw": null
+        },
+        "method": "lexical",
+        "semantic_index": null,
+        "source": [
+          {
+            "flags": [],
+            "index": 0,
+            "lexical": [
+              "telescópio",
+              "registrar",
+              "imagem",
+              "galáxia",
+              "distante"
+            ],
+            "raw": "O telescópio registra imagens de galáxias distantes.",
+            "semantic": "O telescópio registra imagens de galáxias distantes.",
+            "window": null,
+            "words": 7
+          }
+        ],
+        "state": "calculated",
+        "summary": null,
+        "suspect": [
+          {
+            "flags": [],
+            "index": 0,
+            "lexical": [
+              "cozinheira",
+              "misturar",
+              "farinha",
+              "ovo",
+              "preparar",
+              "bolo"
+            ],
+            "raw": "A cozinheira misturou farinha e ovos para preparar o bolo.",
+            "semantic": "A cozinheira misturou farinha e ovos para preparar o bolo.",
+            "window": null,
+            "words": 10
+          }
+        ]
+      }
+    },
+    {
+      "format": "pdf",
+      "id": "NFo-17",
+      "mode": "hybrid",
+      "relation": "R1",
+      "result": {
+        "alignment": {
+          "objective": 1.0,
+          "pairs": [
+            {
+              "score": 1.0,
+              "source": 0,
+              "suspect": 0
+            }
+          ],
+          "unmatched_source": [],
+          "unmatched_suspect": []
+        },
+        "index": {
+          "source_to_suspect": 1.0,
+          "suspect_to_source": 1.0,
+          "value": 100.0
+        },
+        "lexical_index": {
+          "source_to_suspect": 1.0,
+          "suspect_to_source": 1.0,
+          "value": 100.0
+        },
+        "matches": [
+          {
+            "characters": {
+              "jaro": 1.0,
+              "jaro_winkler": 1.0,
+              "levenshtein": 1.0,
+              "ngram": 1.0,
+              "osa": 1.0,
+              "smith_waterman": 1.0,
+              "vsm_cosine": 1.0
+            },
+            "decision": {
+              "label": "copia_exata",
+              "lexical_high": true,
+              "reason": "igualdade_da_representacao_textual"
+            },
+            "edit": 1.0,
+            "fused": 1.0,
+            "lexical": 1.0,
+            "semantic_operational": 1.0,
+            "semantic_raw": 1.0,
+            "source": 0,
+            "suspect": 0
+          }
+        ],
+        "matrices": {
+          "fused": [
+            [
+              1.0
+            ]
+          ],
+          "lexical": [
+            [
+              1.0
+            ]
+          ],
+          "semantic_operational": [
+            [
+              1.0
+            ]
+          ],
+          "semantic_raw": [
+            [
+              1.0
+            ]
+          ]
+        },
+        "method": "hybrid",
+        "semantic_index": {
+          "source_to_suspect": 1.0,
+          "suspect_to_source": 1.0,
+          "value": 100.0
+        },
+        "source": [
+          {
+            "flags": [],
+            "index": 0,
+            "lexical": [
+              "pesquisadora",
+              "comparar",
+              "documento",
+              "português"
+            ],
+            "raw": "A pesquisadora compara os documentos em português.",
+            "semantic": "A pesquisadora compara os documentos em português.",
+            "window": {
+              "content_tokens": 9,
+              "covered_tokens": 9,
+              "window_tokens": [
+                9
+              ],
+              "windows": 1
+            },
+            "words": 7
+          }
+        ],
+        "state": "calculated",
+        "summary": {
+          "counts": {
+            "copia_editada": 0,
+            "copia_exata": 1,
+            "parafrase": 0,
+            "sem_correspondencia_detectada": 0
+          },
+          "denominator": 1,
+          "inserted_segment": "indisponivel_regra_nao_definida",
+          "predominance": "copia_exata",
+          "proportions": {
+            "copia_editada": 0.0,
+            "copia_exata": 1.0,
+            "parafrase": 0.0,
+            "sem_correspondencia_detectada": 0.0
+          }
+        },
+        "suspect": [
+          {
+            "flags": [],
+            "index": 0,
+            "lexical": [
+              "pesquisadora",
+              "comparar",
+              "documento",
+              "português"
+            ],
+            "raw": "A pesquisadora compara os documentos em português.",
+            "semantic": "A pesquisadora compara os documentos em português.",
+            "window": {
+              "content_tokens": 9,
+              "covered_tokens": 9,
+              "window_tokens": [
+                9
+              ],
+              "windows": 1
+            },
+            "words": 7
+          }
+        ]
+      }
+    },
+    {
+      "format": "pdf",
+      "id": "NFo-18",
+      "mode": "hybrid",
+      "relation": "R2",
+      "result": {
+        "alignment": {
+          "objective": 0.9906188751044533,
+          "pairs": [
+            {
+              "score": 0.9906188751044533,
+              "source": 0,
+              "suspect": 0
+            }
+          ],
+          "unmatched_source": [],
+          "unmatched_suspect": []
+        },
+        "index": {
+          "source_to_suspect": 0.9906188751044533,
+          "suspect_to_source": 0.9906188751044533,
+          "value": 99.06188751044533
+        },
+        "lexical_index": {
+          "source_to_suspect": 1.0,
+          "suspect_to_source": 1.0,
+          "value": 100.0
+        },
+        "matches": [
+          {
+            "characters": {
+              "jaro": 0.9491156462585034,
+              "jaro_winkler": 0.969469387755102,
+              "levenshtein": 0.98,
+              "ngram": 0.9565217391304348,
+              "osa": 0.98,
+              "smith_waterman": 0.9897959183673469,
+              "vsm_cosine": 1.0
+            },
+            "decision": {
+              "label": "copia_editada",
+              "lexical_high": true,
+              "reason": "semelhanca_estrutural"
+            },
+            "edit": 0.98,
+            "fused": 0.9906188751044533,
+            "lexical": 1.0,
+            "semantic_operational": 0.9843647918407556,
+            "semantic_raw": 0.9843647918407556,
+            "source": 0,
+            "suspect": 0
+          }
+        ],
+        "matrices": {
+          "fused": [
+            [
+              0.9906188751044533
+            ]
+          ],
+          "lexical": [
+            [
+              1.0
+            ]
+          ],
+          "semantic_operational": [
+            [
+              0.9843647918407556
+            ]
+          ],
+          "semantic_raw": [
+            [
+              0.9843647918407556
+            ]
+          ]
+        },
+        "method": "hybrid",
+        "semantic_index": {
+          "source_to_suspect": 0.9843647918407556,
+          "suspect_to_source": 0.9843647918407556,
+          "value": 98.43647918407557
+        },
+        "source": [
+          {
+            "flags": [],
+            "index": 0,
+            "lexical": [
+              "pesquisadora",
+              "comparar",
+              "documento",
+              "português"
+            ],
+            "raw": "A pesquisadora compara os documentos em português.",
+            "semantic": "A pesquisadora compara os documentos em português.",
+            "window": {
+              "content_tokens": 9,
+              "covered_tokens": 9,
+              "window_tokens": [
+                9
+              ],
+              "windows": 1
+            },
+            "words": 7
+          }
+        ],
+        "state": "calculated",
+        "summary": {
+          "counts": {
+            "copia_editada": 1,
+            "copia_exata": 0,
+            "parafrase": 0,
+            "sem_correspondencia_detectada": 0
+          },
+          "denominator": 1,
+          "inserted_segment": "indisponivel_regra_nao_definida",
+          "predominance": "copia_editada",
+          "proportions": {
+            "copia_editada": 1.0,
+            "copia_exata": 0.0,
+            "parafrase": 0.0,
+            "sem_correspondencia_detectada": 0.0
+          }
+        },
+        "suspect": [
+          {
+            "flags": [],
+            "index": 0,
+            "lexical": [
+              "pesquisadora",
+              "comparar",
+              "documento",
+              "português"
+            ],
+            "raw": "A pesquisadora compara os documento em português.",
+            "semantic": "A pesquisadora compara os documento em português.",
+            "window": {
+              "content_tokens": 9,
+              "covered_tokens": 9,
+              "window_tokens": [
+                9
+              ],
+              "windows": 1
+            },
+            "words": 7
+          }
+        ]
+      }
+    },
+    {
+      "format": "pdf",
+      "id": "NFo-19",
+      "mode": "hybrid",
+      "relation": "R3",
+      "result": {
+        "alignment": {
+          "objective": 0.9758130666738792,
+          "pairs": [
+            {
+              "score": 0.9758130666738792,
+              "source": 0,
+              "suspect": 0
+            }
+          ],
+          "unmatched_source": [],
+          "unmatched_suspect": []
+        },
+        "index": {
+          "source_to_suspect": 0.9758130666738792,
+          "suspect_to_source": 0.9758130666738792,
+          "value": 97.58130666738792
+        },
+        "lexical_index": {
+          "source_to_suspect": 1.0,
+          "suspect_to_source": 1.0,
+          "value": 100.0
+        },
+        "matches": [
+          {
+            "characters": {
+              "jaro": 0.6480769230769231,
+              "jaro_winkler": 0.6480769230769231,
+              "levenshtein": 0.35416666666666663,
+              "ngram": 0.6341463414634146,
+              "osa": 0.35416666666666663,
+              "smith_waterman": 0.3333333333333333,
+              "vsm_cosine": 1.0
+            },
+            "decision": {
+              "label": "parafrase",
+              "lexical_high": true,
+              "reason": "similaridade_semantica_operacional"
+            },
+            "edit": 0.35416666666666663,
+            "fused": 0.9758130666738792,
+            "lexical": 1.0,
+            "semantic_operational": 0.9596884444564654,
+            "semantic_raw": 0.9596884444564654,
+            "source": 0,
+            "suspect": 0
+          }
+        ],
+        "matrices": {
+          "fused": [
+            [
+              0.9758130666738792
+            ]
+          ],
+          "lexical": [
+            [
+              1.0
+            ]
+          ],
+          "semantic_operational": [
+            [
+              0.9596884444564654
+            ]
+          ],
+          "semantic_raw": [
+            [
+              0.9596884444564654
+            ]
+          ]
+        },
+        "method": "hybrid",
+        "semantic_index": {
+          "source_to_suspect": 0.9596884444564654,
+          "suspect_to_source": 0.9596884444564654,
+          "value": 95.96884444564654
+        },
+        "source": [
+          {
+            "flags": [],
+            "index": 0,
+            "lexical": [
+              "médica",
+              "tratar",
+              "paciente",
+              "hospital"
+            ],
+            "raw": "A médica tratou o paciente no hospital.",
+            "semantic": "A médica tratou o paciente no hospital.",
+            "window": {
+              "content_tokens": 9,
+              "covered_tokens": 9,
+              "window_tokens": [
+                9
+              ],
+              "windows": 1
+            },
+            "words": 7
+          }
+        ],
+        "state": "calculated",
+        "summary": {
+          "counts": {
+            "copia_editada": 0,
+            "copia_exata": 0,
+            "parafrase": 1,
+            "sem_correspondencia_detectada": 0
+          },
+          "denominator": 1,
+          "inserted_segment": "indisponivel_regra_nao_definida",
+          "predominance": "parafrase",
+          "proportions": {
+            "copia_editada": 0.0,
+            "copia_exata": 0.0,
+            "parafrase": 1.0,
+            "sem_correspondencia_detectada": 0.0
+          }
+        },
+        "suspect": [
+          {
+            "flags": [],
+            "index": 0,
+            "lexical": [
+              "hospital",
+              "paciente",
+              "tratar",
+              "médica"
+            ],
+            "raw": "No hospital, o paciente foi tratado pela médica.",
+            "semantic": "No hospital, o paciente foi tratado pela médica.",
+            "window": {
+              "content_tokens": 10,
+              "covered_tokens": 10,
+              "window_tokens": [
+                10
+              ],
+              "windows": 1
+            },
+            "words": 8
+          }
+        ]
+      }
+    },
+    {
+      "format": "pdf",
+      "id": "NFo-20",
+      "mode": "hybrid",
+      "relation": "R4",
+      "result": {
+        "alignment": {
+          "objective": 0.0,
+          "pairs": [],
+          "unmatched_source": [
+            0
+          ],
+          "unmatched_suspect": [
+            0
+          ]
+        },
+        "index": {
+          "source_to_suspect": 0.0,
+          "suspect_to_source": 0.0,
+          "value": 0.0
+        },
+        "lexical_index": {
+          "source_to_suspect": 0.0,
+          "suspect_to_source": 0.0,
+          "value": 0.0
+        },
+        "matches": [
+          {
+            "characters": {
+              "jaro": 0.5865562876130173,
+              "jaro_winkler": 0.5865562876130173,
+              "levenshtein": 0.2068965517241379,
+              "ngram": 0.04,
+              "osa": 0.2068965517241379,
+              "smith_waterman": 0.09615384615384616,
+              "vsm_cosine": 0.0
+            },
+            "decision": {
+              "label": "sem_correspondencia_detectada",
+              "lexical_high": false,
+              "reason": "escores_baixos_sem_evidencia_estrutural"
+            },
+            "edit": 0.2068965517241379,
+            "fused": 0.0,
+            "lexical": 0.0,
+            "semantic_operational": 0.0,
+            "semantic_raw": -0.07725671648606662,
+            "source": 0,
+            "suspect": 0
+          }
+        ],
+        "matrices": {
+          "fused": [
+            [
+              0.0
+            ]
+          ],
+          "lexical": [
+            [
+              0.0
+            ]
+          ],
+          "semantic_operational": [
+            [
+              0.0
+            ]
+          ],
+          "semantic_raw": [
+            [
+              -0.07725671648606662
+            ]
+          ]
+        },
+        "method": "hybrid",
+        "semantic_index": {
+          "source_to_suspect": 0.0,
+          "suspect_to_source": 0.0,
+          "value": 0.0
+        },
+        "source": [
+          {
+            "flags": [],
+            "index": 0,
+            "lexical": [
+              "telescópio",
+              "registrar",
+              "imagem",
+              "galáxia",
+              "distante"
+            ],
+            "raw": "O telescópio registra imagens de galáxias distantes.",
+            "semantic": "O telescópio registra imagens de galáxias distantes.",
+            "window": {
+              "content_tokens": 14,
+              "covered_tokens": 14,
+              "window_tokens": [
+                14
+              ],
+              "windows": 1
+            },
+            "words": 7
+          }
+        ],
+        "state": "calculated",
+        "summary": {
+          "counts": {
+            "copia_editada": 0,
+            "copia_exata": 0,
+            "parafrase": 0,
+            "sem_correspondencia_detectada": 1
+          },
+          "denominator": 1,
+          "inserted_segment": "indisponivel_regra_nao_definida",
+          "predominance": "sem_correspondencia_detectada",
+          "proportions": {
+            "copia_editada": 0.0,
+            "copia_exata": 0.0,
+            "parafrase": 0.0,
+            "sem_correspondencia_detectada": 1.0
+          }
+        },
+        "suspect": [
+          {
+            "flags": [],
+            "index": 0,
+            "lexical": [
+              "cozinheira",
+              "misturar",
+              "farinha",
+              "ovo",
+              "preparar",
+              "bolo"
+            ],
+            "raw": "A cozinheira misturou farinha e ovos para preparar o bolo.",
+            "semantic": "A cozinheira misturou farinha e ovos para preparar o bolo.",
+            "window": {
+              "content_tokens": 18,
+              "covered_tokens": 18,
+              "window_tokens": [
+                18
+              ],
+              "windows": 1
+            },
+            "words": 10
+          }
+        ]
+      }
+    },
+    {
+      "format": "pdf",
+      "id": "NFo-21",
+      "mode": "lexical",
+      "relation": "R1",
+      "result": {
+        "alignment": null,
+        "index": {
+          "source_to_suspect": 1.0,
+          "suspect_to_source": 1.0,
+          "value": 100.0
+        },
+        "lexical_index": {
+          "source_to_suspect": 1.0,
+          "suspect_to_source": 1.0,
+          "value": 100.0
+        },
+        "matches": null,
+        "matrices": {
+          "fused": null,
+          "lexical": [
+            [
+              1.0
+            ]
+          ],
+          "semantic_operational": null,
+          "semantic_raw": null
+        },
+        "method": "lexical",
+        "semantic_index": null,
+        "source": [
+          {
+            "flags": [],
+            "index": 0,
+            "lexical": [
+              "pesquisadora",
+              "comparar",
+              "documento",
+              "português"
+            ],
+            "raw": "A pesquisadora compara os documentos em português.",
+            "semantic": "A pesquisadora compara os documentos em português.",
+            "window": null,
+            "words": 7
+          }
+        ],
+        "state": "calculated",
+        "summary": null,
+        "suspect": [
+          {
+            "flags": [],
+            "index": 0,
+            "lexical": [
+              "pesquisadora",
+              "comparar",
+              "documento",
+              "português"
+            ],
+            "raw": "A pesquisadora compara os documentos em português.",
+            "semantic": "A pesquisadora compara os documentos em português.",
+            "window": null,
+            "words": 7
+          }
+        ]
+      }
+    },
+    {
+      "format": "pdf",
+      "id": "NFo-22",
+      "mode": "lexical",
+      "relation": "R2",
+      "result": {
+        "alignment": null,
+        "index": {
+          "source_to_suspect": 1.0,
+          "suspect_to_source": 1.0,
+          "value": 100.0
+        },
+        "lexical_index": {
+          "source_to_suspect": 1.0,
+          "suspect_to_source": 1.0,
+          "value": 100.0
+        },
+        "matches": null,
+        "matrices": {
+          "fused": null,
+          "lexical": [
+            [
+              1.0
+            ]
+          ],
+          "semantic_operational": null,
+          "semantic_raw": null
+        },
+        "method": "lexical",
+        "semantic_index": null,
+        "source": [
+          {
+            "flags": [],
+            "index": 0,
+            "lexical": [
+              "pesquisadora",
+              "comparar",
+              "documento",
+              "português"
+            ],
+            "raw": "A pesquisadora compara os documentos em português.",
+            "semantic": "A pesquisadora compara os documentos em português.",
+            "window": null,
+            "words": 7
+          }
+        ],
+        "state": "calculated",
+        "summary": null,
+        "suspect": [
+          {
+            "flags": [],
+            "index": 0,
+            "lexical": [
+              "pesquisadora",
+              "comparar",
+              "documento",
+              "português"
+            ],
+            "raw": "A pesquisadora compara os documento em português.",
+            "semantic": "A pesquisadora compara os documento em português.",
+            "window": null,
+            "words": 7
+          }
+        ]
+      }
+    },
+    {
+      "format": "pdf",
+      "id": "NFo-23",
+      "mode": "lexical",
+      "relation": "R3",
+      "result": {
+        "alignment": null,
+        "index": {
+          "source_to_suspect": 1.0,
+          "suspect_to_source": 1.0,
+          "value": 100.0
+        },
+        "lexical_index": {
+          "source_to_suspect": 1.0,
+          "suspect_to_source": 1.0,
+          "value": 100.0
+        },
+        "matches": null,
+        "matrices": {
+          "fused": null,
+          "lexical": [
+            [
+              1.0
+            ]
+          ],
+          "semantic_operational": null,
+          "semantic_raw": null
+        },
+        "method": "lexical",
+        "semantic_index": null,
+        "source": [
+          {
+            "flags": [],
+            "index": 0,
+            "lexical": [
+              "médica",
+              "tratar",
+              "paciente",
+              "hospital"
+            ],
+            "raw": "A médica tratou o paciente no hospital.",
+            "semantic": "A médica tratou o paciente no hospital.",
+            "window": null,
+            "words": 7
+          }
+        ],
+        "state": "calculated",
+        "summary": null,
+        "suspect": [
+          {
+            "flags": [],
+            "index": 0,
+            "lexical": [
+              "hospital",
+              "paciente",
+              "tratar",
+              "médica"
+            ],
+            "raw": "No hospital, o paciente foi tratado pela médica.",
+            "semantic": "No hospital, o paciente foi tratado pela médica.",
+            "window": null,
+            "words": 8
+          }
+        ]
+      }
+    },
+    {
+      "format": "pdf",
+      "id": "NFo-24",
+      "mode": "lexical",
+      "relation": "R4",
+      "result": {
+        "alignment": null,
+        "index": {
+          "source_to_suspect": 0.0,
+          "suspect_to_source": 0.0,
+          "value": 0.0
+        },
+        "lexical_index": {
+          "source_to_suspect": 0.0,
+          "suspect_to_source": 0.0,
+          "value": 0.0
+        },
+        "matches": null,
+        "matrices": {
+          "fused": null,
+          "lexical": [
+            [
+              0.0
+            ]
+          ],
+          "semantic_operational": null,
+          "semantic_raw": null
+        },
+        "method": "lexical",
+        "semantic_index": null,
+        "source": [
+          {
+            "flags": [],
+            "index": 0,
+            "lexical": [
+              "telescópio",
+              "registrar",
+              "imagem",
+              "galáxia",
+              "distante"
+            ],
+            "raw": "O telescópio registra imagens de galáxias distantes.",
+            "semantic": "O telescópio registra imagens de galáxias distantes.",
+            "window": null,
+            "words": 7
+          }
+        ],
+        "state": "calculated",
+        "summary": null,
+        "suspect": [
+          {
+            "flags": [],
+            "index": 0,
+            "lexical": [
+              "cozinheira",
+              "misturar",
+              "farinha",
+              "ovo",
+              "preparar",
+              "bolo"
+            ],
+            "raw": "A cozinheira misturou farinha e ovos para preparar o bolo.",
+            "semantic": "A cozinheira misturou farinha e ovos para preparar o bolo.",
+            "window": null,
+            "words": 10
+          }
+        ]
+      }
+    },
+    {
+      "format": "pasted",
+      "id": "NFo-25",
+      "mode": "hybrid",
+      "relation": "R1",
+      "result": {
+        "alignment": {
+          "objective": 1.0,
+          "pairs": [
+            {
+              "score": 1.0,
+              "source": 0,
+              "suspect": 0
+            }
+          ],
+          "unmatched_source": [],
+          "unmatched_suspect": []
+        },
+        "index": {
+          "source_to_suspect": 1.0,
+          "suspect_to_source": 1.0,
+          "value": 100.0
+        },
+        "lexical_index": {
+          "source_to_suspect": 1.0,
+          "suspect_to_source": 1.0,
+          "value": 100.0
+        },
+        "matches": [
+          {
+            "characters": {
+              "jaro": 1.0,
+              "jaro_winkler": 1.0,
+              "levenshtein": 1.0,
+              "ngram": 1.0,
+              "osa": 1.0,
+              "smith_waterman": 1.0,
+              "vsm_cosine": 1.0
+            },
+            "decision": {
+              "label": "copia_exata",
+              "lexical_high": true,
+              "reason": "igualdade_da_representacao_textual"
+            },
+            "edit": 1.0,
+            "fused": 1.0,
+            "lexical": 1.0,
+            "semantic_operational": 1.0,
+            "semantic_raw": 1.0,
+            "source": 0,
+            "suspect": 0
+          }
+        ],
+        "matrices": {
+          "fused": [
+            [
+              1.0
+            ]
+          ],
+          "lexical": [
+            [
+              1.0
+            ]
+          ],
+          "semantic_operational": [
+            [
+              1.0
+            ]
+          ],
+          "semantic_raw": [
+            [
+              1.0
+            ]
+          ]
+        },
+        "method": "hybrid",
+        "semantic_index": {
+          "source_to_suspect": 1.0,
+          "suspect_to_source": 1.0,
+          "value": 100.0
+        },
+        "source": [
+          {
+            "flags": [],
+            "index": 0,
+            "lexical": [
+              "pesquisadora",
+              "comparar",
+              "documento",
+              "português"
+            ],
+            "raw": "A pesquisadora compara os documentos em português.",
+            "semantic": "A pesquisadora compara os documentos em português.",
+            "window": {
+              "content_tokens": 9,
+              "covered_tokens": 9,
+              "window_tokens": [
+                9
+              ],
+              "windows": 1
+            },
+            "words": 7
+          }
+        ],
+        "state": "calculated",
+        "summary": {
+          "counts": {
+            "copia_editada": 0,
+            "copia_exata": 1,
+            "parafrase": 0,
+            "sem_correspondencia_detectada": 0
+          },
+          "denominator": 1,
+          "inserted_segment": "indisponivel_regra_nao_definida",
+          "predominance": "copia_exata",
+          "proportions": {
+            "copia_editada": 0.0,
+            "copia_exata": 1.0,
+            "parafrase": 0.0,
+            "sem_correspondencia_detectada": 0.0
+          }
+        },
+        "suspect": [
+          {
+            "flags": [],
+            "index": 0,
+            "lexical": [
+              "pesquisadora",
+              "comparar",
+              "documento",
+              "português"
+            ],
+            "raw": "A pesquisadora compara os documentos em português.",
+            "semantic": "A pesquisadora compara os documentos em português.",
+            "window": {
+              "content_tokens": 9,
+              "covered_tokens": 9,
+              "window_tokens": [
+                9
+              ],
+              "windows": 1
+            },
+            "words": 7
+          }
+        ]
+      }
+    },
+    {
+      "format": "pasted",
+      "id": "NFo-26",
+      "mode": "hybrid",
+      "relation": "R2",
+      "result": {
+        "alignment": {
+          "objective": 0.9906188751044533,
+          "pairs": [
+            {
+              "score": 0.9906188751044533,
+              "source": 0,
+              "suspect": 0
+            }
+          ],
+          "unmatched_source": [],
+          "unmatched_suspect": []
+        },
+        "index": {
+          "source_to_suspect": 0.9906188751044533,
+          "suspect_to_source": 0.9906188751044533,
+          "value": 99.06188751044533
+        },
+        "lexical_index": {
+          "source_to_suspect": 1.0,
+          "suspect_to_source": 1.0,
+          "value": 100.0
+        },
+        "matches": [
+          {
+            "characters": {
+              "jaro": 0.9491156462585034,
+              "jaro_winkler": 0.969469387755102,
+              "levenshtein": 0.98,
+              "ngram": 0.9565217391304348,
+              "osa": 0.98,
+              "smith_waterman": 0.9897959183673469,
+              "vsm_cosine": 1.0
+            },
+            "decision": {
+              "label": "copia_editada",
+              "lexical_high": true,
+              "reason": "semelhanca_estrutural"
+            },
+            "edit": 0.98,
+            "fused": 0.9906188751044533,
+            "lexical": 1.0,
+            "semantic_operational": 0.9843647918407556,
+            "semantic_raw": 0.9843647918407556,
+            "source": 0,
+            "suspect": 0
+          }
+        ],
+        "matrices": {
+          "fused": [
+            [
+              0.9906188751044533
+            ]
+          ],
+          "lexical": [
+            [
+              1.0
+            ]
+          ],
+          "semantic_operational": [
+            [
+              0.9843647918407556
+            ]
+          ],
+          "semantic_raw": [
+            [
+              0.9843647918407556
+            ]
+          ]
+        },
+        "method": "hybrid",
+        "semantic_index": {
+          "source_to_suspect": 0.9843647918407556,
+          "suspect_to_source": 0.9843647918407556,
+          "value": 98.43647918407557
+        },
+        "source": [
+          {
+            "flags": [],
+            "index": 0,
+            "lexical": [
+              "pesquisadora",
+              "comparar",
+              "documento",
+              "português"
+            ],
+            "raw": "A pesquisadora compara os documentos em português.",
+            "semantic": "A pesquisadora compara os documentos em português.",
+            "window": {
+              "content_tokens": 9,
+              "covered_tokens": 9,
+              "window_tokens": [
+                9
+              ],
+              "windows": 1
+            },
+            "words": 7
+          }
+        ],
+        "state": "calculated",
+        "summary": {
+          "counts": {
+            "copia_editada": 1,
+            "copia_exata": 0,
+            "parafrase": 0,
+            "sem_correspondencia_detectada": 0
+          },
+          "denominator": 1,
+          "inserted_segment": "indisponivel_regra_nao_definida",
+          "predominance": "copia_editada",
+          "proportions": {
+            "copia_editada": 1.0,
+            "copia_exata": 0.0,
+            "parafrase": 0.0,
+            "sem_correspondencia_detectada": 0.0
+          }
+        },
+        "suspect": [
+          {
+            "flags": [],
+            "index": 0,
+            "lexical": [
+              "pesquisadora",
+              "comparar",
+              "documento",
+              "português"
+            ],
+            "raw": "A pesquisadora compara os documento em português.",
+            "semantic": "A pesquisadora compara os documento em português.",
+            "window": {
+              "content_tokens": 9,
+              "covered_tokens": 9,
+              "window_tokens": [
+                9
+              ],
+              "windows": 1
+            },
+            "words": 7
+          }
+        ]
+      }
+    },
+    {
+      "format": "pasted",
+      "id": "NFo-27",
+      "mode": "hybrid",
+      "relation": "R3",
+      "result": {
+        "alignment": {
+          "objective": 0.9758130666738792,
+          "pairs": [
+            {
+              "score": 0.9758130666738792,
+              "source": 0,
+              "suspect": 0
+            }
+          ],
+          "unmatched_source": [],
+          "unmatched_suspect": []
+        },
+        "index": {
+          "source_to_suspect": 0.9758130666738792,
+          "suspect_to_source": 0.9758130666738792,
+          "value": 97.58130666738792
+        },
+        "lexical_index": {
+          "source_to_suspect": 1.0,
+          "suspect_to_source": 1.0,
+          "value": 100.0
+        },
+        "matches": [
+          {
+            "characters": {
+              "jaro": 0.6480769230769231,
+              "jaro_winkler": 0.6480769230769231,
+              "levenshtein": 0.35416666666666663,
+              "ngram": 0.6341463414634146,
+              "osa": 0.35416666666666663,
+              "smith_waterman": 0.3333333333333333,
+              "vsm_cosine": 1.0
+            },
+            "decision": {
+              "label": "parafrase",
+              "lexical_high": true,
+              "reason": "similaridade_semantica_operacional"
+            },
+            "edit": 0.35416666666666663,
+            "fused": 0.9758130666738792,
+            "lexical": 1.0,
+            "semantic_operational": 0.9596884444564654,
+            "semantic_raw": 0.9596884444564654,
+            "source": 0,
+            "suspect": 0
+          }
+        ],
+        "matrices": {
+          "fused": [
+            [
+              0.9758130666738792
+            ]
+          ],
+          "lexical": [
+            [
+              1.0
+            ]
+          ],
+          "semantic_operational": [
+            [
+              0.9596884444564654
+            ]
+          ],
+          "semantic_raw": [
+            [
+              0.9596884444564654
+            ]
+          ]
+        },
+        "method": "hybrid",
+        "semantic_index": {
+          "source_to_suspect": 0.9596884444564654,
+          "suspect_to_source": 0.9596884444564654,
+          "value": 95.96884444564654
+        },
+        "source": [
+          {
+            "flags": [],
+            "index": 0,
+            "lexical": [
+              "médica",
+              "tratar",
+              "paciente",
+              "hospital"
+            ],
+            "raw": "A médica tratou o paciente no hospital.",
+            "semantic": "A médica tratou o paciente no hospital.",
+            "window": {
+              "content_tokens": 9,
+              "covered_tokens": 9,
+              "window_tokens": [
+                9
+              ],
+              "windows": 1
+            },
+            "words": 7
+          }
+        ],
+        "state": "calculated",
+        "summary": {
+          "counts": {
+            "copia_editada": 0,
+            "copia_exata": 0,
+            "parafrase": 1,
+            "sem_correspondencia_detectada": 0
+          },
+          "denominator": 1,
+          "inserted_segment": "indisponivel_regra_nao_definida",
+          "predominance": "parafrase",
+          "proportions": {
+            "copia_editada": 0.0,
+            "copia_exata": 0.0,
+            "parafrase": 1.0,
+            "sem_correspondencia_detectada": 0.0
+          }
+        },
+        "suspect": [
+          {
+            "flags": [],
+            "index": 0,
+            "lexical": [
+              "hospital",
+              "paciente",
+              "tratar",
+              "médica"
+            ],
+            "raw": "No hospital, o paciente foi tratado pela médica.",
+            "semantic": "No hospital, o paciente foi tratado pela médica.",
+            "window": {
+              "content_tokens": 10,
+              "covered_tokens": 10,
+              "window_tokens": [
+                10
+              ],
+              "windows": 1
+            },
+            "words": 8
+          }
+        ]
+      }
+    },
+    {
+      "format": "pasted",
+      "id": "NFo-28",
+      "mode": "hybrid",
+      "relation": "R4",
+      "result": {
+        "alignment": {
+          "objective": 0.0,
+          "pairs": [],
+          "unmatched_source": [
+            0
+          ],
+          "unmatched_suspect": [
+            0
+          ]
+        },
+        "index": {
+          "source_to_suspect": 0.0,
+          "suspect_to_source": 0.0,
+          "value": 0.0
+        },
+        "lexical_index": {
+          "source_to_suspect": 0.0,
+          "suspect_to_source": 0.0,
+          "value": 0.0
+        },
+        "matches": [
+          {
+            "characters": {
+              "jaro": 0.5865562876130173,
+              "jaro_winkler": 0.5865562876130173,
+              "levenshtein": 0.2068965517241379,
+              "ngram": 0.04,
+              "osa": 0.2068965517241379,
+              "smith_waterman": 0.09615384615384616,
+              "vsm_cosine": 0.0
+            },
+            "decision": {
+              "label": "sem_correspondencia_detectada",
+              "lexical_high": false,
+              "reason": "escores_baixos_sem_evidencia_estrutural"
+            },
+            "edit": 0.2068965517241379,
+            "fused": 0.0,
+            "lexical": 0.0,
+            "semantic_operational": 0.0,
+            "semantic_raw": -0.07725671648606662,
+            "source": 0,
+            "suspect": 0
+          }
+        ],
+        "matrices": {
+          "fused": [
+            [
+              0.0
+            ]
+          ],
+          "lexical": [
+            [
+              0.0
+            ]
+          ],
+          "semantic_operational": [
+            [
+              0.0
+            ]
+          ],
+          "semantic_raw": [
+            [
+              -0.07725671648606662
+            ]
+          ]
+        },
+        "method": "hybrid",
+        "semantic_index": {
+          "source_to_suspect": 0.0,
+          "suspect_to_source": 0.0,
+          "value": 0.0
+        },
+        "source": [
+          {
+            "flags": [],
+            "index": 0,
+            "lexical": [
+              "telescópio",
+              "registrar",
+              "imagem",
+              "galáxia",
+              "distante"
+            ],
+            "raw": "O telescópio registra imagens de galáxias distantes.",
+            "semantic": "O telescópio registra imagens de galáxias distantes.",
+            "window": {
+              "content_tokens": 14,
+              "covered_tokens": 14,
+              "window_tokens": [
+                14
+              ],
+              "windows": 1
+            },
+            "words": 7
+          }
+        ],
+        "state": "calculated",
+        "summary": {
+          "counts": {
+            "copia_editada": 0,
+            "copia_exata": 0,
+            "parafrase": 0,
+            "sem_correspondencia_detectada": 1
+          },
+          "denominator": 1,
+          "inserted_segment": "indisponivel_regra_nao_definida",
+          "predominance": "sem_correspondencia_detectada",
+          "proportions": {
+            "copia_editada": 0.0,
+            "copia_exata": 0.0,
+            "parafrase": 0.0,
+            "sem_correspondencia_detectada": 1.0
+          }
+        },
+        "suspect": [
+          {
+            "flags": [],
+            "index": 0,
+            "lexical": [
+              "cozinheira",
+              "misturar",
+              "farinha",
+              "ovo",
+              "preparar",
+              "bolo"
+            ],
+            "raw": "A cozinheira misturou farinha e ovos para preparar o bolo.",
+            "semantic": "A cozinheira misturou farinha e ovos para preparar o bolo.",
+            "window": {
+              "content_tokens": 18,
+              "covered_tokens": 18,
+              "window_tokens": [
+                18
+              ],
+              "windows": 1
+            },
+            "words": 10
+          }
+        ]
+      }
+    },
+    {
+      "format": "pasted",
+      "id": "NFo-29",
+      "mode": "lexical",
+      "relation": "R1",
+      "result": {
+        "alignment": null,
+        "index": {
+          "source_to_suspect": 1.0,
+          "suspect_to_source": 1.0,
+          "value": 100.0
+        },
+        "lexical_index": {
+          "source_to_suspect": 1.0,
+          "suspect_to_source": 1.0,
+          "value": 100.0
+        },
+        "matches": null,
+        "matrices": {
+          "fused": null,
+          "lexical": [
+            [
+              1.0
+            ]
+          ],
+          "semantic_operational": null,
+          "semantic_raw": null
+        },
+        "method": "lexical",
+        "semantic_index": null,
+        "source": [
+          {
+            "flags": [],
+            "index": 0,
+            "lexical": [
+              "pesquisadora",
+              "comparar",
+              "documento",
+              "português"
+            ],
+            "raw": "A pesquisadora compara os documentos em português.",
+            "semantic": "A pesquisadora compara os documentos em português.",
+            "window": null,
+            "words": 7
+          }
+        ],
+        "state": "calculated",
+        "summary": null,
+        "suspect": [
+          {
+            "flags": [],
+            "index": 0,
+            "lexical": [
+              "pesquisadora",
+              "comparar",
+              "documento",
+              "português"
+            ],
+            "raw": "A pesquisadora compara os documentos em português.",
+            "semantic": "A pesquisadora compara os documentos em português.",
+            "window": null,
+            "words": 7
+          }
+        ]
+      }
+    },
+    {
+      "format": "pasted",
+      "id": "NFo-30",
+      "mode": "lexical",
+      "relation": "R2",
+      "result": {
+        "alignment": null,
+        "index": {
+          "source_to_suspect": 1.0,
+          "suspect_to_source": 1.0,
+          "value": 100.0
+        },
+        "lexical_index": {
+          "source_to_suspect": 1.0,
+          "suspect_to_source": 1.0,
+          "value": 100.0
+        },
+        "matches": null,
+        "matrices": {
+          "fused": null,
+          "lexical": [
+            [
+              1.0
+            ]
+          ],
+          "semantic_operational": null,
+          "semantic_raw": null
+        },
+        "method": "lexical",
+        "semantic_index": null,
+        "source": [
+          {
+            "flags": [],
+            "index": 0,
+            "lexical": [
+              "pesquisadora",
+              "comparar",
+              "documento",
+              "português"
+            ],
+            "raw": "A pesquisadora compara os documentos em português.",
+            "semantic": "A pesquisadora compara os documentos em português.",
+            "window": null,
+            "words": 7
+          }
+        ],
+        "state": "calculated",
+        "summary": null,
+        "suspect": [
+          {
+            "flags": [],
+            "index": 0,
+            "lexical": [
+              "pesquisadora",
+              "comparar",
+              "documento",
+              "português"
+            ],
+            "raw": "A pesquisadora compara os documento em português.",
+            "semantic": "A pesquisadora compara os documento em português.",
+            "window": null,
+            "words": 7
+          }
+        ]
+      }
+    },
+    {
+      "format": "pasted",
+      "id": "NFo-31",
+      "mode": "lexical",
+      "relation": "R3",
+      "result": {
+        "alignment": null,
+        "index": {
+          "source_to_suspect": 1.0,
+          "suspect_to_source": 1.0,
+          "value": 100.0
+        },
+        "lexical_index": {
+          "source_to_suspect": 1.0,
+          "suspect_to_source": 1.0,
+          "value": 100.0
+        },
+        "matches": null,
+        "matrices": {
+          "fused": null,
+          "lexical": [
+            [
+              1.0
+            ]
+          ],
+          "semantic_operational": null,
+          "semantic_raw": null
+        },
+        "method": "lexical",
+        "semantic_index": null,
+        "source": [
+          {
+            "flags": [],
+            "index": 0,
+            "lexical": [
+              "médica",
+              "tratar",
+              "paciente",
+              "hospital"
+            ],
+            "raw": "A médica tratou o paciente no hospital.",
+            "semantic": "A médica tratou o paciente no hospital.",
+            "window": null,
+            "words": 7
+          }
+        ],
+        "state": "calculated",
+        "summary": null,
+        "suspect": [
+          {
+            "flags": [],
+            "index": 0,
+            "lexical": [
+              "hospital",
+              "paciente",
+              "tratar",
+              "médica"
+            ],
+            "raw": "No hospital, o paciente foi tratado pela médica.",
+            "semantic": "No hospital, o paciente foi tratado pela médica.",
+            "window": null,
+            "words": 8
+          }
+        ]
+      }
+    },
+    {
+      "format": "pasted",
+      "id": "NFo-32",
+      "mode": "lexical",
+      "relation": "R4",
+      "result": {
+        "alignment": null,
+        "index": {
+          "source_to_suspect": 0.0,
+          "suspect_to_source": 0.0,
+          "value": 0.0
+        },
+        "lexical_index": {
+          "source_to_suspect": 0.0,
+          "suspect_to_source": 0.0,
+          "value": 0.0
+        },
+        "matches": null,
+        "matrices": {
+          "fused": null,
+          "lexical": [
+            [
+              0.0
+            ]
+          ],
+          "semantic_operational": null,
+          "semantic_raw": null
+        },
+        "method": "lexical",
+        "semantic_index": null,
+        "source": [
+          {
+            "flags": [],
+            "index": 0,
+            "lexical": [
+              "telescópio",
+              "registrar",
+              "imagem",
+              "galáxia",
+              "distante"
+            ],
+            "raw": "O telescópio registra imagens de galáxias distantes.",
+            "semantic": "O telescópio registra imagens de galáxias distantes.",
+            "window": null,
+            "words": 7
+          }
+        ],
+        "state": "calculated",
+        "summary": null,
+        "suspect": [
+          {
+            "flags": [],
+            "index": 0,
+            "lexical": [
+              "cozinheira",
+              "misturar",
+              "farinha",
+              "ovo",
+              "preparar",
+              "bolo"
+            ],
+            "raw": "A cozinheira misturou farinha e ovos para preparar o bolo.",
+            "semantic": "A cozinheira misturou farinha e ovos para preparar o bolo.",
+            "window": null,
+            "words": 10
+          }
+        ]
+      }
+    }
+  ],
+  "generation": {
+    "command": "python scripts/generate_q5v2_snapshot.py --provenance /provenance.json --out /snapshot/q5v2-snapshot.json",
+    "environment": "prepared core Docker image, CPU, offline",
+    "fixtures_manifest_sha256": "3b1feacb02fa0f962746ef0216fbc26f995e8d7016cbd940a06541a178a531e9",
+    "provenance": {
+      "branch": "main",
+      "commit": "ac1f224c744317e83aed5d6a462c929c7bc9c0b5",
+      "dirty": true,
+      "initial_git_diff_sha256": "ba3681e54378868deaa81ff95902ac8eddf0a1656caec2f4be84a757b869f24e",
+      "initial_git_status": " M .github/workflows/validation.yml\n M core/pyproject.toml\n M core/scripts/prepare_s5c_reference.py\n M core/src/hts_core/adapters/http.py\n M core/src/hts_core/adapters/parsers/__init__.py\n M core/src/hts_core/application/comparison.py\n M core/tests/adapters/test_http.py\n M core/tests/test_final_reference_preparation.py\n M docker-compose.ci.yml\n M docs/16-plano-conclusao-e-testes.md\n M web/e2e/unavailable.spec.ts\n M web/package.json\n?? .gitattributes\n?? core/assets/rubrics/\n?? core/scripts/generate_equivalence.py\n?? core/tests/adapters/test_equivalence_classes.py\n?? core/tests/equivalence_support.py\n?? core/tests/fixtures/\n?? web/e2e/equivalence.spec.ts\n",
+      "note": "Hashes incluem fontes novas não rastreadas; snapshot excluído para evitar autorreferência. Sem timestamp volátil.",
+      "source_files_sha256": {
+        ".python-version": "61141e9590171b900fdf709e7ea8f050d5c2a69198d4a4a1977d7c45186307e5",
+        "assets/fonts/Amiri-Regular.ttf": "ab391c4147d054c48976e98322ad0eefe1427aa0e0502a12a4c75d80a70cfcd7",
+        "assets/fonts/IBMPlexSansArabic-Regular.ttf": "6f611412270a132bbac838da9259d4c68569b4175f3b3b8fa3fa36a30b56dab9",
+        "assets/fonts/NotoSans-Regular.ttf": "b85c38ecea8a7cfb39c24e395a4007474fa5a4fc864f6ee33309eb4948d232d5",
+        "assets/fonts/NotoSansArabic-VF.ttf": "63111b5b2e074dd48cc67692e0a2726d86ee94c1c37fe8598257b7b4e87e869e",
+        "assets/fonts/NotoSansCJKsc-Regular-HTS.ttf": "568d44ed35df4ffdd53ce99dab039b2c0b60c291847574e9b46f50415c47ce7b",
+        "assets/fonts/NotoSansCJKsc-VF.ttf": "990c807e79c25662a5a9ecf7f971baeb2bf2eab9a559e5ecf15cdfdb8561d21f",
+        "assets/fonts/OFL-Amiri.txt": "72de68e5954f4fdd24702292ef5a32f003ca960ec9330dc86e5eefb5dffb9b22",
+        "assets/fonts/OFL-Arabic.txt": "07fc70bfeb985cc1a87a8587d0a0c80bab11c86c9dc3fd95b6f0cb332f983e96",
+        "assets/fonts/OFL-CJK.txt": "6a73f9541c2de74158c0e7cf6b0a58ef774f5a780bf191f2d7ec9cc53efe2bf2",
+        "assets/fonts/OFL-PlexArabic.txt": "37784b44044a4ffd9256702b7c0982c37e5c8887ba90c6dca0479aea93dc898d",
+        "assets/fonts/OFL.txt": "0dab92d0544f7b233403f14b84a663bdbfa746982eda629e7f4f9ffe1b036feb",
+        "assets/fonts/manifest-amiri.json": "29e51544e81caaec86a2d0f9d88c085ebe44c4176f0d2f686e1b1ce98d3177b3",
+        "assets/fonts/manifest-arabic.json": "fe2d4827b2fd82e9840914640461e6aba3f759159a17d77a34807ab0bcba37c6",
+        "assets/fonts/manifest-cjk-static.json": "f042125dfb38b6151ab2edc75d98f05ec3fcaf33c1d76c0ac17f0138d0dd7e74",
+        "assets/fonts/manifest-cjk.json": "c85d26cc5bb46cb90823a9257408ed8c57d0557166b6cc064615f9ccbff09479",
+        "assets/fonts/manifest-plex-arabic.json": "e6f8ac996a951140a8544bd7b2d3247ebe4acb477c72f3c844291f40ff64e420",
+        "assets/fonts/manifest.json": "fb20ab1851ecb1e91a4160ddd374ac4caa81d067980b1919bf041634574ded09",
+        "assets/rubrics/s5b-rubric-01.md": "e805b86423b4a6e46e2b3a2f577dd4b8b66419b8b2270cd5eb31a785f6d579a2",
+        "configs/comparison.json": "79c7defc501092c77743266e5610206c6f5f9ed2cf7ed8381d864d46c0a90031",
+        "configs/dataset_operational.json": "fb29fd6898cfa210ac490729690c8120386bb7e3c39203895762793430616176",
+        "configs/dataset_operational_curated.json": "30a86447329ba0f7eac2f5d6d1be6c11ab63d00d8461313894eb1fcfdccc45d2",
+        "configs/dataset_pilot.json": "931945bfe1ca947c8d7e856cb4d943da3ae84fb9ff9e7d17e4f9033dc690c44e",
+        "configs/dataset_source_proposal.json": "d6c74abe6211bab7a229bb86c5f9759e87f13fbd6684cded19ee09045ac20773",
+        "configs/experiment_candidates_s5a.json": "3b723ab52a07e35198fe16fd6d1c2bddd4cf10d80d834ee406086b0dc9ff4e4e",
+        "configs/experiment_s5a.json": "3fb0c64d2fe72460ab962deb698b9730dfdc4b2a67b29a7c7196f5426866686b",
+        "configs/experiment_s5b.json": "95eb9712c769cdb5c390919de234e9415c8639b1d22eb91257efe0c786e764a9",
+        "configs/experiment_s5b.schema.json": "f319e4debd37fd918c4b54b3ad31e979295674ec410af07e419204ea313e6d31",
+        "configs/refcorpus_provisorio.yaml": "6bd92acb66f0c53d2dd1c7aa985720dabc4759df698923049e932cf0858ff62d",
+        "configs/reference_s5c.plan.json": "d850363c03cc409065c083bbcfa4ad2b93cf7c92862aae56482b86b550c6631e",
+        "pyproject.toml": "a48aef79bbc40644f113be89ffb082f930ad879c4fa9377a439cdf8a31a71f59",
+        "scripts/auditar_referencias.py": "71205544744ce93ddae6644a642648a1a07aea1cbffbb21d2ff4b021fed03634",
+        "scripts/check_dataset_mongo.py": "782ae3531a79916d3c19977dcfcc01259cebcd29c93e6ae8ee9688b2f575a99e",
+        "scripts/generate_equivalence.py": "8b86e4969214033f6021f7209299f2a4acb55004235d2f3f3d898453661042b4",
+        "scripts/generate_q5v2_snapshot.py": "6c02ff0c761eefe9af98b3d1a29bf154c3f155b9ea7464f75771164d105552e8",
+        "scripts/gerar_fixtures_ci.py": "630e045dd5255c4da1f0dac006ae07025287ab710dd0a0050bdd240d6c76fbe5",
+        "scripts/identidade_idf.py": "d705db18c99640dca8a3506db9a40713a91bb2d97b119ee0912c95aba8eb2a54",
+        "scripts/prepare_dataset_sources.py": "9a1b4fe2dd9c86af20e68f7588db5caf317f40150b20fe6078b38a4b1622d256",
+        "scripts/prepare_model.py": "ffb600cabd9386df080156318a00694a25d371aa4b3897094d1037f3b377655e",
+        "scripts/prepare_s5c_reference.py": "c43445597da8217249b182cbe0daddd7c1bf9dbd3e6ab3c0aafde218e089a9f0",
+        "scripts/rebuild_dataset_operational.py": "9ad733c24dfe811d481bc6d3fb25ff35e6772ec4867955f54bfb0697aa280ab0",
+        "scripts/run_s5b_docker.py": "8e5f16e20fb81eadf097aeb2db3f8632990fc6ae66fad196d6965ac232a7b058",
+        "scripts/valores_referencia.py": "bf6ed49a13c79e953f320db4b47de0dc57fbbffd185a9af806a3ac78b9900406",
+        "src/hts_core/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "src/hts_core/adapters/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "src/hts_core/adapters/checkpoint_retention.py": "b3b2ac6fc034adf0ed648cf11da79196d18b9c286888e597543e6adc35b3555c",
+        "src/hts_core/adapters/container_memory.py": "1aa9ff7fdd285ae8e27363cd9b850eedd5724d10f69fb8d4b30b84a70e989613",
+        "src/hts_core/adapters/contract_types.py": "4de3e7502d5344e3b9fe62f3dd9673a4088f5b7c6d9d4e08f0242a55ef3d8d75",
+        "src/hts_core/adapters/dataset_collect.py": "80ce847bd0313376c8317191e783871b390f79ab177f9a3336d24b55890c8a55",
+        "src/hts_core/adapters/dataset_curation.py": "01afa9198893eccd71711f925fff24211cd7dad9c3d5d50ebf42c9002e27304c",
+        "src/hts_core/adapters/dataset_formats.py": "47515505f8e35776364a5d3cad1ef7b100ab02b78d5234dcbc6c8fe8ee6f7e2f",
+        "src/hts_core/adapters/dataset_llm.py": "09ece222ba112ab6f16fa1d7bc418ef5555462637062c9c9cc2b67c7b7cf25b9",
+        "src/hts_core/adapters/dataset_mongo.py": "a420d4d37b8ebd748f16f29dd7f53a13be45863db71dad19d2058ef83ee19cd4",
+        "src/hts_core/adapters/dataset_operational.py": "3e9284699e92e1b7313162149a67c049ee121b3bf9f4b6b57c1c9cb1d74c8ee5",
+        "src/hts_core/adapters/dataset_review.py": "625f7734832d92e6e60caba2f4f6fd08e6f12289916aed8ea8da5d023e624d32",
+        "src/hts_core/adapters/dataset_schemas.py": "c6f6e41d35b41eb0b6f811d1f48998e686fd2e654f993bee5cb41c71e8a1ed2f",
+        "src/hts_core/adapters/dataset_store.py": "b62629101c3593bea8b9a4f4cf601baf6bd294f52ae7602e58b1283a28c2987a",
+        "src/hts_core/adapters/dataset_validation.py": "c412d690065ed087d3173aadafb86d4ab78760922dd9517a79056070161adafe",
+        "src/hts_core/adapters/experiment_io.py": "5a8293a64a662f2efa277c9e004619ac358a460ff08a9c520ea3a6b86cc90041",
+        "src/hts_core/adapters/experiment_protocol.py": "8dc5c8e9176ae377e2b8186b1c575898cfb27ef978782397346721fe69d26201",
+        "src/hts_core/adapters/http.py": "1da697e7868d295de7b6e044463e5a6c55613612686025e17b83f812258147eb",
+        "src/hts_core/adapters/idf_contract.py": "c8c78b9068915999ccaa7e256dabb11133472b8eb86b0440ab730abe09309d01",
+        "src/hts_core/adapters/nlp.py": "89fd7b4b0606e8d00a4ec7470bbf518ae280877cc7eb0f4f49c32c0572641f7c",
+        "src/hts_core/adapters/parsers/__init__.py": "b8bdd765a6be437bb05860b6414da53a246203f9f3a6b72223c1eb82032c3bb1",
+        "src/hts_core/adapters/parsers/docx_parser.py": "2e3b7f9b33d39c36b37d416c3c8932800377e9fce827851dee1cd6a4466c4327",
+        "src/hts_core/adapters/parsers/pdf_parser.py": "461cc9f29e406e7c3a54de0c71d9b370a27f248e8be113a89bcdbc9e0ddaff08",
+        "src/hts_core/adapters/parsers/txt_parser.py": "9792b02feb7af0cadaea1a9524196e256a400c18c3b95f635041391bdf96aecb",
+        "src/hts_core/adapters/refcorpus.py": "c772f0a15161c125e6667b8000664c2453c774c643a5fb7c190ecd072f40cc35",
+        "src/hts_core/adapters/resources.py": "08073f901a75e661adca05c2de424fdd20fb6e096b1d45bc39c7930b368f0efd",
+        "src/hts_core/adapters/schemas.py": "d3e6e0a9a3944ce528a3f47b962839457690944df02c6e71f93e1900eb1a9d48",
+        "src/hts_core/adapters/semantic.py": "c2daa96b6e2c40b3fc82991b6949eff83204b73c3afb8b14b8ea5b19e979054b",
+        "src/hts_core/adapters/trainable_siamese.py": "f871fcfb51e7a49e4c317aeda08fdd495c9882bad4773538bc9bc2c138decbe0",
+        "src/hts_core/adapters/training_artifacts.py": "6e3fdbb5e8c5d80d21aafd79341ec646795b09a1f92d4abb945ff845e5af5d80",
+        "src/hts_core/adapters/training_classifiers.py": "ef0bab63f073f29dc6328921988c551d4c85d7a998f40a84a08b41f4e9db4f69",
+        "src/hts_core/adapters/training_contract.py": "8c57f27afc199bcdd795b33ebd6a39a2546f3507c35135ccb6e4dd068e4b5413",
+        "src/hts_core/adapters/training_runtime.py": "8868e0d6264c92850b91a9131d08a7ba8d735849d5e7f1b482a15cbf24adff80",
+        "src/hts_core/application/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "src/hts_core/application/comparison.py": "5b66aa4177b283a2d83ff7593056793f4c1843912499165dfbd6bee71bc32718",
+        "src/hts_core/application/controlled_training.py": "ab44e4f5a2319ae8d5ddb07209ca5caab844ff02192332bea3793293563729c3",
+        "src/hts_core/application/dataset_pipeline.py": "2e7735cf45c71d9a4b02ae047fe851888b0c6e714c878e6afa688650d0d08607",
+        "src/hts_core/application/experiment_preparation.py": "bcead03d5973347bbff5af7da3190aaf316f87b67d383fd13aeeae2be85ab377",
+        "src/hts_core/application/text_pipeline.py": "32cd29ebc53afd2c602b65f8770af8487cf99200e7b109138181d914ee596c9a",
+        "src/hts_core/cli/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "src/hts_core/cli/__main__.py": "85bb030ada1f45b0612d277aa0c99e5a801aa8bc29db07c9b9cb11a189eb7ab8",
+        "src/hts_core/cli/dataset.py": "98262397c4dffbb51995b85131262da89cf0b8a91548e1ced38cbb18c9ff172e",
+        "src/hts_core/cli/experiment.py": "66d055e7489035960ee7c018c5f81a1c63cf2fe570dbe739c99bd6654d2d9296",
+        "src/hts_core/cli/training.py": "bdf0df3d78b9e8f227c9af08d0996409f8a163f3fd3ba45e341c5112aab83114",
+        "src/hts_core/domain/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "src/hts_core/domain/dataset.py": "cbad26c14979b2d5ee64bc02d1e80a79fee8ba8545e6e4ecfd30a81abb773957",
+        "src/hts_core/domain/experiments.py": "d93f9a31e33a89281d39276c606ddb23c15fb07096c309158434416c2bd641ba",
+        "src/hts_core/domain/hybrid.py": "c347e42a017038965bf5f81a001dc4e9556a88683e1a21954c96b0dfa69a9540",
+        "src/hts_core/domain/lexical.py": "f99062abca9868c1524f2db6543fe01f100d039c42807c7634651dc500008f73",
+        "src/hts_core/domain/metrics.py": "c3eaf20bbada6d711f8f35dc3ab1b7eef0d0a690413d211169848655d35d20e0",
+        "src/hts_core/domain/preprocess.py": "68c0f28a2c180f8079d2171b67d990a00d281ea6032d9ab8b6e2f7b904196dae",
+        "src/hts_core/domain/signature.py": "c0eaddd97a81f09605b02441230837c5704e8da618f0cd3b8c8ae52d92e3e8bc",
+        "src/hts_core/domain/strings.py": "d5a0fe435f1ba0aa79283362ddc7b1f5f8ff499c24ddd90f01238fe40fad012f",
+        "src/hts_core/domain/text.py": "431359af097a8d33f6ec4a974c4f1f24bb1a577d5486a6c292e54a1d55de18b2",
+        "src/hts_core/domain/vectors.py": "e309ff36cabb15836d70b4233271309dee3bc087496250037b4d6a9c6f686127",
+        "tests/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "tests/adapters/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "tests/adapters/test_ci_fixtures.py": "6cb9381386c048facb0931f482134d1b3b3ff2d34afe4d905337e0a5886a4894",
+        "tests/adapters/test_docx_safety.py": "f882e0f4860fcd5a0365f2324bc6cbbfdfbf5701b16177045d8f68a7d8120c4b",
+        "tests/adapters/test_engineering_headers.py": "026a2876242f89ef370131d6be2849f338800d69334b0cfbd4a1ed54790be4d4",
+        "tests/adapters/test_equivalence_classes.py": "9571005c6c3f1e189dcfc25a2e8bf983111da084b88143705c83b351f1dc6035",
+        "tests/adapters/test_http.py": "4bbc9f8d0c2fd2b74b7be42fa8bc33745ccf09d6065e9fdee2f36168908cbcbb",
+        "tests/adapters/test_http_docx_errors.py": "a12cbb4ba57cf33b7c988d018c7a4aa5aaf97aae7878a1caa5f2bda05d5c41c1",
+        "tests/adapters/test_idf_identity_proposal.py": "0c87977c90d83c928c01f759137be13548d131ab103131689bc914b938fa93be",
+        "tests/adapters/test_nlp_and_refcorpus.py": "57f9c1cdfba8bce350e110e7a69957083cdee44c0462aa3e80efc54ebe4fde28",
+        "tests/adapters/test_parsers.py": "3ea801d2529dab38225dc467134024c00ca9982244cbd7e58f8e60f2d8cf8b9e",
+        "tests/adapters/test_pdf_encoding.py": "b5c11dedc2a6e39ebf43223734c0453ccd4b162c45403fa32efc0fa0585ff2c1",
+        "tests/adapters/test_semantic.py": "2c10be76dc33988278d963f9fd54d881a607c77c558e58ad25f81fe32a656a28",
+        "tests/adapters/test_txt_decoding.py": "f83907e5f9276df39642cb24ad25587af11fe1f6ee2f8fac5fdd42b12b2afcfc",
+        "tests/application/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "tests/domain/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "tests/domain/test_architecture.py": "aa699f8c05c6117778db240e34620a3248cbe361822e3eb6cfad4d06c18d02eb",
+        "tests/domain/test_audit_edges.py": "2b9d02d17e13e25c736dbbc6770ea7cacbc7765ba45f6a105376fe55c703ede7",
+        "tests/domain/test_external_review.py": "f6d0cd822dbc6ff938ee3e51095a544c46093f0ff82a063dcdbe37a223d294dd",
+        "tests/domain/test_hybrid.py": "aa784210704c8b164a859455698659c0e9eff214c3ddef10c65c26cffe95cf1e",
+        "tests/domain/test_metrics.py": "570fa9c1d3cd87466cd7ff1ecf8a47221efe18dfaa521a8c57ddb0059c3c7650",
+        "tests/domain/test_properties.py": "afdb4541f2224c0effbbd90486c15b7e9461deb75d115e1f04503e35bf1915cf",
+        "tests/domain/test_reference_values.py": "2f8626a4f5cdc0db1ad585e55ca6d92620b54f979c2f1a3f80c9b47dc2e89143",
+        "tests/domain/test_revision_s0_s1.py": "d7482a7a6d44bff8bda9ead5bb74bd9defd8c9626453ee75fa6331afd5daa469",
+        "tests/domain/test_text.py": "45166a04e567876f4e805cffe19714ba392b0b07bc0c6ec10c37ee11bcb4c26c",
+        "tests/equivalence_support.py": "12f3652e1bb0d8dfeaa70903006024257310a19fdf8a91740b4edb4139cc0cbc",
+        "tests/fixtures/equivalence/README.md": "76b85062a71ca06e1959e89d455cd1f40431d12b6083af9aeece1c9cc333f0b0",
+        "tests/fixtures/equivalence/formats/R1-source.docx": "f70f25a6af036666df085751d36d5829da35133072652ab408b78eef50b484b1",
+        "tests/fixtures/equivalence/formats/R1-source.pdf": "b87b461483ed7c8b6c62f866da32d4b0baef18ac19392a80f6de38241fdc5547",
+        "tests/fixtures/equivalence/formats/R1-source.txt": "da31c03b0f83275b3d0322be106bca979ec47465b86b2a0cf23445c3e7040ccf",
+        "tests/fixtures/equivalence/formats/R1-suspect.docx": "f70f25a6af036666df085751d36d5829da35133072652ab408b78eef50b484b1",
+        "tests/fixtures/equivalence/formats/R1-suspect.pdf": "b87b461483ed7c8b6c62f866da32d4b0baef18ac19392a80f6de38241fdc5547",
+        "tests/fixtures/equivalence/formats/R1-suspect.txt": "da31c03b0f83275b3d0322be106bca979ec47465b86b2a0cf23445c3e7040ccf",
+        "tests/fixtures/equivalence/formats/R2-source.docx": "f70f25a6af036666df085751d36d5829da35133072652ab408b78eef50b484b1",
+        "tests/fixtures/equivalence/formats/R2-source.pdf": "b87b461483ed7c8b6c62f866da32d4b0baef18ac19392a80f6de38241fdc5547",
+        "tests/fixtures/equivalence/formats/R2-source.txt": "da31c03b0f83275b3d0322be106bca979ec47465b86b2a0cf23445c3e7040ccf",
+        "tests/fixtures/equivalence/formats/R2-suspect.docx": "4af2f641a88368c26d56463db6cf0cbd203c0f753f8b8d03e8ab4efcc263a715",
+        "tests/fixtures/equivalence/formats/R2-suspect.pdf": "d087229d465a394411f56272ac7e8572dc2fca9fa17c9f6c7825034293e1fe08",
+        "tests/fixtures/equivalence/formats/R2-suspect.txt": "6c51be88cfabc9afac84d6317dfbeda4f5b7b55d39a801ec05429376907e3415",
+        "tests/fixtures/equivalence/formats/R3-source.docx": "ffe08c26b101fe033891eb9a58bb82f1efb35d38dd125ef78bb5c3cff91f349f",
+        "tests/fixtures/equivalence/formats/R3-source.pdf": "e0220eec2fbbd7f8c2859d07f15f3741cf70c22733baeef3fc600c20837a9513",
+        "tests/fixtures/equivalence/formats/R3-source.txt": "759b4d3f671d90dfa79d9501fdb1af07d685cc68c1aaf59633dbdce5df6c8972",
+        "tests/fixtures/equivalence/formats/R3-suspect.docx": "3e11c23044de0b032b1929ad9162805467f979b4bafcc811da6c4bf45e1542b3",
+        "tests/fixtures/equivalence/formats/R3-suspect.pdf": "634a17531d00830fa53d8e1875783da8a475dfdbccb1f5dd3aca86dcca046d6d",
+        "tests/fixtures/equivalence/formats/R3-suspect.txt": "0ba1fb03a43666b718a3bd8283cc52d105fadf00507b67f792ac8320800a783a",
+        "tests/fixtures/equivalence/formats/R4-source.docx": "9315d0a75f89db0ea2cdd6b721a788682fe7b72d1bd8d41f3cf7ad25d2a77c1d",
+        "tests/fixtures/equivalence/formats/R4-source.pdf": "afa6cb375aed28f9d57b5a9f41bed6167ac5f545398b4bfc749c2fe76d03fc22",
+        "tests/fixtures/equivalence/formats/R4-source.txt": "1ee20d1568e49d27352a53e70e5bf02f105c0c8e52d622abbbd1f60032c71b7e",
+        "tests/fixtures/equivalence/formats/R4-suspect.docx": "4e75391b705884c132bc73421f2cce9166edd67bf69b815a215aaf07b1502f85",
+        "tests/fixtures/equivalence/formats/R4-suspect.pdf": "cdd0f84962a45c8fefbfd29b256920f4a87f5887b9a10b720dcd84a1dec7f0c1",
+        "tests/fixtures/equivalence/formats/R4-suspect.txt": "63be57e933c648d47190c7b69e20f0c614e8c8806c180fe43d76ad19956ba9d9",
+        "tests/fixtures/equivalence/formats/manifest.json": "3b1feacb02fa0f962746ef0216fbc26f995e8d7016cbd940a06541a178a531e9",
+        "tests/fixtures/equivalence/pairs.json": "f405296ebe0a0ac82e4be78afcdf02cdf52c08a8bb016bd7ae167f916f217873",
+        "tests/fixtures/regression/README.md": "a276df585bea08cc3903cf1633c2b2348b45b3d697df05a04ba20747cac661df",
+        "tests/test_checkpoint_manifest_links.py": "17d5ad8d4d78e21238a8326417c63461c435713dd9c341fd34ca1dc74f48705a",
+        "tests/test_checkpoint_retention.py": "72cb7a03d52b79407228d357d4a347ffdd4b2ff94f8fc0fdd237cc78e84da30a",
+        "tests/test_container_memory.py": "7b9b80a354233f4ab0217d6cf8ac6eb4e9bd2c8c7178d7eb7d82996021497044",
+        "tests/test_controlled_training.py": "2e6081e5017ddf08c981ccffe33d4f8155dbcf52568d83e90c4e8d3e964c8a80",
+        "tests/test_dataset_closure.py": "cca92c4ee8fd2b3b3aa559ed113524f148ed302eff0ddf00434dec846d773003",
+        "tests/test_dataset_operational.py": "e9b3abc54e16408e49cb846bf2b561d60f0199d641c1e1e80ce5f7db07370355",
+        "tests/test_dataset_s4.py": "d8b74dd7f374e0c84a3fc4f3cc77f5fdb36f1f9bfe3498e6efdb0fdeae9d8bc3",
+        "tests/test_dataset_s4_complement.py": "f511590f91d5cc149b2a5aac5a9a1968ba4bd69a1f1e3451228793574546eecb",
+        "tests/test_experiment_preparation.py": "2100ff1041952bbc9247117a16b34d955c8c14d02ca653df504b44186d7c5c76",
+        "tests/test_final_reference_preparation.py": "dde1f7811e6605319c2f16c43ea2e1700cefd45b33dd24ae3acebe9d999d65d4",
+        "tests/test_idf_runtime_compatibility.py": "1ae68b17f1178657d1720dbfaf266a9d1ebef9ab16cb7e6ceca8d27699dac4ec",
+        "tests/test_idf_runtime_recompute.py": "e099f1bdba141c34c9b14d1e0044bca93f50bae819a93583e1fbce96b67cdce5",
+        "tests/test_q5v2_regression.py": "df692678d4c45a96a9eb397b97800836c3d913945419b82179784a5fb718d151",
+        "tests/test_training_artifact_contract.py": "1c6487ba5f7ce67d24f7e4527ff010248270a5611f8eb60421bcd25d9bd0b8c1",
+        "uv.lock": "3ffe29f6517d2da9fa261d768d5be6899aea1b59e30d0faa50265dd2a7b2a22a"
+      }
+    },
+    "script": "scripts/generate_q5v2_snapshot.py",
+    "script_sha256": "6c02ff0c761eefe9af98b3d1a29bf154c3f155b9ea7464f75771164d105552e8"
+  },
+  "purpose": "software_regression_not_scientific_evaluation",
+  "research_dataset_used": false,
+  "resources": {
+    "application_idf": {
+      "construction_attestation": false,
+      "formula": "tf_count * (ln((1+N)/(1+df))+1); unknown df=0",
+      "historical_version": "9531b9f0ae7c44fa53d44d6db2dd02340527e339b7e1d8bc68ba799aafd2f5b3",
+      "identity": "08be5cac366addf22f3e4191dff6215d3a3bc433506a28fb41a37358eb6b4730",
+      "lexical_configuration": {
+        "corpus_config_sha256": "6bd92acb66f0c53d2dd1c7aa985720dabc4759df698923049e932cf0858ff62d",
+        "disabled": [
+          "parser",
+          "ner"
+        ],
+        "min_token_length": 3,
+        "stopwords": [
+          "a",
+          "acerca",
+          "ademais",
+          "adeus",
+          "agora",
+          "ainda",
+          "algo",
+          "algumas",
+          "alguns",
+          "ali",
+          "além",
+          "ambas",
+          "ambos",
+          "antes",
+          "ao",
+          "aos",
+          "apenas",
+          "apoia",
+          "apoio",
+          "apontar",
+          "após",
+          "aquela",
+          "aquelas",
+          "aquele",
+          "aqueles",
+          "aqui",
+          "aquilo",
+          "as",
+          "assim",
+          "através",
+          "atrás",
+          "até",
+          "aí",
+          "baixo",
+          "bastante",
+          "bem",
+          "boa",
+          "bom",
+          "breve",
+          "cada",
+          "caminho",
+          "catorze",
+          "cedo",
+          "cento",
+          "certamente",
+          "certeza",
+          "cima",
+          "cinco",
+          "coisa",
+          "com",
+          "como",
+          "comprida",
+          "comprido",
+          "conhecida",
+          "conhecido",
+          "conselho",
+          "contra",
+          "contudo",
+          "corrente",
+          "cuja",
+          "cujo",
+          "custa",
+          "cá",
+          "da",
+          "daquela",
+          "daquele",
+          "dar",
+          "das",
+          "de",
+          "debaixo",
+          "demais",
+          "dentro",
+          "depois",
+          "des",
+          "desde",
+          "dessa",
+          "desse",
+          "desta",
+          "deste",
+          "deve",
+          "devem",
+          "deverá",
+          "dez",
+          "dezanove",
+          "dezasseis",
+          "dezassete",
+          "dezoito",
+          "diante",
+          "direita",
+          "disso",
+          "diz",
+          "dizem",
+          "dizer",
+          "do",
+          "dois",
+          "dos",
+          "doze",
+          "duas",
+          "dá",
+          "dão",
+          "e",
+          "ela",
+          "elas",
+          "ele",
+          "eles",
+          "em",
+          "embora",
+          "enquanto",
+          "entre",
+          "então",
+          "era",
+          "essa",
+          "essas",
+          "esse",
+          "esses",
+          "esta",
+          "estado",
+          "estar",
+          "estará",
+          "estas",
+          "estava",
+          "este",
+          "estes",
+          "esteve",
+          "estive",
+          "estivemos",
+          "estiveram",
+          "estiveste",
+          "estivestes",
+          "estou",
+          "está",
+          "estás",
+          "estão",
+          "eu",
+          "eventual",
+          "exemplo",
+          "falta",
+          "fará",
+          "favor",
+          "faz",
+          "fazeis",
+          "fazem",
+          "fazemos",
+          "fazer",
+          "fazes",
+          "fazia",
+          "faço",
+          "fez",
+          "fim",
+          "final",
+          "foi",
+          "fomos",
+          "for",
+          "fora",
+          "foram",
+          "forma",
+          "foste",
+          "fostes",
+          "fui",
+          "geral",
+          "grande",
+          "grandes",
+          "grupo",
+          "inclusive",
+          "iniciar",
+          "inicio",
+          "ir",
+          "irá",
+          "isso",
+          "isto",
+          "já",
+          "lado",
+          "lhe",
+          "ligado",
+          "local",
+          "logo",
+          "longe",
+          "lugar",
+          "lá",
+          "maior",
+          "maioria",
+          "maiorias",
+          "mais",
+          "mal",
+          "mas",
+          "me",
+          "meio",
+          "menor",
+          "menos",
+          "meses",
+          "mesmo",
+          "meu",
+          "meus",
+          "mil",
+          "minha",
+          "minhas",
+          "momento",
+          "muito",
+          "muitos",
+          "máximo",
+          "mês",
+          "na",
+          "nada",
+          "naquela",
+          "naquele",
+          "nas",
+          "nem",
+          "nenhuma",
+          "nessa",
+          "nesse",
+          "nesta",
+          "neste",
+          "no",
+          "nos",
+          "nossa",
+          "nossas",
+          "nosso",
+          "nossos",
+          "nova",
+          "novas",
+          "nove",
+          "novo",
+          "novos",
+          "num",
+          "numa",
+          "nunca",
+          "nuns",
+          "não",
+          "nível",
+          "nós",
+          "número",
+          "números",
+          "o",
+          "obrigada",
+          "obrigado",
+          "oitava",
+          "oitavo",
+          "oito",
+          "onde",
+          "ontem",
+          "onze",
+          "ora",
+          "os",
+          "ou",
+          "outra",
+          "outras",
+          "outros",
+          "para",
+          "parece",
+          "parte",
+          "partir",
+          "pegar",
+          "pela",
+          "pelas",
+          "pelo",
+          "pelos",
+          "perto",
+          "pode",
+          "podem",
+          "poder",
+          "poderá",
+          "podia",
+          "pois",
+          "ponto",
+          "pontos",
+          "por",
+          "porquanto",
+          "porque",
+          "porquê",
+          "portanto",
+          "porém",
+          "posição",
+          "possivelmente",
+          "posso",
+          "possível",
+          "pouca",
+          "pouco",
+          "povo",
+          "primeira",
+          "primeiro",
+          "próprio",
+          "próxima",
+          "próximo",
+          "puderam",
+          "pôde",
+          "põe",
+          "põem",
+          "quais",
+          "qual",
+          "qualquer",
+          "quando",
+          "quanto",
+          "quarta",
+          "quarto",
+          "quatro",
+          "que",
+          "quem",
+          "quer",
+          "querem",
+          "quero",
+          "questão",
+          "quieta",
+          "quieto",
+          "quinta",
+          "quinto",
+          "quinze",
+          "quê",
+          "relação",
+          "sabe",
+          "saber",
+          "se",
+          "segunda",
+          "segundo",
+          "sei",
+          "seis",
+          "sem",
+          "sempre",
+          "ser",
+          "seria",
+          "sete",
+          "seu",
+          "seus",
+          "sexta",
+          "sexto",
+          "sim",
+          "sistema",
+          "sob",
+          "sobre",
+          "sois",
+          "somente",
+          "somos",
+          "sou",
+          "sua",
+          "suas",
+          "são",
+          "sétima",
+          "sétimo",
+          "só",
+          "tais",
+          "tal",
+          "talvez",
+          "também",
+          "tanta",
+          "tanto",
+          "tarde",
+          "te",
+          "tem",
+          "temos",
+          "tempo",
+          "tendes",
+          "tenho",
+          "tens",
+          "tentar",
+          "tentaram",
+          "tente",
+          "tentei",
+          "ter",
+          "terceira",
+          "terceiro",
+          "teu",
+          "teus",
+          "teve",
+          "tipo",
+          "tive",
+          "tivemos",
+          "tiveram",
+          "tiveste",
+          "tivestes",
+          "toda",
+          "todas",
+          "todo",
+          "todos",
+          "treze",
+          "três",
+          "tu",
+          "tua",
+          "tuas",
+          "tudo",
+          "tão",
+          "têm",
+          "um",
+          "uma",
+          "umas",
+          "uns",
+          "usa",
+          "usar",
+          "vai",
+          "vais",
+          "valor",
+          "veja",
+          "vem",
+          "vens",
+          "ver",
+          "vez",
+          "vezes",
+          "vinda",
+          "vindo",
+          "vinte",
+          "você",
+          "vocês",
+          "vos",
+          "vossa",
+          "vossas",
+          "vosso",
+          "vossos",
+          "vários",
+          "vão",
+          "vêm",
+          "vós",
+          "zero",
+          "à",
+          "às",
+          "área",
+          "é",
+          "és",
+          "último"
+        ],
+        "tf": "raw_count",
+        "vector_normalization": "cosine_only"
+      },
+      "observed_pipeline": {
+        "data/refcorpus/manifest.json": "239879fe7c5c7ebec26d4edcd77e4c10df803955a046f1ac4d301393da105718",
+        "src/hts_core/adapters/nlp.py": "89fd7b4b0606e8d00a4ec7470bbf518ae280877cc7eb0f4f49c32c0572641f7c",
+        "src/hts_core/adapters/refcorpus.py": "c772f0a15161c125e6667b8000664c2453c774c643a5fb7c190ecd072f40cc35",
+        "src/hts_core/domain/lexical.py": "f99062abca9868c1524f2db6543fe01f100d039c42807c7634651dc500008f73",
+        "src/hts_core/domain/preprocess.py": "68c0f28a2c180f8079d2171b67d990a00d281ea6032d9ab8b6e2f7b904196dae",
+        "src/hts_core/domain/text.py": "431359af097a8d33f6ec4a974c4f1f24bb1a577d5486a6c292e54a1d55de18b2"
+      },
+      "python": "3.11.9",
+      "runtime": {
+        "mwparserfromhell": "0.7.2",
+        "numpy": "2.4.6",
+        "spacy": "3.8.16"
+      },
+      "spacy_assets_sha256": {
+        "__init__.py": "c8eb57079c03fc4157c227f641781fbcb3e9d11439abe1bf0b72e4c0fa78a38d",
+        "meta.json": "cda55c5516d0199b9ea39bc56da098c56866b3eb897bd696f4edf766623a895e",
+        "pt_core_news_sm-3.8.0/LICENSE": "3b2890eacd851373001c4a14623458e3adaf1b1967939aa9c38a318e28d61c00",
+        "pt_core_news_sm-3.8.0/LICENSES_SOURCES": "82336ba25d09650b7eace42bf0da2ee7376f61f2e6470fc5a0abb9b41e14e801",
+        "pt_core_news_sm-3.8.0/README.md": "ea498cce855713dde9922beebf5c518f5ffb01768e3e83141134362c56186679",
+        "pt_core_news_sm-3.8.0/accuracy.json": "f05e29567c875b3268240df8d1bb31aecbb156c818d3cf3644b945845af8f334",
+        "pt_core_news_sm-3.8.0/attribute_ruler/patterns": "7729f95ca78f12afec2a16a34e39a9a929bb0a136ee523639bd4ccdbfb950a86",
+        "pt_core_news_sm-3.8.0/config.cfg": "7872ca92c50a3855825a250511d5e21aba9ff8a2b5fb9dc799896da6421d32b1",
+        "pt_core_news_sm-3.8.0/lemmatizer/cfg": "7dc578056c67610ea2314694c41c376aa006a5023844c0dd1c420598503c6e0c",
+        "pt_core_news_sm-3.8.0/lemmatizer/model": "65c7a7c2109ff45a33615252101272501ca95fc90643c3c7619e81237a3f7d71",
+        "pt_core_news_sm-3.8.0/lemmatizer/trees": "17f0516034e76c736cb0f241b58e481623ea08f67d08863a4aedbdd512c2cb49",
+        "pt_core_news_sm-3.8.0/meta.json": "cda55c5516d0199b9ea39bc56da098c56866b3eb897bd696f4edf766623a895e",
+        "pt_core_news_sm-3.8.0/morphologizer/cfg": "55d9edbc87d18059382db15e5cb7f8825635e29835420befb917ae8a264673e8",
+        "pt_core_news_sm-3.8.0/morphologizer/model": "7553a1da0cdaeec222982ff80882c18e2bec96af4e8bea2db2d82c68b2b5dfd8",
+        "pt_core_news_sm-3.8.0/ner/cfg": "a7172edadafba9f472e9ac0f2660eec04b6405e471be9e20267b79c67288d22d",
+        "pt_core_news_sm-3.8.0/ner/model": "3ebe0ca1e8553c008e4b48890a9e9ac9104b4bfce43390f64210bb246890cc53",
+        "pt_core_news_sm-3.8.0/ner/moves": "86dff4462cc32db87be5e7f1f912404ca22c6ad1d124be30033f43b3061adb63",
+        "pt_core_news_sm-3.8.0/parser/cfg": "e2a240ef01f95e58f5dd4c9d6e90d61f597b8d998966570d3009dd81e8879780",
+        "pt_core_news_sm-3.8.0/parser/model": "c05280ad43865236199f2a2fd4b036ab08559ad7bb6dea756afb42312e3f9498",
+        "pt_core_news_sm-3.8.0/parser/moves": "f3abe72c266479d92f70b78bb3909380391ec7cd1c0296611a34fc44c19aadb8",
+        "pt_core_news_sm-3.8.0/senter/cfg": "2a4db4a729b6469da1f87d71cc7cd3ed2a73360cc85326821e850836c4671103",
+        "pt_core_news_sm-3.8.0/senter/model": "48472842737b012a1d02fb5d8f9b9116519d5b30736196c20b4bdee7f79ecfa0",
+        "pt_core_news_sm-3.8.0/tok2vec/cfg": "f8a5a26e3056eb6fb06deeb3dbccfd88ae74900200c98c70b5966bbb7ec9d4de",
+        "pt_core_news_sm-3.8.0/tok2vec/model": "d318cb14b94d5407b9613bdb60373ca4f5cc59a2f80f907d339f592684aca99a",
+        "pt_core_news_sm-3.8.0/tokenizer": "bf779408c4b8782bf729f663f175888920c65ee475df57a60a00402e902e40e5",
+        "pt_core_news_sm-3.8.0/vocab/key2row": "76be8b528d0075f7aae98d6fa57a6d3c83ae480a8469e668d7b0af968995ac71",
+        "pt_core_news_sm-3.8.0/vocab/lookups.bin": "1766aff40004f0dfb2ebc8b3da7a40af9d966c7a7200d1bc5a921f58a289b186",
+        "pt_core_news_sm-3.8.0/vocab/strings.json": "6dcd8a08f43e42d31192cffee8f42cc33bf15c01659e83a2c95204b0f5d7393b",
+        "pt_core_news_sm-3.8.0/vocab/vectors": "14772b683e726436d5948ad3fff2b43d036ef2ebbe3458aafed6004e05a40706",
+        "pt_core_news_sm-3.8.0/vocab/vectors.cfg": "ff4359091952c8cd16f1f0482f5770fb82d1707368d5cca3c46aa501f552e3c5"
+      },
+      "spacy_model": {
+        "license": "CC BY-SA 4.0",
+        "name": "pt_core_news_sm",
+        "version": "3.8.0"
+      },
+      "table_sha256": "06dc0f6972394c51dee400026d447838e561ade99d8ae98fb8a83407e799d82f",
+      "unicode": "14.0.0"
+    },
+    "model": {
+      "content_capacity": 126,
+      "dimension": 384,
+      "identity": "a49bb4785944e34fabd43e9b90bf86b91bf38e6b49177b06ebb8729829a0bc18",
+      "license": "apache-2.0",
+      "limit": 128,
+      "model": "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2",
+      "revision": "e8f8c211226b894fcb81acc59f3b34ba3efd5f42",
+      "runtime": {
+        "sentence-transformers": "6.2.0",
+        "tokenizers": "0.23.3",
+        "torch": "2.14.1+cpu",
+        "transformers": "5.20.2"
+      },
+      "special_tokens": 2
+    },
+    "model_manifest_sha256": "d3802a867a09fc43a569bdfc9aec60d13e8dd6c7f20a99e6eb05f0d9770b519a",
+    "policy_file_sha256": "79c7defc501092c77743266e5610206c6f5f9ed2cf7ed8381d864d46c0a90031",
+    "research_training_idf_used": false
+  },
+  "schema": "hts-q5v2-regression-1",
+  "tolerance": {
+    "absolute": 1e-09,
+    "relative": 0
+  }
+}

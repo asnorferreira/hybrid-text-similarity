@@ -1,0 +1,8 @@
+{
+  "schema": "hts-rg01-header-migration-1",
+  "reason": "author_requested_opening_docstring_removal",
+  "source": "src/hts_core/adapters/refcorpus.py",
+  "before_sha256": "c772f0a15161c125e6667b8000664c2453c774c643a5fb7c190ecd072f40cc35",
+  "after_sha256": "59975a55531d978d8a3a8923e77a790a57fb16949eb42565b0e52552dec32ca8",
+  "removed_prefix": "\"\"\"Corpus de referência do IDF (guia 0.3): wikitext da Wikipédia em português por revisão (oldid), com manifesto e hash.\"\"\"\n\n"
+}
