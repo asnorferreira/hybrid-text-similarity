@@ -2,7 +2,18 @@
 
 Data: 2026-10-26. Base: repositório `hybrid-text-similarity` em `c144965`, pasta TCC e artifacts de S4–S5B.
 
-Natureza: proposta. Nada aqui foi aprovado pelo orientador nem executado. Toda mudança no protocolo S5B (revisão 2, `1bc0736e…`) exige uma revisão registrada em `01-decisoes.md` **antes** de qualquer acesso ao teste.
+Natureza: proposta, sem aprovação do orientador presumida. Execução técnica iniciada em 2026-10-26; estado e limites registrados abaixo. Toda mudança no protocolo S5B (revisão 2, `1bc0736e…`) exige uma revisão registrada em `01-decisoes.md` **antes** de qualquer acesso ao teste.
+
+<!-- PLANO16-P0-CURRENT -->
+**Execução 2026-10-26, local, Docker Engine.** P0 concluída na tentativa 02 com MongoDB 7 isolado aprovado pelo autor; volumes preservados e serviços parados. [Evidência P0](../TCC/evidencias/codex-p00-02/relatorio.md). P1 concluída no alcance local (CI remoto pendente de publicação); P2 concluída (70/70; core completo 739); P3 concluída (snapshot 32 NFo, 34 testes duas vezes, saídas idênticas). [P1](../TCC/evidencias/codex-p01-02/relatorio.md) · [P2](../TCC/evidencias/codex-p02-03/relatorio.md) · [P3](../TCC/evidencias/codex-p03-01/relatorio.md).
+
+**PH1: autor aprovou D1–D4. P4–P6 concluídas.** Revisão 3 registrada antes do treinamento, identidade `b8137660098a04d63ff11500ce4d3c2c23f7fd2dee23bb7fb3020ca77a5996cc`. [Decisões](../TCC/01-decisoes.md) · [P4](../TCC/evidencias/codex-p04-01/relatorio.md) · [P5](../TCC/evidencias/codex-p05-02/relatorio.md). Somente os seis tensores da cabeça MLP são treináveis (98.817 parâmetros); gradientes e atualizações de todos comprovados, encoder sem gradientes e com hash intacto. Fixture real: MSE 0,3537144363 → 0,3532803953; recarga com erro zero; pico RSS 1,8037 GiB/cgroup 2,0382 GiB incluindo checkpoint. Medição não garante suficiência; readiness 2/4 GiB mantido. [Prova e recursos P6](../TCC/evidencias/codex-p06-01/proposta-recursos.md).
+
+**P7 concluída: H1 e ajuste Platt P1.** Reinício técnico único aprovado pelo autor, anexo operacional r3.1 registrado antes do fit, originais preservados. Quatro logísticas e dois baselines, 32 train/17 validation; seis exports recarregados com predições idênticas. Macro-F1: fixa/aprendida/lexical 0,4142857143, semântico 0,4182692308, Q5-V2 1,0, majoritária 0,1304347826. Platt: 4.560 pares únicos de validation; um componente de dependência, avaliação independente null com motivo. Melhoria de Brier/log-loss/ECE apenas em ressubstituição; 4.560 probabilidades recarregadas com erro zero. PL-09 pendente de P11. [Evidência P7](../TCC/evidencias/codex-p07-04/relatorio.md).
+
+**Editor ambientado e diagnósticos corrigidos.** Python standard: 123 arquivos, zero erros/avisos; 21 imports; 819 testes core e 12 web aprovados, typecheck e Ruff limpos. 14 docstrings de abertura removidas; sem ocultar diagnósticos. [Evidência do editor](../TCC/evidencias/codex-editor-01/relatorio.md). **P8 bloqueada por memória:** readiness real com 2558152704 bytes disponíveis, mínimo 4 GiB, teto de contêiner 5 GiB. H2 ainda só fixture; nenhum claim consumido. [Evidência P8](../TCC/evidencias/codex-p08-01/relatorio.md). D5/D6/PH2 pendentes, teste fechado, readiness 2/4 GiB intacto. Serviços parados, volumes/artefatos preservados; sem commit/push/publicação. As seções seguintes mantêm a base histórica do planejamento; decisões vigentes na revisão 3.
+<!-- /PLANO16-P0-CURRENT -->
+
 Sumário:
 
 1. Estado atual em uma página
@@ -419,11 +430,11 @@ Checklist de conclusão:
 
 - [ ] D1–D6 registradas em `01-decisoes.md`; revisão 3 do protocolo com hash novo
 - [ ] CI corrigido e verde no `main` (L8)
-- [ ] Matriz de classes de equivalência (seção 5) mapeada para testes, faltantes criados
-- [ ] Snapshot RG-01 gravado antes de qualquer integração
-- [ ] H1 executada: 4 sistemas + 2 baselines, export recarregável (RL-01 a RL-06)
+- [x] Matriz de classes de equivalência (seção 5) mapeada para testes, faltantes criados — P2 local, 70/70, evidência codex-p02-03
+- [x] Snapshot RG-01 gravado antes de qualquer integração — P3, 32 NFo, 34 testes aprovados duas vezes, codex-p03-01
+- [x] H1 executada: 4 sistemas + 2 baselines, export recarregável (RL-01 a RL-06), P7 codex-p07-04
 - [ ] H2 executada na variante aprovada, checkpoint recarregável (RG-04)
-- [ ] Platt ajustado na validação, se aprovado (PL-01 a PL-09)
+- [ ] Platt: ajuste validation e recarga concluídos na P7; PL-09 depende da integração P11; avaliação independente indisponível por um único componente
 - [ ] Anotação humana feita e congelada (κ / ICC registrados), se o caminho for B ou C
 - [ ] Referência final congelada com hash antes das predições
 - [ ] S5C: teste rodado uma vez; tabelas de `13-resultados.md` geradas por script

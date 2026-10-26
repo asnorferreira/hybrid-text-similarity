@@ -1,11 +1,13 @@
 # hybrid-text-similarity
 
 <!-- S5B-CURRENT -->
-## Estado vigente — retomada após travamento, 2026-10-25
+## Estado vigente — plano de conclusão, 2026-10-26
 
-**S5B incompleta; H1/H2 não iniciados. S5C não liberada.** Pacote anterior, inventário, campanha e logs históricos de 215 testes +1 controle +IDF conferidos sem repetir execução. Stack Mongo/core/web ativa e comunicação real verificada; timeouts intermitentes do healthcheck Mongo preservados. Host na última coleta: 751685632 bytes físicos disponíveis; VM: 3763134464 totais/2521923584 disponíveis, coletas separadas. Reservas2/4 GiB preservadas; readiness completo03 é histórico e não foi repetido por inviabilidade já observada. Sem treino/modelos/checkpoints/predições. Causa do travamento não determinada; reinício do editor observado, boot Windows anterior à entrega. Proposta concreta de adequação preparada, sem mudança global aplicada.
+P0–P7 concluídas no alcance local, Docker Engine; CI remoto pendente de publicação manual. Autor aprovou D1–D4 e um reinício técnico H1, registrado antes do ajuste. H1 completa: quatro logísticas e dois baselines, 32 train/17 validation, exports recarregados com predições iguais. Platt P1 ajustado em 4.560 pares únicos de validation e recarregado com erro zero; avaliação independente indisponível por haver um único componente de dependência. Métricas de ajuste são ressubstituição. H2 ainda só fixture: P8 bloqueada com 2,38 GiB disponíveis para o mínimo de 4 GiB, sem consumir tentativa; não há garantia de suficiência por congelar o encoder. D5/D6/PH2 pendentes e teste científico fechado.
 
-[Relatório atual](TCC/evidencias/codex-s5b-pos-travamento-01/relatorio-retomada.md) | [checkpoint](TCC/evidencias/codex-s5b-pos-travamento-01/checkpoint.json) | [proposta de recursos](TCC/evidencias/codex-s5b-pos-travamento-01/proposta-recursos.md) | [entrega anterior preservada](TCC/evidencias/codex-s5b-conclusao-01/relatorio-final.md)
+Ambiente do editor instalado e configurado; Python standard sem erros/avisos em 123 arquivos, 819 testes core e 12 web aprovados. Serviços parados, volumes e artefatos preservados; sem commit/push/publicação. Os registros anteriores de S4/S5A abaixo são históricos.
+
+[Plano e evidências](docs/16-plano-conclusao-e-testes.md) · [H1 e calibração](TCC/evidencias/codex-p07-04/relatorio.md) · [Ambiente do editor](docs/17-ambiente-editor.md).
 <!-- /S5B-CURRENT -->
 
 <!-- S5A-HISTORICAL -->
