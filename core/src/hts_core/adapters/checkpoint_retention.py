@@ -43,7 +43,7 @@ class CheckpointRetention:
                            'segments':[str(self.out)],'entries':[], 'latest':None,'selected':None,'ledger':[]}
         else:
             cp = safe_path(resume)
-            manifest = json.loads((cp/'manifest.json').read_text(encoding='utf-8'))
+            manifest = json.loads(safe_path(cp/'manifest.json').read_text(encoding='utf-8'))
             owner = manifest.get('ownership', {})
             self.root = safe_path(owner['root'])
             self.record = json.loads(safe_path(self.root/'retention.json').read_text(encoding='utf-8'))
@@ -57,7 +57,7 @@ class CheckpointRetention:
                 raise ValueError('resume destination must not nest in checkpoint root')
             self.record['segments'].append(str(self.out))
         for segment in self.record['segments'][:-1]:
-            marker=json.loads((safe_path(segment)/'logical-execution.json').read_text(encoding='utf-8'))
+            marker=json.loads(safe_path(Path(segment)/'logical-execution.json').read_text(encoding='utf-8'))
             if marker != self.owner:
                 raise ValueError('logical execution segment ownership conflict')
         atomic_json(self.out/'logical-execution.json', self.owner)
@@ -81,7 +81,7 @@ class CheckpointRetention:
         if len(set(segments)) != len(segments) or any(a in b.parents for a in segments for b in segments if a != b):
             raise ValueError('overlapping logical execution segments')
         for p in segments:
-            if json.loads((p/'logical-execution.json').read_text(encoding='utf-8')) != self.owner:
+            if json.loads(safe_path(p/'logical-execution.json').read_text(encoding='utf-8')) != self.owner:
                 raise ValueError('logical execution segment ownership conflict')
         return sum(tree_bytes(p) for p in segments)
 
@@ -108,7 +108,7 @@ class CheckpointRetention:
         cp=safe_path(entry['path'])
         if cp.parent != self.root or entry['status'] != 'live':
             raise ValueError('checkpoint inventory ownership conflict')
-        manifest=json.loads((cp/'manifest.json').read_text(encoding='utf-8'))
+        manifest=json.loads(safe_path(cp/'manifest.json').read_text(encoding='utf-8'))
         if (file_hash(cp/'manifest.json') != entry['manifest_sha256'] or manifest.get('ownership') != self.owner
                 or manifest['bindings'] != self.bindings or manifest['bindings_identity'] != identity(self.bindings)
                 or set(manifest['files']) != {'weights.safetensors','local-state.pt'}

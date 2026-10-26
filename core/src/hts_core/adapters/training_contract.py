@@ -65,9 +65,13 @@ def memory_snapshot():
                 'scope': 'Windows physical available; working set including native allocations; no GPU accounting'}
     values = dict(line.split(':', 1) for line in Path('/proc/meminfo').read_text().splitlines())
     rss = int(Path('/proc/self/statm').read_text().split()[1])*os.sysconf('SC_PAGE_SIZE')
-    return {'total_bytes': int(values['MemTotal'].split()[0])*1024,
-            'available_bytes': int(values['MemAvailable'].split()[0])*1024, 'rss_bytes': rss, 'peak_rss_bytes': None,
-            'scope': 'Linux MemAvailable and resident pages; not cgroup/GPU accounting'}
+    from hts_core.adapters.container_memory import cgroup_memory, effective_memory
+    result = effective_memory(int(values['MemTotal'].split()[0])*1024,
+                              int(values['MemAvailable'].split()[0])*1024, cgroup_memory(),
+                              os.environ.get('HTS_HOST_MEMORY_SNAPSHOT'))
+    result.update(rss_bytes=rss, peak_rss_bytes=None,
+                  scope='minimum of Linux VM MemAvailable, exposed cgroup headroom and supplied fresh host availability; RSS includes native resident pages; no GPU accounting')
+    return result
 
 
 def readiness(config, task, examples, snapshot):
