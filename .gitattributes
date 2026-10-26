@@ -1,0 +1,5 @@
+# This frozen rubric is identified by its exact bytes, including CRLF.
+core/assets/rubrics/s5b-rubric-01.md -text
+core/tests/fixtures/equivalence/pairs.json text eol=lf
+core/tests/fixtures/equivalence/formats/** -text
+core/tests/fixtures/regression/q5v2-snapshot.json -text

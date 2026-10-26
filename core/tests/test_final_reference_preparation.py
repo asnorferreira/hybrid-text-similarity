@@ -1,4 +1,5 @@
 from copy import deepcopy
+import hashlib
 import importlib.util
 import json
 from pathlib import Path
@@ -7,6 +8,7 @@ import pytest
 
 CORE=Path(__file__).resolve().parents[1]
 spec=importlib.util.spec_from_file_location('prepare_s5c_reference', CORE/'scripts/prepare_s5c_reference.py')
+assert spec is not None and spec.loader is not None
 module=importlib.util.module_from_spec(spec)
 spec.loader.exec_module(module)
 
@@ -62,7 +64,10 @@ def test_plan_rejects_ignored_fields_and_changed_contract(field,value):
     with pytest.raises(ValueError):module.validate_plan(changed)
 
 
-def test_plan_check_never_opens_dataset_or_produces_labels(tmp_path,capsys):
+def test_plan_check_never_opens_dataset_or_produces_labels(tmp_path,capsys,monkeypatch):
+    def forbidden(*args, **kwargs):
+        raise AssertionError('plan-only must not inspect any dataset')
+    monkeypatch.setattr(module, 'inspect_dataset', forbidden)
     module.main(['--plan',str(CORE/'configs/reference_s5c.plan.json'),'--check-plan-only','--dataset',str(tmp_path/'nonexistent')])
     receipt=json.loads(capsys.readouterr().out)
     assert receipt['status']=='plan_checked_no_dataset_opened'
@@ -70,7 +75,26 @@ def test_plan_check_never_opens_dataset_or_produces_labels(tmp_path,capsys):
     assert list(tmp_path.iterdir())==[]
 
 
-def test_preparation_refuses_missing_separate_authorization(tmp_path):
+def test_preparation_refuses_missing_separate_authorization(tmp_path,monkeypatch):
+    def forbidden(*args, **kwargs):
+        raise AssertionError('unauthorized preparation must not inspect any dataset')
+    monkeypatch.setattr(module, 'inspect_dataset', forbidden)
     with pytest.raises(SystemExit) as error:
         module.main(['--plan',str(CORE/'configs/reference_s5c.plan.json'),'--dataset',str(tmp_path/'not-opened'),'--out',str(tmp_path/'out')])
     assert error.value.code==2 and not (tmp_path/'out').exists()
+
+
+def test_rg09_clean_checkout_uses_frozen_rubric_without_local_artifacts(tmp_path,capsys,monkeypatch):
+    """Run 40261747702: both CLI checks failed on an ignored rubric path."""
+    rubric=CORE/'assets/rubrics/s5b-rubric-01.md'
+    assert hashlib.sha256(rubric.read_bytes()).hexdigest()==plan()['rubric_sha256']
+    # An arbitrary empty cwd represents a checkout without experiment artifacts.
+    monkeypatch.chdir(tmp_path)
+    args=['--plan',str(CORE/'configs/reference_s5c.plan.json'),
+          '--protocol',str(CORE/'configs/experiment_s5b.json')]
+    module.main([*args,'--check-plan-only'])
+    assert json.loads(capsys.readouterr().out)['status']=='plan_checked_no_dataset_opened'
+    with pytest.raises(SystemExit) as error:
+        module.main([*args,'--dataset','not-opened','--out','not-created'])
+    assert error.value.code==2
+    assert list(tmp_path.iterdir())==[]

@@ -1,4 +1,3 @@
-"""Prepare blank reference inputs only after separate S5C authorization."""
 import argparse
 from collections import defaultdict
 from datetime import datetime, timezone
@@ -73,11 +72,13 @@ def validate_plan(plan):
 
 
 def main(argv=None):
-    parser=argparse.ArgumentParser(description=__doc__)
+    parser=argparse.ArgumentParser(description='Preparar referência após autorização S5C.')
     parser.add_argument('--plan',required=True)
     parser.add_argument('--protocol',default='configs/experiment_s5b.json')
     parser.add_argument('--reference',default='configs/experiment_s5a.json')
-    parser.add_argument('--rubric',default='artifacts/s5b-01/rubrics.md')
+    # The frozen rubric is part of the source distribution, including Docker.
+    # Local experiment artifacts are optional and excluded from clean builds.
+    parser.add_argument('--rubric',default=str(Path(__file__).resolve().parents[1]/'assets/rubrics/s5b-rubric-01.md'))
     parser.add_argument('--check-plan-only',action='store_true')
     parser.add_argument('--authorization-record')
     parser.add_argument('--dataset')
