@@ -48,7 +48,7 @@ def validate_resume_claim(path, claim):
     from hts_core.adapters.checkpoint_retention import safe_path
     cp=safe_path(path)
     root=safe_path(Path(claim['first_destination'])/'training')
-    manifest=json.loads((cp/'manifest.json').read_text(encoding='utf-8'))
+    manifest=json.loads(safe_path(cp/'manifest.json').read_text(encoding='utf-8'))
     if cp.parent != root or manifest.get('ownership',{}).get('root') != str(root):
         raise ValueError('resume checkpoint differs from claimed logical execution root')
     if manifest.get('bindings') != claim['bindings']:
@@ -89,7 +89,7 @@ def save_training_checkpoint(path, model, optimizer, state, bindings, ownership=
 def load_training_checkpoint(path, model, optimizer, bindings):
     from hts_core.adapters.checkpoint_retention import safe_path
     path = safe_path(path)
-    manifest = json.loads((path/'manifest.json').read_text(encoding='utf-8'))
+    manifest = json.loads(safe_path(path/'manifest.json').read_text(encoding='utf-8'))
     if (manifest.get('schema') != 'hts-training-checkpoint-1' or manifest.get('bindings') != bindings
             or manifest.get('bindings_identity') != identity(bindings)):
         raise ValueError('checkpoint identity conflict')

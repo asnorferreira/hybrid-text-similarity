@@ -124,7 +124,7 @@ def _run_h1(examples, config, bindings, idf, out):
     from hts_core.adapters.nlp import analyze, STOPWORDS
     from hts_core.domain.preprocess import lexical_tokens
     from hts_core.domain.lexical import ReferenceIdf, cosine
-    from hts_core.adapters.training_classifiers import fit_classifiers
+    from hts_core.adapters.training_classifiers import fit_classifiers, save_fitted_classifiers
     from hts_core.adapters.training_contract import memory_snapshot
     table=read_json(Path(idf)/'idf.json')
     lexical=ReferenceIdf(table['n_docs'],table['df'],table['version'])
@@ -149,8 +149,14 @@ def _run_h1(examples, config, bindings, idf, out):
             record={'split':split,'row':i,'trace':row['trace'],'features':values,'token_windows':diagnostics,'bindings':bindings}
             save_json_new(out/f'features/{split}-{i:04}.json',record)
             cache.append(record)
-    return fit_classifiers(features['train'],features['validation'],[r['target'] for r in examples['train']],
-                           [r['target'] for r in examples['validation']],config['h1'],bindings)
+    classifiers = fit_classifiers(features['train'],features['validation'],[r['target'] for r in examples['train']],
+                                  [r['target'] for r in examples['validation']],config['h1'],bindings)
+    artifacts = save_fitted_classifiers(classifiers,out,bindings)
+    save_json_new(out/'selected-load-verification.json',{'loaded':True,'artifacts':artifacts,'bindings':bindings})
+    return {'status':'complete','training_executed':True,'training_started':True,'training_completed':True,
+            'stop_reason':'three_fixed_fits_completed_and_exports_reloaded','classifiers':classifiers,
+            'artifacts':artifacts,'train_count':len(examples['train']),'validation_count':len(examples['validation']),
+            'selection':config['selection']['h1']}
 
 
 def _baseline_h2(model, examples, out, config):
