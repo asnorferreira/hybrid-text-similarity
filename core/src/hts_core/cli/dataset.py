@@ -42,6 +42,8 @@ def main(argv=None):
     idf_validation = sub.add_parser('validar-idf')
     idf_validation.add_argument('--dataset', required=True)
     idf_validation.add_argument('--idf', required=True)
+    idf_validation.add_argument('--allow-runtime-lock-difference', action='store_true',
+                                help='explicitly allow only global lock hash difference; lexical dependencies and complete df must still match')
     for name in ('formatos', 'revisao', 'idf-treino', 'exportar'):
         command = sub.add_parser(name)
         command.add_argument('--dataset', required=True)
@@ -108,7 +110,7 @@ def main(argv=None):
         result = verify_seal(args.dataset)
     elif args.action == 'validar-idf':
         from hts_core.adapters.dataset_validation import validate_training_idf
-        result = validate_training_idf(args.dataset, args.idf)
+        result = validate_training_idf(args.dataset, args.idf, allow_runtime_lock_difference=args.allow_runtime_lock_difference)
     elif args.action == 'formatos':
         from hts_core.adapters.dataset_formats import add_formats
         result = add_formats(args.dataset, args.out, args.limit)

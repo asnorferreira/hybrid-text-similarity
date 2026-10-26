@@ -41,6 +41,18 @@ def lexical_projection(pipeline):
             'packages': {key: pipeline['packages'][key] for key in ('spacy', 'pt-core-news-sm', 'numpy')}}
 
 
+def runtime_lexical_compatibility(sealed, runtime, allow_lock_difference=False):
+    if type(allow_lock_difference) is not bool:
+        raise ValueError('runtime lock permission requires boolean')
+    old, current = lexical_projection(sealed), lexical_projection(runtime)
+    locks = {'sealed': old.pop('lock_sha256'), 'runtime': current.pop('lock_sha256')}
+    locks['identical'] = locks['sealed'] == locks['runtime']
+    if old != current or (not locks['identical'] and not allow_lock_difference):
+        raise ValueError('produtor lexical/modelo/recursos diferem do ambiente atual; preservar e usar o ambiente identificado')
+    return {**locks, 'different_lock_explicitly_permitted': not locks['identical'],
+            'scope': 'recorded lexical code, packages, model assets and settings only; full df recomputation still required'}
+
+
 def validate_training_idf_contract(folder, idf_folder, expected_identity=None):
     folder, idf_folder = Path(folder), Path(idf_folder)
     manifest = verify_seal(folder)

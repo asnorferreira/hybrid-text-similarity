@@ -324,16 +324,15 @@ def evaluation_inputs(folder, split):
     return [{'id': p['content_id'], 'text': p['text']} for p in pairs if p['split'] == split]
 
 
-def validate_training_idf(folder, idf_folder):
+def validate_training_idf(folder, idf_folder, *, allow_runtime_lock_difference=False):
     from hts_core.adapters import nlp
-    from hts_core.adapters.idf_contract import lexical_projection, validate_training_idf_contract
+    from hts_core.adapters.idf_contract import runtime_lexical_compatibility, validate_training_idf_contract
     from hts_core.application.text_pipeline import prepare_sentences
     from hts_core.application.dataset_pipeline import pipeline_descriptor
     validate_data(folder)
     report = validate_training_idf_contract(folder, idf_folder)
     descriptor = read_json(Path(idf_folder)/'construction.json')
-    _require(lexical_projection(descriptor['pipeline']) == lexical_projection(pipeline_descriptor()),
-             'produtor lexical/modelo/recursos diferem do ambiente atual; preservar e usar o ambiente identificado')
+    runtime_lock = runtime_lexical_compatibility(descriptor['pipeline'], pipeline_descriptor(), allow_runtime_lock_difference)
     counts = Counter()
     for source in read_jsonl(Path(folder)/'sources.jsonl'):
         if source['split'] == 'train':
@@ -343,4 +342,5 @@ def validate_training_idf(folder, idf_folder):
     _require(table['df'] == dict(counts), 'df do IDF divergente do treino recomputado')
     return {**report, 'status': 'training_only_verified', 'sources': table['n_docs'],
             'current_runtime_producer_equivalence': 'verified_lexical_dependencies_only',
-            'lexical_recomputation': 'executed', 'scope': 'A_B_and_C_verified'}
+              'runtime_lock_comparison': runtime_lock,
+              'lexical_recomputation': 'executed', 'scope': 'A_B_and_C_verified'}
