@@ -3,7 +3,7 @@
   "properties": {
     "schema": {
       "type": "string",
-      "const": "hts-s5b-1"
+      "const": "hts-s5b-2"
     },
     "status": {
       "type": "string",
@@ -14,7 +14,7 @@
     },
     "authorization": {
       "type": "string",
-      "const": "user S5B request: dependent automated annotation and controlled train/validation; no final test"
+      "const": "user S5B resumption request: owned checkpoint retention and exploratory train/validation; no final test"
     },
     "dataset_version": {
       "type": "string",
@@ -475,6 +475,59 @@
         "feature_wall_seconds": {
           "type": "integer",
           "const": 600
+        },
+        "checkpoint_policy": {
+          "type": "object",
+          "properties": {
+            "revision": {
+              "type": "integer",
+              "const": 2
+            },
+            "retention": {
+              "type": "string",
+              "const": "latest_and_selected"
+            },
+            "scope": {
+              "type": "string",
+              "const": "same_logical_execution_all_resume_segments"
+            },
+            "transition": {
+              "type": "string",
+              "const": "verify_load_publish_references_then_rotate_owned_intermediates"
+            },
+            "initial_margin_bytes": {
+              "type": "integer",
+              "const": 1048576
+            },
+            "observed_margin_fraction": {
+              "type": "number",
+              "const": 0.1
+            },
+            "minimum_observed_margin_bytes": {
+              "type": "integer",
+              "const": 65536
+            },
+            "unknown_files": {
+              "type": "string",
+              "const": "preserve_and_account"
+            },
+            "interrupted_temporaries": {
+              "type": "string",
+              "const": "preserve_and_account"
+            }
+          },
+          "required": [
+            "revision",
+            "retention",
+            "scope",
+            "transition",
+            "initial_margin_bytes",
+            "observed_margin_fraction",
+            "minimum_observed_margin_bytes",
+            "unknown_files",
+            "interrupted_temporaries"
+          ],
+          "additionalProperties": false
         }
       },
       "required": [
@@ -493,7 +546,8 @@
         "rationale",
         "checkpoint_disk_limit_bytes",
         "checkpoint_frequency",
-        "feature_wall_seconds"
+        "feature_wall_seconds",
+        "checkpoint_policy"
       ],
       "additionalProperties": false
     },

@@ -77,6 +77,9 @@ def training_entry(protocol, reference, dataset, idf, annotations, campaign, tas
         save_json_new(claim,{'bindings':bindings,'first_destination':str(out.resolve()),'attempts':1})
     elif not claim.exists() or read_json(claim)['bindings'] != bindings:
         raise ValueError('resume requires existing compatible logical attempt')
+    if resume is not None:
+        from hts_core.adapters.training_runtime import validate_resume_claim
+        validate_resume_claim(resume,read_json(claim))
     save_json_new(out/'attempt.json',{'status':'started','bindings':bindings,'utc':datetime.now(timezone.utc).isoformat()})
     try:
         if task == 'H1':

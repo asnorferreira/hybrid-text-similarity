@@ -1,13 +1,13 @@
 # hybrid-text-similarity
 
 <!-- S5B-CURRENT -->
-## Estado vigente — S5B, 2026-10-25
+## Estado vigente — retomada S5B, 2026-10-25
 
-Engenharia e campanha limitada S5B concluídas no alcance verificado; execução real bloqueada por memória disponível. Fluxo separado de treino, sem ativação na aplicação.
+Correção de retenção concluída e409testes oficiais aprovados; campanha preservada. Treino H1/H2 novamente bloqueado antes da base por memória física disponível904286208/853778432bytes versus2/4GiB. Sem modelos ou métricas preditivas reais. Teste final fechado; S5C não iniciada.
 
-[protocolo](docs/10-protocolo-s5b.md) | [relatório](TCC/evidencias/codex-s5b-01/relatorio-final.md) | [matriz](TCC/evidencias/codex-s5b-01/matriz-entrega.md) | [checkpoint](TCC/evidencias/codex-s5b-01/checkpoint.md)
+[Relatório](TCC/evidencias/codex-s5b-retomada-01/relatorio-final.md) | [matriz](TCC/evidencias/codex-s5b-retomada-01/matriz-encerramento.md) | [checkpoint](TCC/evidencias/codex-s5b-retomada-01/checkpoint.md) | [comandos](TCC/evidencias/codex-s5b-retomada-01/README-reproducao.md)
 
-Os registros anteriores abaixo descrevem os estados de suas respectivas etapas; não são bloqueios vigentes por omissão desta S5B.
+Estado S5B anterior preservado no pacote original e snapshot before.zip; registros abaixo permanecem históricos.
 <!-- /S5B-CURRENT -->
 
 <!-- S5A-HISTORICAL -->
