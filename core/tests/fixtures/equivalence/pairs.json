@@ -1,0 +1,26 @@
+{
+  "schema": "hts-development-equivalence-1",
+  "provenance": "Written by hand for software behavior tests on 2026-10-26; no research dataset used.",
+  "pairs": {
+    "R1": {
+      "source": "A pesquisadora compara os documentos em português.",
+      "suspect": "A pesquisadora compara os documentos em português.",
+      "expected_hybrid": "copia_exata"
+    },
+    "R2": {
+      "source": "A pesquisadora compara os documentos em português.",
+      "suspect": "A pesquisadora compara os documento em português.",
+      "expected_hybrid": "copia_editada"
+    },
+    "R3": {
+      "source": "A médica tratou o paciente no hospital.",
+      "suspect": "No hospital, o paciente foi tratado pela médica.",
+      "expected_hybrid": "parafrase"
+    },
+    "R4": {
+      "source": "O telescópio registra imagens de galáxias distantes.",
+      "suspect": "A cozinheira misturou farinha e ovos para preparar o bolo.",
+      "expected_hybrid": "sem_correspondencia_detectada"
+    }
+  }
+}

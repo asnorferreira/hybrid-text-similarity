@@ -1,0 +1,263 @@
+{
+  "files": {
+    "R1-source.docx": {
+      "bytes": 828244,
+      "format": {
+        "core_datetime": "2000-01-01",
+        "metadata": "no class/source in rendered content",
+        "zip_datetime": "1980-01-01"
+      },
+      "sha256": "f70f25a6af036666df085751d36d5829da35133072652ab408b78eef50b484b1"
+    },
+    "R1-source.pdf": {
+      "bytes": 15621,
+      "format": {
+        "arabic_font": null,
+        "arabic_font_sha256": null,
+        "arabic_presentation": null,
+        "fallback": null,
+        "fallback_sha256": null,
+        "font": "Noto Sans Regular; upstream OFL-1.1 preserved in assets/fonts/OFL.txt",
+        "font_sha256": "b85c38ecea8a7cfb39c24e395a4007474fa5a4fc864f6ee33309eb4948d232d5",
+        "identity": "container bytes and canonical content distinct",
+        "invariant": true
+      },
+      "sha256": "b87b461483ed7c8b6c62f866da32d4b0baef18ac19392a80f6de38241fdc5547"
+    },
+    "R1-source.txt": {
+      "bytes": 51,
+      "format": {
+        "encoding": "UTF-8 without BOM",
+        "newline": "LF"
+      },
+      "sha256": "da31c03b0f83275b3d0322be106bca979ec47465b86b2a0cf23445c3e7040ccf"
+    },
+    "R1-suspect.docx": {
+      "bytes": 828244,
+      "format": {
+        "core_datetime": "2000-01-01",
+        "metadata": "no class/source in rendered content",
+        "zip_datetime": "1980-01-01"
+      },
+      "sha256": "f70f25a6af036666df085751d36d5829da35133072652ab408b78eef50b484b1"
+    },
+    "R1-suspect.pdf": {
+      "bytes": 15621,
+      "format": {
+        "arabic_font": null,
+        "arabic_font_sha256": null,
+        "arabic_presentation": null,
+        "fallback": null,
+        "fallback_sha256": null,
+        "font": "Noto Sans Regular; upstream OFL-1.1 preserved in assets/fonts/OFL.txt",
+        "font_sha256": "b85c38ecea8a7cfb39c24e395a4007474fa5a4fc864f6ee33309eb4948d232d5",
+        "identity": "container bytes and canonical content distinct",
+        "invariant": true
+      },
+      "sha256": "b87b461483ed7c8b6c62f866da32d4b0baef18ac19392a80f6de38241fdc5547"
+    },
+    "R1-suspect.txt": {
+      "bytes": 51,
+      "format": {
+        "encoding": "UTF-8 without BOM",
+        "newline": "LF"
+      },
+      "sha256": "da31c03b0f83275b3d0322be106bca979ec47465b86b2a0cf23445c3e7040ccf"
+    },
+    "R2-source.docx": {
+      "bytes": 828244,
+      "format": {
+        "core_datetime": "2000-01-01",
+        "metadata": "no class/source in rendered content",
+        "zip_datetime": "1980-01-01"
+      },
+      "sha256": "f70f25a6af036666df085751d36d5829da35133072652ab408b78eef50b484b1"
+    },
+    "R2-source.pdf": {
+      "bytes": 15621,
+      "format": {
+        "arabic_font": null,
+        "arabic_font_sha256": null,
+        "arabic_presentation": null,
+        "fallback": null,
+        "fallback_sha256": null,
+        "font": "Noto Sans Regular; upstream OFL-1.1 preserved in assets/fonts/OFL.txt",
+        "font_sha256": "b85c38ecea8a7cfb39c24e395a4007474fa5a4fc864f6ee33309eb4948d232d5",
+        "identity": "container bytes and canonical content distinct",
+        "invariant": true
+      },
+      "sha256": "b87b461483ed7c8b6c62f866da32d4b0baef18ac19392a80f6de38241fdc5547"
+    },
+    "R2-source.txt": {
+      "bytes": 51,
+      "format": {
+        "encoding": "UTF-8 without BOM",
+        "newline": "LF"
+      },
+      "sha256": "da31c03b0f83275b3d0322be106bca979ec47465b86b2a0cf23445c3e7040ccf"
+    },
+    "R2-suspect.docx": {
+      "bytes": 828243,
+      "format": {
+        "core_datetime": "2000-01-01",
+        "metadata": "no class/source in rendered content",
+        "zip_datetime": "1980-01-01"
+      },
+      "sha256": "4af2f641a88368c26d56463db6cf0cbd203c0f753f8b8d03e8ab4efcc263a715"
+    },
+    "R2-suspect.pdf": {
+      "bytes": 15621,
+      "format": {
+        "arabic_font": null,
+        "arabic_font_sha256": null,
+        "arabic_presentation": null,
+        "fallback": null,
+        "fallback_sha256": null,
+        "font": "Noto Sans Regular; upstream OFL-1.1 preserved in assets/fonts/OFL.txt",
+        "font_sha256": "b85c38ecea8a7cfb39c24e395a4007474fa5a4fc864f6ee33309eb4948d232d5",
+        "identity": "container bytes and canonical content distinct",
+        "invariant": true
+      },
+      "sha256": "d087229d465a394411f56272ac7e8572dc2fca9fa17c9f6c7825034293e1fe08"
+    },
+    "R2-suspect.txt": {
+      "bytes": 50,
+      "format": {
+        "encoding": "UTF-8 without BOM",
+        "newline": "LF"
+      },
+      "sha256": "6c51be88cfabc9afac84d6317dfbeda4f5b7b55d39a801ec05429376907e3415"
+    },
+    "R3-source.docx": {
+      "bytes": 828233,
+      "format": {
+        "core_datetime": "2000-01-01",
+        "metadata": "no class/source in rendered content",
+        "zip_datetime": "1980-01-01"
+      },
+      "sha256": "ffe08c26b101fe033891eb9a58bb82f1efb35d38dd125ef78bb5c3cff91f349f"
+    },
+    "R3-source.pdf": {
+      "bytes": 15584,
+      "format": {
+        "arabic_font": null,
+        "arabic_font_sha256": null,
+        "arabic_presentation": null,
+        "fallback": null,
+        "fallback_sha256": null,
+        "font": "Noto Sans Regular; upstream OFL-1.1 preserved in assets/fonts/OFL.txt",
+        "font_sha256": "b85c38ecea8a7cfb39c24e395a4007474fa5a4fc864f6ee33309eb4948d232d5",
+        "identity": "container bytes and canonical content distinct",
+        "invariant": true
+      },
+      "sha256": "e0220eec2fbbd7f8c2859d07f15f3741cf70c22733baeef3fc600c20837a9513"
+    },
+    "R3-source.txt": {
+      "bytes": 40,
+      "format": {
+        "encoding": "UTF-8 without BOM",
+        "newline": "LF"
+      },
+      "sha256": "759b4d3f671d90dfa79d9501fdb1af07d685cc68c1aaf59633dbdce5df6c8972"
+    },
+    "R3-suspect.docx": {
+      "bytes": 828242,
+      "format": {
+        "core_datetime": "2000-01-01",
+        "metadata": "no class/source in rendered content",
+        "zip_datetime": "1980-01-01"
+      },
+      "sha256": "3e11c23044de0b032b1929ad9162805467f979b4bafcc811da6c4bf45e1542b3"
+    },
+    "R3-suspect.pdf": {
+      "bytes": 15592,
+      "format": {
+        "arabic_font": null,
+        "arabic_font_sha256": null,
+        "arabic_presentation": null,
+        "fallback": null,
+        "fallback_sha256": null,
+        "font": "Noto Sans Regular; upstream OFL-1.1 preserved in assets/fonts/OFL.txt",
+        "font_sha256": "b85c38ecea8a7cfb39c24e395a4007474fa5a4fc864f6ee33309eb4948d232d5",
+        "identity": "container bytes and canonical content distinct",
+        "invariant": true
+      },
+      "sha256": "634a17531d00830fa53d8e1875783da8a475dfdbccb1f5dd3aca86dcca046d6d"
+    },
+    "R3-suspect.txt": {
+      "bytes": 49,
+      "format": {
+        "encoding": "UTF-8 without BOM",
+        "newline": "LF"
+      },
+      "sha256": "0ba1fb03a43666b718a3bd8283cc52d105fadf00507b67f792ac8320800a783a"
+    },
+    "R4-source.docx": {
+      "bytes": 828247,
+      "format": {
+        "core_datetime": "2000-01-01",
+        "metadata": "no class/source in rendered content",
+        "zip_datetime": "1980-01-01"
+      },
+      "sha256": "9315d0a75f89db0ea2cdd6b721a788682fe7b72d1bd8d41f3cf7ad25d2a77c1d"
+    },
+    "R4-source.pdf": {
+      "bytes": 15622,
+      "format": {
+        "arabic_font": null,
+        "arabic_font_sha256": null,
+        "arabic_presentation": null,
+        "fallback": null,
+        "fallback_sha256": null,
+        "font": "Noto Sans Regular; upstream OFL-1.1 preserved in assets/fonts/OFL.txt",
+        "font_sha256": "b85c38ecea8a7cfb39c24e395a4007474fa5a4fc864f6ee33309eb4948d232d5",
+        "identity": "container bytes and canonical content distinct",
+        "invariant": true
+      },
+      "sha256": "afa6cb375aed28f9d57b5a9f41bed6167ac5f545398b4bfc749c2fe76d03fc22"
+    },
+    "R4-source.txt": {
+      "bytes": 54,
+      "format": {
+        "encoding": "UTF-8 without BOM",
+        "newline": "LF"
+      },
+      "sha256": "1ee20d1568e49d27352a53e70e5bf02f105c0c8e52d622abbbd1f60032c71b7e"
+    },
+    "R4-suspect.docx": {
+      "bytes": 828251,
+      "format": {
+        "core_datetime": "2000-01-01",
+        "metadata": "no class/source in rendered content",
+        "zip_datetime": "1980-01-01"
+      },
+      "sha256": "4e75391b705884c132bc73421f2cce9166edd67bf69b815a215aaf07b1502f85"
+    },
+    "R4-suspect.pdf": {
+      "bytes": 15493,
+      "format": {
+        "arabic_font": null,
+        "arabic_font_sha256": null,
+        "arabic_presentation": null,
+        "fallback": null,
+        "fallback_sha256": null,
+        "font": "Noto Sans Regular; upstream OFL-1.1 preserved in assets/fonts/OFL.txt",
+        "font_sha256": "b85c38ecea8a7cfb39c24e395a4007474fa5a4fc864f6ee33309eb4948d232d5",
+        "identity": "container bytes and canonical content distinct",
+        "invariant": true
+      },
+      "sha256": "cdd0f84962a45c8fefbfd29b256920f4a87f5887b9a10b720dcd84a1dec7f0c1"
+    },
+    "R4-suspect.txt": {
+      "bytes": 58,
+      "format": {
+        "encoding": "UTF-8 without BOM",
+        "newline": "LF"
+      },
+      "sha256": "63be57e933c648d47190c7b69e20f0c614e8c8806c180fe43d76ad19956ba9d9"
+    }
+  },
+  "pairs_sha256": "f405296ebe0a0ac82e4be78afcdf02cdf52c08a8bb016bd7ae167f916f217873",
+  "research_data_used": false,
+  "schema": "hts-equivalence-formats-1"
+}

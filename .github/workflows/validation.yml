@@ -1,4 +1,4 @@
-name: Validate S4
+name: Validate system and experiment contracts
 
 on:
   push:
@@ -71,6 +71,12 @@ jobs:
         run: |
           docker compose run --rm --no-deps browser npm run test:e2e
           python3 scripts/ci/check_junit.py core/artifacts/ci/results/e2e/system.xml
+      - name: Browser authentication equivalence classes
+        # Authentication equivalence cases run before resource failure scenarios.
+        # No scientific dataset is mounted in the browser.
+        run: |
+          docker compose run --rm --no-deps -e HTS_E2E_OUTPUT=/results/equivalence browser npm run test:equivalence
+          python3 scripts/ci/check_junit.py core/artifacts/ci/results/equivalence/system.xml
       - name: Browser with semantic model unavailable
         run: |
           docker compose -f docker-compose.ci.yml -f docker-compose.no-model.yml up -d --wait --wait-timeout 180 core
@@ -107,6 +113,7 @@ jobs:
             core/artifacts/ci/results/runtime-web.json
             core/artifacts/ci/results/technical.json
             core/artifacts/ci/results/e2e/system.xml
+            core/artifacts/ci/results/equivalence/system.xml
             core/artifacts/ci/results/model-unavailable/system.xml
             core/artifacts/ci/results/core-unavailable/system.xml
             core/artifacts/ci/results/npm-audit.json

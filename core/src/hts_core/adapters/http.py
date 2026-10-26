@@ -74,6 +74,8 @@ def create_app(service=None):
             phases = {}
             result = service.compare(data.source.text, data.suspect.text, data.mode, timings=phases)
             compared = perf_counter()
+            if result['state'] == 'resource_unavailable':
+                return error('resource_unavailable', 'recurso semântico obrigatório indisponível; sem classificação', 503)
             return engineering(jsonify(ComparisonResult.model_validate(result).model_dump()),
                                {'resources': prepared - started, 'compare': compared - prepared, **phases}, state)
         except InvalidDocument as exc:
@@ -99,7 +101,7 @@ def create_app(service=None):
         except UnsupportedFileError:
             return error('unsupported_format', 'tipo real e extensão incompatíveis ou não suportados', 415)
         except NoTextLayerError as exc:
-            return error('no_useful_content', str(exc), 422)
+            return error('extraction_failed', str(exc), 422)
         except (ProtectedPdfError, PdfReadError, TxtDecodeError) as exc:
             return error('extraction_failed', str(exc), 422)
         except (ValueError, OSError, KeyError):

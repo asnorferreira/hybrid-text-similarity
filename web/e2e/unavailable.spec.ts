@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { register, fillFiles } from './helpers';
+import { register, fillFiles, compare } from './helpers';
 
 const kind = process.env.HTS_FAILURE_KIND;
 if (kind !== 'model' && kind !== 'core') throw new Error('defina HTS_FAILURE_KIND=model ou core para o cenário real preparado');
@@ -10,12 +10,15 @@ test(`indisponibilidade real: ${kind}`, async ({ page }) => {
   await page.getByRole('button', { name: 'Comparar conteúdos' }).click();
   const response = await responsePromise;
   if (kind === 'model') {
-    expect(response.status()).toBe(200);
+    expect(response.status()).toBe(503);
     const value = await response.json();
-    expect(value.result.state).toBe('resource_unavailable');
-    expect(value.result.index === null && value.result.semantic_index === null && value.result.matches === null).toBe(true);
-    await expect(page.getByTestId('similarity-index')).toHaveText('Indisponível');
-    await expect(page.getByText(/Recurso semântico indisponível/)).toBeVisible();
+    expect(value.state).toBe('resource_unavailable');
+    expect(value.result).toBeUndefined();
+    await expect(page.locator('main .error[role="alert"]')).toContainText('recurso semântico');
+    await expect(page.getByRole('heading', { name: 'Relações entre os conteúdos' })).toHaveCount(0);
+    expect((await (await page.request.get('/api/comparisons')).json()).items).toEqual([]);
+    await page.getByLabel('Método / apresentação').selectOption('lexical');
+    await compare(page, 200);
     await expect(page.getByRole('heading', { name: 'Relações entre os conteúdos' })).toBeVisible();
   } else {
     expect(response.status()).toBe(503);

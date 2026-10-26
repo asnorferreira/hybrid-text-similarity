@@ -60,6 +60,7 @@ services:
       core:
         condition: service_healthy
   browser:
+    networks: [default, backend]
     image: hts-ci-browser:local
     profiles: [tools]
     build:
@@ -70,6 +71,8 @@ services:
       HTS_WEB_URL: http://web:3000
       HTS_FIXTURE_DIR: /fixtures
       HTS_E2E_OUTPUT: /results/e2e
+      HTS_E2E_MONGO_URI: mongodb://mongo:27017
+      HTS_E2E_MONGO_DB: hts_ci_s3
     volumes:
       - ./core/artifacts/ci/fixtures:/fixtures:ro
       - ./core/artifacts/ci/results:/results

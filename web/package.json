@@ -14,6 +14,7 @@
     "seed": "tsx scripts/seed.ts",
     "integration": "tsx scripts/integration.ts",
     "test:e2e": "playwright test e2e/system.spec.ts",
+    "test:equivalence": "playwright test e2e/equivalence.spec.ts",
     "test:unavailable": "playwright test e2e/unavailable.spec.ts",
     "test:security": "tsx scripts/security.ts",
     "load": "tsx scripts/load.ts"

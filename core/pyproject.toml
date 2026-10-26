@@ -49,6 +49,7 @@ explicit = true
 package = false
 
 [tool.pytest.ini_options]
+junit_family = "xunit1" # Supports per-case equivalence evidence properties.
 addopts = "--hypothesis-seed=20261024"
 testpaths = ["tests"]
 pythonpath = ["src"]

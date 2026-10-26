@@ -20,8 +20,8 @@ def sniff_type(data: bytes) -> str:
             with zipfile.ZipFile(io.BytesIO(data)) as archive:
                 if "word/document.xml" in archive.namelist():
                     return "docx"
-        except zipfile.BadZipFile:
-            pass
+        except zipfile.BadZipFile as exc:
+            raise ValueError('arquivo ZIP/DOCX corrompido') from exc
         raise UnsupportedFileError("arquivo zip que não é DOCX")
     if b"\x00" in data[:4096]:
         raise UnsupportedFileError("arquivo binário não suportado")
