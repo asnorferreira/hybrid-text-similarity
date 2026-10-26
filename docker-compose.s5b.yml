@@ -1,0 +1,37 @@
+services:
+  training:
+    image: hybrid-text-similarity-core:latest
+    pull_policy: never
+    working_dir: /workspace/core
+    environment:
+      PYTHONPATH: /workspace/core/src
+      PYTHONHASHSEED: '20261025'
+      PYTHONIOENCODING: utf-8
+      HF_HUB_OFFLINE: '1'
+      TRANSFORMERS_OFFLINE: '1'
+      HTS_MODEL_PATH: /workspace/core/models/e8f8c211226b894fcb81acc59f3b34ba3efd5f42
+      HTS_HOST_MEMORY_SNAPSHOT: /s5b-output/host-memory-live.json
+      HTS_TORCH_THREADS: '2'
+      OMP_NUM_THREADS: '2'
+      MKL_NUM_THREADS: '2'
+    volumes:
+      - ./core/src:/workspace/core/src:ro
+      - ./core/configs:/workspace/core/configs:ro
+      - ./core/scripts:/workspace/core/scripts:ro
+      - ./core/tests:/workspace/core/tests:ro
+      - ./core/assets:/workspace/core/assets:ro
+      - ./core/data:/workspace/core/data:ro
+      - ./core/pyproject.toml:/workspace/core/pyproject.toml:ro
+      - ./core/uv.lock:/workspace/core/uv.lock:ro
+      - ./core/.python-version:/workspace/core/.python-version:ro
+      - ./core/models:/workspace/core/models:ro
+      - ./core/artifacts/s4-fechamento-01/frozen-curated-01:/workspace/core/artifacts/s4-fechamento-01/frozen-curated-01:ro
+      - ./core/artifacts/s4-fechamento-01/idf-final-01:/workspace/core/artifacts/s4-fechamento-01/idf-final-01:ro
+      - ./core/artifacts/s5b-01:/workspace/core/artifacts/s5b-01
+      - ./core/artifacts/s5b-docker-01:/s5b-output
+    networks: [backend]
+    command: [python, -m, hts_core.cli, training, --help]
+networks:
+  backend:
+    external: true
+    name: hybrid-text-similarity_backend

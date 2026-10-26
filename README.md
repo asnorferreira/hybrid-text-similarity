@@ -1,13 +1,13 @@
 # hybrid-text-similarity
 
 <!-- S5B-CURRENT -->
-## Estado vigente — retomada S5B, 2026-10-25
+## Estado vigente — auditoria integrada S5A/S5B, 2026-10-25
 
-Correção de retenção concluída e409testes oficiais aprovados; campanha preservada. Treino H1/H2 novamente bloqueado antes da base por memória física disponível904286208/853778432bytes versus2/4GiB. Sem modelos ou métricas preditivas reais. Teste final fechado; S5C não iniciada.
+**S5B parcial; S5C não liberada.** Stack Mongo/core/web ativa e funcional, ping Mongo autenticado e comunicação web/core verificados. Readiness Docker02 H1/H2 exit0/releasable=false: 797728768/855248896bytes efetivos versus2/4GiB. VM total3763134464bytes impede reservaH2. Nenhum treino real iniciado/concluído, época, update, modelo, checkpoint ou métrica preditiva. Campanha original56observações preservada. Teste final fechado.
 
-[Relatório](TCC/evidencias/codex-s5b-retomada-01/relatorio-final.md) | [matriz](TCC/evidencias/codex-s5b-retomada-01/matriz-encerramento.md) | [checkpoint](TCC/evidencias/codex-s5b-retomada-01/checkpoint.md) | [comandos](TCC/evidencias/codex-s5b-retomada-01/README-reproducao.md)
+Executado/verificado: contratos S5A no alcance das regressões, guard host/VM/cgroup,62testes iniciais;347regressões S5A e87casos afetados verificados com falhas de montagem/snapshot preservadas e repetições restritas. Corrigidos export H1/estado e manifest symlink; carga/retomada somente artificiais. Não somar reexecuções. Decisão operacional: mínimo efetivo e monitor fresco, sem reduzir reservas. Pendente: recursos H1/H2, treinos/modelos reais, referência final compatível; independência limita H2 original, não treino exploratório.
 
-Estado S5B anterior preservado no pacote original e snapshot before.zip; registros abaixo permanecem históricos.
+[Relatório](TCC/evidencias/codex-s5b-docker-01/relatorio-final.md) | [matriz](TCC/evidencias/codex-s5b-docker-01/matriz-prontidao-s5c.md) | [checkpoint](TCC/evidencias/codex-s5b-docker-01/checkpoint.json)
 <!-- /S5B-CURRENT -->
 
 <!-- S5A-HISTORICAL -->
