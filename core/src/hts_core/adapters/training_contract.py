@@ -32,7 +32,14 @@ def validate_s5b(config):
             raise ValueError(path+': unsupported value for adopted revision')
         elif kind == 'string':
             text(value, path)
-    visit(config, read_json(SCHEMA), 's5b')
+    schema = read_json(SCHEMA)
+    if 'oneOf' in schema:
+        profiles = {item['properties']['schema']['const']: item for item in schema['oneOf']}
+        try:
+            schema = profiles[config['schema']]
+        except (KeyError, TypeError) as exc:
+            raise ValueError('unsupported S5B revision') from exc
+    visit(config, schema, 's5b')
     if datetime.fromisoformat(config['adopted_utc']).utcoffset() is None:
         raise ValueError('adoption timestamp requires timezone')
     return identity(config)

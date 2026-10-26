@@ -1,725 +1,1764 @@
 {
-  "type": "object",
-  "properties": {
-    "schema": {
-      "type": "string",
-      "const": "hts-s5b-2"
-    },
-    "status": {
-      "type": "string",
-      "const": "adopted_exploratory"
-    },
-    "adopted_utc": {
-      "type": "string"
-    },
-    "authorization": {
-      "type": "string",
-      "const": "user S5B resumption request: owned checkpoint retention and exploratory train/validation; no final test"
-    },
-    "dataset_version": {
-      "type": "string",
-      "const": "fccdffc984dca0b30d9c044ee62bee32eb52b3b4a828fe454e6a17de0602fd26"
-    },
-    "idf_identity": {
-      "type": "string",
-      "const": "9ddb353e50c050f58cc3417f8a41763867550730e7c18c56851d4f6dd74680c6"
-    },
-    "reference_protocol_identity": {
-      "type": "string",
-      "const": "a763d0359a78bd0cdb4dd0bdc689308524c314c0552ed89fc80d99cf52a75d40"
-    },
-    "seed": {
-      "type": "integer",
-      "const": 20261025
-    },
-    "allowed_splits": {
-      "type": "array",
-      "prefixItems": [
-        {
-          "type": "string",
-          "const": "train"
-        },
-        {
-          "type": "string",
-          "const": "validation"
-        }
-      ],
-      "minItems": 2,
-      "maxItems": 2
-    },
-    "annotation": {
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "Exact adopted S5B revisions 2 and 3; revision 2 remains immutable.",
+  "oneOf": [
+    {
       "type": "object",
       "properties": {
-        "origin": {
+        "schema": {
           "type": "string",
-          "const": "automated_weak"
+          "const": "hts-s5b-2"
         },
-        "generator_relationship": {
+        "status": {
           "type": "string",
-          "const": "shared"
+          "const": "adopted_exploratory"
         },
-        "shared_dependencies": {
+        "adopted_utc": {
+          "type": "string"
+        },
+        "authorization": {
+          "type": "string",
+          "const": "user S5B resumption request: owned checkpoint retention and exploratory train/validation; no final test"
+        },
+        "dataset_version": {
+          "type": "string",
+          "const": "fccdffc984dca0b30d9c044ee62bee32eb52b3b4a828fe454e6a17de0602fd26"
+        },
+        "idf_identity": {
+          "type": "string",
+          "const": "9ddb353e50c050f58cc3417f8a41763867550730e7c18c56851d4f6dd74680c6"
+        },
+        "reference_protocol_identity": {
+          "type": "string",
+          "const": "a763d0359a78bd0cdb4dd0bdc689308524c314c0552ed89fc80d99cf52a75d40"
+        },
+        "seed": {
+          "type": "integer",
+          "const": 20261025
+        },
+        "allowed_splits": {
           "type": "array",
           "prefixItems": [
             {
               "type": "string",
-              "const": "Codex session family used in candidate curation; independence not demonstrated"
+              "const": "train"
             },
             {
               "type": "string",
-              "const": "same preserved synthetic dataset and project context"
+              "const": "validation"
             }
           ],
           "minItems": 2,
           "maxItems": 2
         },
-        "procedure_id": {
-          "type": "string",
-          "const": "codex-s5b-content-judgment-01"
+        "annotation": {
+          "type": "object",
+          "properties": {
+            "origin": {
+              "type": "string",
+              "const": "automated_weak"
+            },
+            "generator_relationship": {
+              "type": "string",
+              "const": "shared"
+            },
+            "shared_dependencies": {
+              "type": "array",
+              "prefixItems": [
+                {
+                  "type": "string",
+                  "const": "Codex session family used in candidate curation; independence not demonstrated"
+                },
+                {
+                  "type": "string",
+                  "const": "same preserved synthetic dataset and project context"
+                }
+              ],
+              "minItems": 2,
+              "maxItems": 2
+            },
+            "procedure_id": {
+              "type": "string",
+              "const": "codex-s5b-content-judgment-01"
+            },
+            "rubric_id": {
+              "type": "string",
+              "const": "s5b-rubric-01"
+            }
+          },
+          "required": [
+            "origin",
+            "generator_relationship",
+            "shared_dependencies",
+            "procedure_id",
+            "rubric_id"
+          ],
+          "additionalProperties": false
         },
-        "rubric_id": {
+        "h1": {
+          "type": "object",
+          "properties": {
+            "unit": {
+              "type": "string",
+              "const": "sentence_pair"
+            },
+            "classes": {
+              "type": "array",
+              "prefixItems": [
+                {
+                  "type": "string",
+                  "const": "copia_exata"
+                },
+                {
+                  "type": "string",
+                  "const": "copia_editada"
+                },
+                {
+                  "type": "string",
+                  "const": "parafrase"
+                },
+                {
+                  "type": "string",
+                  "const": "sem_correspondencia_detectada"
+                }
+              ],
+              "minItems": 4,
+              "maxItems": 4
+            },
+            "features_by_system": {
+              "type": "object",
+              "properties": {
+                "lexical": {
+                  "type": "array",
+                  "prefixItems": [
+                    {
+                      "type": "string",
+                      "const": "lexical_cosine"
+                    }
+                  ],
+                  "minItems": 1,
+                  "maxItems": 1
+                },
+                "semantic": {
+                  "type": "array",
+                  "prefixItems": [
+                    {
+                      "type": "string",
+                      "const": "semantic_cosine_raw"
+                    }
+                  ],
+                  "minItems": 1,
+                  "maxItems": 1
+                },
+                "fixed_fusion": {
+                  "type": "array",
+                  "prefixItems": [
+                    {
+                      "type": "string",
+                      "const": "0.4*lexical_cosine+0.6*max(0,semantic_cosine_raw)"
+                    }
+                  ],
+                  "minItems": 1,
+                  "maxItems": 1
+                }
+              },
+              "required": [
+                "lexical",
+                "semantic",
+                "fixed_fusion"
+              ],
+              "additionalProperties": false
+            },
+            "classifier": {
+              "type": "object",
+              "properties": {
+                "kind": {
+                  "type": "string",
+                  "const": "multinomial_logistic_regression"
+                },
+                "penalty": {
+                  "type": "string",
+                  "const": "l2"
+                },
+                "C": {
+                  "type": "number",
+                  "const": 1.0
+                },
+                "max_iter": {
+                  "type": "integer",
+                  "const": 1000
+                },
+                "seed": {
+                  "type": "integer",
+                  "const": 20261025
+                },
+                "fit_split": {
+                  "type": "string",
+                  "const": "train"
+                },
+                "selection_split": {
+                  "type": "string",
+                  "const": "validation"
+                },
+                "class_weight": {
+                  "type": "null",
+                  "const": null
+                }
+              },
+              "required": [
+                "kind",
+                "penalty",
+                "C",
+                "max_iter",
+                "seed",
+                "fit_split",
+                "selection_split",
+                "class_weight"
+              ],
+              "additionalProperties": false
+            },
+            "eligibility": {
+              "type": "string",
+              "const": "previously_annotated_sentence_pairs; no_winner_selected_alignment; same_rows_for_all_systems"
+            },
+            "failures": {
+              "type": "string",
+              "const": "preserve_attempts; comparison_incomplete_if_any_prediction_missing; no_success_only_macro_f1"
+            }
+          },
+          "required": [
+            "unit",
+            "classes",
+            "features_by_system",
+            "classifier",
+            "eligibility",
+            "failures"
+          ],
+          "additionalProperties": false
+        },
+        "h2": {
+          "type": "object",
+          "properties": {
+            "unit": {
+              "type": "string",
+              "const": "sentence_pair"
+            },
+            "construct": {
+              "type": "string",
+              "const": "degree_of_shared_propositional_content_with_separate_relation_axes"
+            },
+            "range": {
+              "type": "array",
+              "prefixItems": [
+                {
+                  "type": "integer",
+                  "const": 0
+                },
+                {
+                  "type": "integer",
+                  "const": 1
+                }
+              ],
+              "minItems": 2,
+              "maxItems": 2
+            },
+            "annotation_schema": {
+              "type": "string",
+              "const": "hts-annotations-2"
+            },
+            "contradiction_policy": {
+              "type": "string",
+              "const": "separate_axis; never_automatic_zero; score_1_forbidden; insufficient_context_unlabeled"
+            },
+            "baseline_diagnostics": {
+              "type": "string",
+              "const": "(raw_cosine+1)/2; Spearman_uses_raw_cosine_and_is_invariant_to_this_affine_mapping"
+            }
+          },
+          "required": [
+            "unit",
+            "construct",
+            "range",
+            "annotation_schema",
+            "contradiction_policy",
+            "baseline_diagnostics"
+          ],
+          "additionalProperties": false
+        },
+        "siamese": {
+          "type": "object",
+          "properties": {
+            "base": {
+              "type": "string",
+              "const": "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
+            },
+            "revision": {
+              "type": "string",
+              "const": "e8f8c211226b894fcb81acc59f3b34ba3efd5f42"
+            },
+            "license": {
+              "type": "string",
+              "const": "Apache-2.0"
+            },
+            "sharing": {
+              "type": "string",
+              "const": "same_encoder_instance_and_weights_both_branches"
+            },
+            "pooling": {
+              "type": "string",
+              "const": "existing_complete_nonoverlapping_windows_content_weighted_mean_then_l2"
+            },
+            "embedding_dimension": {
+              "type": "integer",
+              "const": 384
+            },
+            "pair_features": {
+              "type": "string",
+              "const": "concat(abs(u-v),u*v)"
+            },
+            "dense_dimensions": {
+              "type": "array",
+              "prefixItems": [
+                {
+                  "type": "integer",
+                  "const": 768
+                },
+                {
+                  "type": "integer",
+                  "const": 128
+                },
+                {
+                  "type": "integer",
+                  "const": 1
+                }
+              ],
+              "minItems": 3,
+              "maxItems": 3
+            },
+            "head": {
+              "type": "string",
+              "const": "Linear768x128_LayerNorm128_LeakyReLU_Dropout_Linear128x1_Sigmoid"
+            },
+            "layer_norm_epsilon": {
+              "type": "number",
+              "const": 1e-05
+            },
+            "leaky_relu_alpha": {
+              "type": "number",
+              "const": 0.1
+            },
+            "dropout": {
+              "type": "number",
+              "const": 0.1
+            },
+            "loss": {
+              "type": "string",
+              "const": "MSELoss"
+            },
+            "optimizer": {
+              "type": "string",
+              "const": "Adam"
+            },
+            "learning_rate": {
+              "type": "number",
+              "const": 2e-06
+            },
+            "weight_decay": {
+              "type": "number",
+              "const": 1e-05
+            },
+            "long_sentences": {
+              "type": "string",
+              "const": "same_complete_window_policy_as_baseline; no_silent_truncation_or_test_exclusion"
+            },
+            "input": {
+              "type": "string",
+              "const": "two_texts_only; external_targets_separate"
+            },
+            "output": {
+              "type": "string",
+              "const": "one_finite_scalar_in_0_1_per_sentence_pair"
+            },
+            "source_status": {
+              "type": "string",
+              "const": "project_proposal_adapted_from_A7; dimensions_base_head_and_budget_not_attributed_to_A7"
+            },
+            "encoder_trainable": {
+              "type": "boolean",
+              "const": true
+            }
+          },
+          "required": [
+            "base",
+            "revision",
+            "license",
+            "sharing",
+            "pooling",
+            "embedding_dimension",
+            "pair_features",
+            "dense_dimensions",
+            "head",
+            "layer_norm_epsilon",
+            "leaky_relu_alpha",
+            "dropout",
+            "loss",
+            "optimizer",
+            "learning_rate",
+            "weight_decay",
+            "long_sentences",
+            "input",
+            "output",
+            "source_status",
+            "encoder_trainable"
+          ],
+          "additionalProperties": false
+        },
+        "budget": {
+          "type": "object",
+          "properties": {
+            "device": {
+              "type": "string",
+              "const": "cpu"
+            },
+            "threads": {
+              "type": "integer",
+              "const": 2
+            },
+            "microbatch": {
+              "type": "integer",
+              "const": 1
+            },
+            "gradient_accumulation": {
+              "type": "integer",
+              "const": 4
+            },
+            "maximum_epochs": {
+              "type": "integer",
+              "const": 8
+            },
+            "maximum_optimizer_updates": {
+              "type": "integer",
+              "const": 2000
+            },
+            "maximum_wall_seconds": {
+              "type": "integer",
+              "const": 7200
+            },
+            "process_rss_limit_bytes": {
+              "type": "integer",
+              "const": 3221225472
+            },
+            "attempts": {
+              "type": "integer",
+              "const": 1
+            },
+            "early_stopping_patience_epochs": {
+              "type": "integer",
+              "const": 2
+            },
+            "selection": {
+              "type": "string",
+              "const": "lowest_validation_MSE_then_earliest_epoch"
+            },
+            "stop": {
+              "type": "string",
+              "const": "first_budget_or_patience_limit; preserve_partial_status_and_all_attempts; never_extend_after_test"
+            },
+            "rationale": {
+              "type": "string",
+              "const": "conservative_resource_caps_on_observed_local_CPU; not_predicted_duration_or_guaranteed_feasibility"
+            },
+            "checkpoint_disk_limit_bytes": {
+              "type": "integer",
+              "const": 6442450944
+            },
+            "checkpoint_frequency": {
+              "type": "string",
+              "const": "epoch_and_safe_budget_stop; retain latest and selected"
+            },
+            "feature_wall_seconds": {
+              "type": "integer",
+              "const": 600
+            },
+            "checkpoint_policy": {
+              "type": "object",
+              "properties": {
+                "revision": {
+                  "type": "integer",
+                  "const": 2
+                },
+                "retention": {
+                  "type": "string",
+                  "const": "latest_and_selected"
+                },
+                "scope": {
+                  "type": "string",
+                  "const": "same_logical_execution_all_resume_segments"
+                },
+                "transition": {
+                  "type": "string",
+                  "const": "verify_load_publish_references_then_rotate_owned_intermediates"
+                },
+                "initial_margin_bytes": {
+                  "type": "integer",
+                  "const": 1048576
+                },
+                "observed_margin_fraction": {
+                  "type": "number",
+                  "const": 0.1
+                },
+                "minimum_observed_margin_bytes": {
+                  "type": "integer",
+                  "const": 65536
+                },
+                "unknown_files": {
+                  "type": "string",
+                  "const": "preserve_and_account"
+                },
+                "interrupted_temporaries": {
+                  "type": "string",
+                  "const": "preserve_and_account"
+                }
+              },
+              "required": [
+                "revision",
+                "retention",
+                "scope",
+                "transition",
+                "initial_margin_bytes",
+                "observed_margin_fraction",
+                "minimum_observed_margin_bytes",
+                "unknown_files",
+                "interrupted_temporaries"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "device",
+            "threads",
+            "microbatch",
+            "gradient_accumulation",
+            "maximum_epochs",
+            "maximum_optimizer_updates",
+            "maximum_wall_seconds",
+            "process_rss_limit_bytes",
+            "attempts",
+            "early_stopping_patience_epochs",
+            "selection",
+            "stop",
+            "rationale",
+            "checkpoint_disk_limit_bytes",
+            "checkpoint_frequency",
+            "feature_wall_seconds",
+            "checkpoint_policy"
+          ],
+          "additionalProperties": false
+        },
+        "statistics": {
+          "type": "object",
+          "properties": {
+            "scope": {
+              "type": "string",
+              "const": "finite_annotated_set_descriptive"
+            },
+            "population_intervals": {
+              "type": "boolean",
+              "const": false
+            },
+            "components_per_split": {
+              "type": "integer",
+              "const": 1
+            },
+            "formats_are_observations": {
+              "type": "boolean",
+              "const": false
+            }
+          },
+          "required": [
+            "scope",
+            "population_intervals",
+            "components_per_split",
+            "formats_are_observations"
+          ],
+          "additionalProperties": false
+        },
+        "readiness": {
+          "type": "object",
+          "properties": {
+            "minimum_train_per_class": {
+              "type": "integer",
+              "const": 2
+            },
+            "minimum_validation_per_class": {
+              "type": "integer",
+              "const": 1
+            },
+            "minimum_h2_train": {
+              "type": "integer",
+              "const": 16
+            },
+            "minimum_h2_validation": {
+              "type": "integer",
+              "const": 8
+            },
+            "minimum_distinct_h2_targets": {
+              "type": "integer",
+              "const": 3
+            },
+            "training_free_memory_bytes": {
+              "type": "integer",
+              "const": 4294967296
+            },
+            "inference_free_memory_bytes": {
+              "type": "integer",
+              "const": 2147483648
+            },
+            "reserve_explanation": {
+              "type": "string",
+              "const": "conservative operational limits: encoder storage about 449 MiB; training parameters, gradients and Adam moments about 1.8 GiB before activations/runtime; reserve is chosen, not measured requirement"
+            }
+          },
+          "required": [
+            "minimum_train_per_class",
+            "minimum_validation_per_class",
+            "minimum_h2_train",
+            "minimum_h2_validation",
+            "minimum_distinct_h2_targets",
+            "training_free_memory_bytes",
+            "inference_free_memory_bytes",
+            "reserve_explanation"
+          ],
+          "additionalProperties": false
+        },
+        "selection": {
+          "type": "object",
+          "properties": {
+            "h1": {
+              "type": "string",
+              "const": "one fixed fit; no tuning; report validation macro_f1"
+            },
+            "h2": {
+              "type": "string",
+              "const": "lowest_validation_MSE_then_earliest_epoch"
+            },
+            "h2_primary": {
+              "type": "string",
+              "const": "spearman"
+            },
+            "undefined": {
+              "type": "string",
+              "const": "null_with_reason_no_zero_substitution"
+            }
+          },
+          "required": [
+            "h1",
+            "h2",
+            "h2_primary",
+            "undefined"
+          ],
+          "additionalProperties": false
+        },
+        "test_policy": {
           "type": "string",
-          "const": "s5b-rubric-01"
+          "const": "closed_no_predictions_no_annotation_no_selection"
+        },
+        "application_policy": {
+          "type": "string",
+          "const": "no automatic activation; integration requires future explicit stage"
+        },
+        "h3": {
+          "type": "object",
+          "properties": {
+            "status": {
+              "type": "string",
+              "const": "protocol_only_no_load_in_S5B"
+            },
+            "candidate_reference": {
+              "type": "string",
+              "const": "experiment_candidates_s5a.json; H3 separate stage"
+            }
+          },
+          "required": [
+            "status",
+            "candidate_reference"
+          ],
+          "additionalProperties": false
+        },
+        "rubric_sha256": {
+          "type": "string",
+          "const": "e805b86423b4a6e46e2b3a2f577dd4b8b66419b8b2270cd5eb31a785f6d579a2"
+        },
+        "campaign_plan_identity": {
+          "type": "string",
+          "const": "8e608aaa9a72c7f80d8689c3484849b4917b61b6c8ca27b0e4d1c7d787fd144a"
+        },
+        "selection_identity": {
+          "type": "string",
+          "const": "2cd70b1db1401536c0e0740b7cb4c998266e2a806d7278475ae2926a7cabe8ff"
         }
       },
       "required": [
-        "origin",
-        "generator_relationship",
-        "shared_dependencies",
-        "procedure_id",
-        "rubric_id"
+        "schema",
+        "status",
+        "adopted_utc",
+        "authorization",
+        "dataset_version",
+        "idf_identity",
+        "reference_protocol_identity",
+        "seed",
+        "allowed_splits",
+        "annotation",
+        "h1",
+        "h2",
+        "siamese",
+        "budget",
+        "statistics",
+        "readiness",
+        "selection",
+        "test_policy",
+        "application_policy",
+        "h3",
+        "rubric_sha256",
+        "campaign_plan_identity",
+        "selection_identity"
       ],
-      "additionalProperties": false
+      "additionalProperties": false,
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "description": "Single supported adopted profile S5B revision 1; change of scientific/operational values requires a new versioned profile, not an approval boolean."
     },
-    "h1": {
+    {
       "type": "object",
       "properties": {
-        "unit": {
+        "schema": {
           "type": "string",
-          "const": "sentence_pair"
+          "const": "hts-s5b-3"
         },
-        "classes": {
+        "status": {
+          "type": "string",
+          "const": "adopted_exploratory"
+        },
+        "adopted_utc": {
+          "type": "string"
+        },
+        "authorization": {
+          "type": "string",
+          "const": "author approves D1 D2 D3 D4 in this session; train/validation only; S5C separately gated"
+        },
+        "dataset_version": {
+          "type": "string",
+          "const": "fccdffc984dca0b30d9c044ee62bee32eb52b3b4a828fe454e6a17de0602fd26"
+        },
+        "idf_identity": {
+          "type": "string",
+          "const": "9ddb353e50c050f58cc3417f8a41763867550730e7c18c56851d4f6dd74680c6"
+        },
+        "reference_protocol_identity": {
+          "type": "string",
+          "const": "a763d0359a78bd0cdb4dd0bdc689308524c314c0552ed89fc80d99cf52a75d40"
+        },
+        "seed": {
+          "type": "integer",
+          "const": 20261025
+        },
+        "allowed_splits": {
           "type": "array",
           "prefixItems": [
             {
               "type": "string",
-              "const": "copia_exata"
+              "const": "train"
             },
             {
               "type": "string",
-              "const": "copia_editada"
-            },
-            {
-              "type": "string",
-              "const": "parafrase"
-            },
-            {
-              "type": "string",
-              "const": "sem_correspondencia_detectada"
+              "const": "validation"
             }
           ],
-          "minItems": 4,
-          "maxItems": 4
+          "minItems": 2,
+          "maxItems": 2
         },
-        "features_by_system": {
+        "annotation": {
           "type": "object",
           "properties": {
-            "lexical": {
-              "type": "array",
-              "prefixItems": [
-                {
-                  "type": "string",
-                  "const": "lexical_cosine"
-                }
-              ],
-              "minItems": 1,
-              "maxItems": 1
+            "origin": {
+              "type": "string",
+              "const": "automated_weak"
             },
-            "semantic": {
-              "type": "array",
-              "prefixItems": [
-                {
-                  "type": "string",
-                  "const": "semantic_cosine_raw"
-                }
-              ],
-              "minItems": 1,
-              "maxItems": 1
+            "generator_relationship": {
+              "type": "string",
+              "const": "shared"
             },
-            "fixed_fusion": {
+            "shared_dependencies": {
               "type": "array",
               "prefixItems": [
                 {
                   "type": "string",
-                  "const": "0.4*lexical_cosine+0.6*max(0,semantic_cosine_raw)"
+                  "const": "Codex session family used in candidate curation; independence not demonstrated"
+                },
+                {
+                  "type": "string",
+                  "const": "same preserved synthetic dataset and project context"
                 }
               ],
-              "minItems": 1,
-              "maxItems": 1
+              "minItems": 2,
+              "maxItems": 2
+            },
+            "procedure_id": {
+              "type": "string",
+              "const": "codex-s5b-content-judgment-01"
+            },
+            "rubric_id": {
+              "type": "string",
+              "const": "s5b-rubric-01"
             }
           },
           "required": [
-            "lexical",
-            "semantic",
-            "fixed_fusion"
+            "origin",
+            "generator_relationship",
+            "shared_dependencies",
+            "procedure_id",
+            "rubric_id"
           ],
           "additionalProperties": false
         },
-        "classifier": {
+        "h1": {
+          "type": "object",
+          "properties": {
+            "unit": {
+              "type": "string",
+              "const": "sentence_pair"
+            },
+            "classes": {
+              "type": "array",
+              "prefixItems": [
+                {
+                  "type": "string",
+                  "const": "copia_exata"
+                },
+                {
+                  "type": "string",
+                  "const": "copia_editada"
+                },
+                {
+                  "type": "string",
+                  "const": "parafrase"
+                },
+                {
+                  "type": "string",
+                  "const": "sem_correspondencia_detectada"
+                }
+              ],
+              "minItems": 4,
+              "maxItems": 4
+            },
+            "features_by_system": {
+              "type": "object",
+              "properties": {
+                "lexical": {
+                  "type": "array",
+                  "prefixItems": [
+                    {
+                      "type": "string",
+                      "const": "lexical_cosine"
+                    }
+                  ],
+                  "minItems": 1,
+                  "maxItems": 1
+                },
+                "semantic": {
+                  "type": "array",
+                  "prefixItems": [
+                    {
+                      "type": "string",
+                      "const": "semantic_cosine_raw"
+                    }
+                  ],
+                  "minItems": 1,
+                  "maxItems": 1
+                },
+                "fixed_fusion": {
+                  "type": "array",
+                  "prefixItems": [
+                    {
+                      "type": "string",
+                      "const": "0.4*lexical_cosine+0.6*max(0,semantic_cosine_raw)"
+                    }
+                  ],
+                  "minItems": 1,
+                  "maxItems": 1
+                },
+                "learned_fusion": {
+                  "type": "array",
+                  "prefixItems": [
+                    {
+                      "type": "string",
+                      "const": "lexical_cosine"
+                    },
+                    {
+                      "type": "string",
+                      "const": "semantic_cosine_operational"
+                    }
+                  ],
+                  "minItems": 2,
+                  "maxItems": 2
+                }
+              },
+              "required": [
+                "lexical",
+                "semantic",
+                "fixed_fusion",
+                "learned_fusion"
+              ],
+              "additionalProperties": false
+            },
+            "classifier": {
+              "type": "object",
+              "properties": {
+                "kind": {
+                  "type": "string",
+                  "const": "multinomial_logistic_regression"
+                },
+                "penalty": {
+                  "type": "string",
+                  "const": "l2"
+                },
+                "C": {
+                  "type": "number",
+                  "const": 1.0
+                },
+                "max_iter": {
+                  "type": "integer",
+                  "const": 1000
+                },
+                "seed": {
+                  "type": "integer",
+                  "const": 20261025
+                },
+                "fit_split": {
+                  "type": "string",
+                  "const": "train"
+                },
+                "selection_split": {
+                  "type": "string",
+                  "const": "validation"
+                },
+                "class_weight": {
+                  "type": "null",
+                  "const": null
+                }
+              },
+              "required": [
+                "kind",
+                "penalty",
+                "C",
+                "max_iter",
+                "seed",
+                "fit_split",
+                "selection_split",
+                "class_weight"
+              ],
+              "additionalProperties": false
+            },
+            "eligibility": {
+              "type": "string",
+              "const": "previously_annotated_sentence_pairs; no_winner_selected_alignment; same_rows_for_all_systems"
+            },
+            "failures": {
+              "type": "string",
+              "const": "preserve_attempts; comparison_incomplete_if_any_prediction_missing; no_success_only_macro_f1"
+            },
+            "baselines": {
+              "type": "array",
+              "prefixItems": [
+                {
+                  "type": "string",
+                  "const": "baseline_q5v2"
+                },
+                {
+                  "type": "string",
+                  "const": "baseline_majority"
+                }
+              ],
+              "minItems": 2,
+              "maxItems": 2
+            }
+          },
+          "required": [
+            "unit",
+            "classes",
+            "features_by_system",
+            "classifier",
+            "eligibility",
+            "failures",
+            "baselines"
+          ],
+          "additionalProperties": false
+        },
+        "h2": {
+          "type": "object",
+          "properties": {
+            "unit": {
+              "type": "string",
+              "const": "sentence_pair"
+            },
+            "construct": {
+              "type": "string",
+              "const": "degree_of_shared_propositional_content_with_separate_relation_axes"
+            },
+            "range": {
+              "type": "array",
+              "prefixItems": [
+                {
+                  "type": "integer",
+                  "const": 0
+                },
+                {
+                  "type": "integer",
+                  "const": 1
+                }
+              ],
+              "minItems": 2,
+              "maxItems": 2
+            },
+            "annotation_schema": {
+              "type": "string",
+              "const": "hts-annotations-2"
+            },
+            "contradiction_policy": {
+              "type": "string",
+              "const": "separate_axis; never_automatic_zero; score_1_forbidden; insufficient_context_unlabeled"
+            },
+            "baseline_diagnostics": {
+              "type": "string",
+              "const": "(raw_cosine+1)/2; Spearman_uses_raw_cosine_and_is_invariant_to_this_affine_mapping"
+            }
+          },
+          "required": [
+            "unit",
+            "construct",
+            "range",
+            "annotation_schema",
+            "contradiction_policy",
+            "baseline_diagnostics"
+          ],
+          "additionalProperties": false
+        },
+        "siamese": {
+          "type": "object",
+          "properties": {
+            "base": {
+              "type": "string",
+              "const": "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
+            },
+            "revision": {
+              "type": "string",
+              "const": "e8f8c211226b894fcb81acc59f3b34ba3efd5f42"
+            },
+            "license": {
+              "type": "string",
+              "const": "Apache-2.0"
+            },
+            "sharing": {
+              "type": "string",
+              "const": "same_encoder_instance_and_weights_both_branches"
+            },
+            "pooling": {
+              "type": "string",
+              "const": "existing_complete_nonoverlapping_windows_content_weighted_mean_then_l2"
+            },
+            "embedding_dimension": {
+              "type": "integer",
+              "const": 384
+            },
+            "pair_features": {
+              "type": "string",
+              "const": "concat(abs(u-v),u*v)"
+            },
+            "dense_dimensions": {
+              "type": "array",
+              "prefixItems": [
+                {
+                  "type": "integer",
+                  "const": 768
+                },
+                {
+                  "type": "integer",
+                  "const": 128
+                },
+                {
+                  "type": "integer",
+                  "const": 1
+                }
+              ],
+              "minItems": 3,
+              "maxItems": 3
+            },
+            "head": {
+              "type": "string",
+              "const": "Linear768x128_LayerNorm128_LeakyReLU_Dropout_Linear128x1_Sigmoid"
+            },
+            "layer_norm_epsilon": {
+              "type": "number",
+              "const": 1e-05
+            },
+            "leaky_relu_alpha": {
+              "type": "number",
+              "const": 0.1
+            },
+            "dropout": {
+              "type": "number",
+              "const": 0.1
+            },
+            "loss": {
+              "type": "string",
+              "const": "MSELoss"
+            },
+            "optimizer": {
+              "type": "string",
+              "const": "Adam"
+            },
+            "learning_rate": {
+              "type": "number",
+              "const": 2e-06
+            },
+            "weight_decay": {
+              "type": "number",
+              "const": 1e-05
+            },
+            "long_sentences": {
+              "type": "string",
+              "const": "same_complete_window_policy_as_baseline; no_silent_truncation_or_test_exclusion"
+            },
+            "input": {
+              "type": "string",
+              "const": "two_texts_only; external_targets_separate"
+            },
+            "output": {
+              "type": "string",
+              "const": "one_finite_scalar_in_0_1_per_sentence_pair"
+            },
+            "source_status": {
+              "type": "string",
+              "const": "project_proposal_adapted_from_A7; dimensions_base_head_and_budget_not_attributed_to_A7"
+            },
+            "encoder_trainable": {
+              "type": "boolean",
+              "const": false
+            },
+            "trainable_parameters": {
+              "type": "object",
+              "properties": {
+                "head.0.weight": {
+                  "type": "array",
+                  "prefixItems": [
+                    {
+                      "type": "integer",
+                      "const": 128
+                    },
+                    {
+                      "type": "integer",
+                      "const": 768
+                    }
+                  ],
+                  "minItems": 2,
+                  "maxItems": 2
+                },
+                "head.0.bias": {
+                  "type": "array",
+                  "prefixItems": [
+                    {
+                      "type": "integer",
+                      "const": 128
+                    }
+                  ],
+                  "minItems": 1,
+                  "maxItems": 1
+                },
+                "head.1.weight": {
+                  "type": "array",
+                  "prefixItems": [
+                    {
+                      "type": "integer",
+                      "const": 128
+                    }
+                  ],
+                  "minItems": 1,
+                  "maxItems": 1
+                },
+                "head.1.bias": {
+                  "type": "array",
+                  "prefixItems": [
+                    {
+                      "type": "integer",
+                      "const": 128
+                    }
+                  ],
+                  "minItems": 1,
+                  "maxItems": 1
+                },
+                "head.4.weight": {
+                  "type": "array",
+                  "prefixItems": [
+                    {
+                      "type": "integer",
+                      "const": 1
+                    },
+                    {
+                      "type": "integer",
+                      "const": 128
+                    }
+                  ],
+                  "minItems": 2,
+                  "maxItems": 2
+                },
+                "head.4.bias": {
+                  "type": "array",
+                  "prefixItems": [
+                    {
+                      "type": "integer",
+                      "const": 1
+                    }
+                  ],
+                  "minItems": 1,
+                  "maxItems": 1
+                }
+              },
+              "required": [
+                "head.0.weight",
+                "head.0.bias",
+                "head.1.weight",
+                "head.1.bias",
+                "head.4.weight",
+                "head.4.bias"
+              ],
+              "additionalProperties": false
+            },
+            "trainable_parameter_count": {
+              "type": "integer",
+              "const": 98817
+            },
+            "frozen_encoder_mode": {
+              "type": "string",
+              "const": "eval_and_no_grad_even_while_head_trains"
+            }
+          },
+          "required": [
+            "base",
+            "revision",
+            "license",
+            "sharing",
+            "pooling",
+            "embedding_dimension",
+            "pair_features",
+            "dense_dimensions",
+            "head",
+            "layer_norm_epsilon",
+            "leaky_relu_alpha",
+            "dropout",
+            "loss",
+            "optimizer",
+            "learning_rate",
+            "weight_decay",
+            "long_sentences",
+            "input",
+            "output",
+            "source_status",
+            "encoder_trainable",
+            "trainable_parameters",
+            "trainable_parameter_count",
+            "frozen_encoder_mode"
+          ],
+          "additionalProperties": false
+        },
+        "budget": {
+          "type": "object",
+          "properties": {
+            "device": {
+              "type": "string",
+              "const": "cpu"
+            },
+            "threads": {
+              "type": "integer",
+              "const": 2
+            },
+            "microbatch": {
+              "type": "integer",
+              "const": 1
+            },
+            "gradient_accumulation": {
+              "type": "integer",
+              "const": 4
+            },
+            "maximum_epochs": {
+              "type": "integer",
+              "const": 8
+            },
+            "maximum_optimizer_updates": {
+              "type": "integer",
+              "const": 2000
+            },
+            "maximum_wall_seconds": {
+              "type": "integer",
+              "const": 7200
+            },
+            "process_rss_limit_bytes": {
+              "type": "integer",
+              "const": 3221225472
+            },
+            "attempts": {
+              "type": "integer",
+              "const": 1
+            },
+            "early_stopping_patience_epochs": {
+              "type": "integer",
+              "const": 2
+            },
+            "selection": {
+              "type": "string",
+              "const": "lowest_validation_MSE_then_earliest_epoch"
+            },
+            "stop": {
+              "type": "string",
+              "const": "first_budget_or_patience_limit; preserve_partial_status_and_all_attempts; never_extend_after_test"
+            },
+            "rationale": {
+              "type": "string",
+              "const": "conservative_resource_caps_on_observed_local_CPU; not_predicted_duration_or_guaranteed_feasibility"
+            },
+            "checkpoint_disk_limit_bytes": {
+              "type": "integer",
+              "const": 6442450944
+            },
+            "checkpoint_frequency": {
+              "type": "string",
+              "const": "epoch_and_safe_budget_stop; retain latest and selected"
+            },
+            "feature_wall_seconds": {
+              "type": "integer",
+              "const": 600
+            },
+            "checkpoint_policy": {
+              "type": "object",
+              "properties": {
+                "revision": {
+                  "type": "integer",
+                  "const": 2
+                },
+                "retention": {
+                  "type": "string",
+                  "const": "latest_and_selected"
+                },
+                "scope": {
+                  "type": "string",
+                  "const": "same_logical_execution_all_resume_segments"
+                },
+                "transition": {
+                  "type": "string",
+                  "const": "verify_load_publish_references_then_rotate_owned_intermediates"
+                },
+                "initial_margin_bytes": {
+                  "type": "integer",
+                  "const": 1048576
+                },
+                "observed_margin_fraction": {
+                  "type": "number",
+                  "const": 0.1
+                },
+                "minimum_observed_margin_bytes": {
+                  "type": "integer",
+                  "const": 65536
+                },
+                "unknown_files": {
+                  "type": "string",
+                  "const": "preserve_and_account"
+                },
+                "interrupted_temporaries": {
+                  "type": "string",
+                  "const": "preserve_and_account"
+                }
+              },
+              "required": [
+                "revision",
+                "retention",
+                "scope",
+                "transition",
+                "initial_margin_bytes",
+                "observed_margin_fraction",
+                "minimum_observed_margin_bytes",
+                "unknown_files",
+                "interrupted_temporaries"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "device",
+            "threads",
+            "microbatch",
+            "gradient_accumulation",
+            "maximum_epochs",
+            "maximum_optimizer_updates",
+            "maximum_wall_seconds",
+            "process_rss_limit_bytes",
+            "attempts",
+            "early_stopping_patience_epochs",
+            "selection",
+            "stop",
+            "rationale",
+            "checkpoint_disk_limit_bytes",
+            "checkpoint_frequency",
+            "feature_wall_seconds",
+            "checkpoint_policy"
+          ],
+          "additionalProperties": false
+        },
+        "statistics": {
+          "type": "object",
+          "properties": {
+            "scope": {
+              "type": "string",
+              "const": "finite_annotated_set_descriptive"
+            },
+            "population_intervals": {
+              "type": "boolean",
+              "const": false
+            },
+            "components_per_split": {
+              "type": "integer",
+              "const": 1
+            },
+            "formats_are_observations": {
+              "type": "boolean",
+              "const": false
+            }
+          },
+          "required": [
+            "scope",
+            "population_intervals",
+            "components_per_split",
+            "formats_are_observations"
+          ],
+          "additionalProperties": false
+        },
+        "readiness": {
+          "type": "object",
+          "properties": {
+            "minimum_train_per_class": {
+              "type": "integer",
+              "const": 2
+            },
+            "minimum_validation_per_class": {
+              "type": "integer",
+              "const": 1
+            },
+            "minimum_h2_train": {
+              "type": "integer",
+              "const": 16
+            },
+            "minimum_h2_validation": {
+              "type": "integer",
+              "const": 8
+            },
+            "minimum_distinct_h2_targets": {
+              "type": "integer",
+              "const": 3
+            },
+            "training_free_memory_bytes": {
+              "type": "integer",
+              "const": 4294967296
+            },
+            "inference_free_memory_bytes": {
+              "type": "integer",
+              "const": 2147483648
+            },
+            "reserve_explanation": {
+              "type": "string",
+              "const": "conservative operational limits: encoder storage about 449 MiB; training parameters, gradients and Adam moments about 1.8 GiB before activations/runtime; reserve is chosen, not measured requirement"
+            }
+          },
+          "required": [
+            "minimum_train_per_class",
+            "minimum_validation_per_class",
+            "minimum_h2_train",
+            "minimum_h2_validation",
+            "minimum_distinct_h2_targets",
+            "training_free_memory_bytes",
+            "inference_free_memory_bytes",
+            "reserve_explanation"
+          ],
+          "additionalProperties": false
+        },
+        "selection": {
+          "type": "object",
+          "properties": {
+            "h1": {
+              "type": "string",
+              "const": "one fixed fit; no tuning; report validation macro_f1"
+            },
+            "h2": {
+              "type": "string",
+              "const": "lowest_validation_MSE_then_earliest_epoch"
+            },
+            "h2_primary": {
+              "type": "string",
+              "const": "spearman"
+            },
+            "undefined": {
+              "type": "string",
+              "const": "null_with_reason_no_zero_substitution"
+            }
+          },
+          "required": [
+            "h1",
+            "h2",
+            "h2_primary",
+            "undefined"
+          ],
+          "additionalProperties": false
+        },
+        "test_policy": {
+          "type": "string",
+          "const": "closed_no_predictions_no_annotation_no_selection"
+        },
+        "application_policy": {
+          "type": "string",
+          "const": "no automatic activation; integration requires future explicit stage"
+        },
+        "h3": {
+          "type": "object",
+          "properties": {
+            "status": {
+              "type": "string",
+              "const": "protocol_only_no_load_in_S5B"
+            },
+            "candidate_reference": {
+              "type": "string",
+              "const": "experiment_candidates_s5a.json; H3 separate stage"
+            }
+          },
+          "required": [
+            "status",
+            "candidate_reference"
+          ],
+          "additionalProperties": false
+        },
+        "rubric_sha256": {
+          "type": "string",
+          "const": "e805b86423b4a6e46e2b3a2f577dd4b8b66419b8b2270cd5eb31a785f6d579a2"
+        },
+        "campaign_plan_identity": {
+          "type": "string",
+          "const": "8e608aaa9a72c7f80d8689c3484849b4917b61b6c8ca27b0e4d1c7d787fd144a"
+        },
+        "selection_identity": {
+          "type": "string",
+          "const": "2cd70b1db1401536c0e0740b7cb4c998266e2a806d7278475ae2926a7cabe8ff"
+        },
+        "decisions": {
+          "type": "object",
+          "properties": {
+            "record": {
+              "type": "string",
+              "const": "TCC/01-decisoes.md#revisao-3-d1-d4"
+            },
+            "D1": {
+              "type": "string",
+              "const": "B: automated reference plus future blinded human partial reference; D5 and PH2 pending"
+            },
+            "D2": {
+              "type": "string",
+              "const": "frozen entire encoder; train only MLP head including LayerNorm affine parameters"
+            },
+            "D3": {
+              "type": "string",
+              "const": "four logistic systems and two baselines; same eligible observations"
+            },
+            "D4": {
+              "type": "string",
+              "const": "Platt P1 derivation only; separate probability; no P2 threshold change"
+            },
+            "approval_source": {
+              "type": "string",
+              "const": "author explicit message; no separate advisor approval claimed"
+            }
+          },
+          "required": [
+            "record",
+            "D1",
+            "D2",
+            "D3",
+            "D4",
+            "approval_source"
+          ],
+          "additionalProperties": false
+        },
+        "calibration": {
           "type": "object",
           "properties": {
             "kind": {
               "type": "string",
-              "const": "multinomial_logistic_regression"
+              "const": "platt_regularized_targets"
             },
-            "penalty": {
+            "variant": {
               "type": "string",
-              "const": "l2"
+              "const": "P1"
             },
-            "C": {
-              "type": "number",
-              "const": 1.0
+            "target": {
+              "type": "string",
+              "const": "binary_sentence_pair_derivation_from_source_ancestry"
             },
-            "max_iter": {
+            "label_origin": {
+              "type": "string",
+              "const": "frozen_S4_ancestors; positive iff source_id and source_sentence_id are present in suspect ancestors; negative otherwise"
+            },
+            "features": {
+              "type": "array",
+              "prefixItems": [
+                {
+                  "type": "string",
+                  "const": "fixed_fusion"
+                }
+              ],
+              "minItems": 1,
+              "maxItems": 1
+            },
+            "fit_split": {
+              "type": "string",
+              "const": "validation"
+            },
+            "eligible": {
+              "type": "string",
+              "const": "all source-suspect sentence pairs for canonical semantic texts; deduplicate text pairs; conflicting labels excluded and reported; formats not separate observations"
+            },
+            "evaluation": {
+              "type": "string",
+              "const": "grouped_out_of_fold_by_dependency_component_if_at_least_two_components_each_fit_has_two_classes; otherwise independent_metrics_null_with_reason"
+            },
+            "folds": {
               "type": "integer",
-              "const": 1000
+              "const": 3
             },
             "seed": {
               "type": "integer",
               "const": 20261025
             },
-            "fit_split": {
+            "resubstitution": {
               "type": "string",
-              "const": "train"
+              "const": "diagnostic_only; never independent or evidence of improvement"
             },
-            "selection_split": {
+            "final_holdout": {
               "type": "string",
-              "const": "validation"
+              "const": "test remains closed; evaluate frozen calibrator only after PH2 authorization in S5C"
             },
-            "class_weight": {
-              "type": "null",
-              "const": null
+            "metrics": {
+              "type": "array",
+              "prefixItems": [
+                {
+                  "type": "string",
+                  "const": "brier"
+                },
+                {
+                  "type": "string",
+                  "const": "log_loss"
+                },
+                {
+                  "type": "string",
+                  "const": "ece_10_equal_width_bins"
+                },
+                {
+                  "type": "string",
+                  "const": "reliability_bin_counts"
+                },
+                {
+                  "type": "string",
+                  "const": "f1_at_0.5"
+                }
+              ],
+              "minItems": 5,
+              "maxItems": 5
+            },
+            "comparators": {
+              "type": "array",
+              "prefixItems": [
+                {
+                  "type": "string",
+                  "const": "uncalibrated_fixed_fusion_probability"
+                },
+                {
+                  "type": "string",
+                  "const": "q5v2_derivation_decision"
+                }
+              ],
+              "minItems": 2,
+              "maxItems": 2
+            },
+            "isotonic": {
+              "type": "boolean",
+              "const": false
+            },
+            "index_policy": {
+              "type": "string",
+              "const": "fixed_fusion_index_unchanged; probability_in_own_field"
+            },
+            "selection": {
+              "type": "string",
+              "const": "no hyperparameter selection; report improvement or degradation without refit_on_evaluation"
+            },
+            "score_resource": {
+              "type": "string",
+              "const": "frozen_application_idf_and_policy_from_RG01; scientific_training_idf_not_used_for_P1"
             }
           },
           "required": [
             "kind",
-            "penalty",
-            "C",
-            "max_iter",
-            "seed",
+            "variant",
+            "target",
+            "label_origin",
+            "features",
             "fit_split",
-            "selection_split",
-            "class_weight"
-          ],
-          "additionalProperties": false
-        },
-        "eligibility": {
-          "type": "string",
-          "const": "previously_annotated_sentence_pairs; no_winner_selected_alignment; same_rows_for_all_systems"
-        },
-        "failures": {
-          "type": "string",
-          "const": "preserve_attempts; comparison_incomplete_if_any_prediction_missing; no_success_only_macro_f1"
-        }
-      },
-      "required": [
-        "unit",
-        "classes",
-        "features_by_system",
-        "classifier",
-        "eligibility",
-        "failures"
-      ],
-      "additionalProperties": false
-    },
-    "h2": {
-      "type": "object",
-      "properties": {
-        "unit": {
-          "type": "string",
-          "const": "sentence_pair"
-        },
-        "construct": {
-          "type": "string",
-          "const": "degree_of_shared_propositional_content_with_separate_relation_axes"
-        },
-        "range": {
-          "type": "array",
-          "prefixItems": [
-            {
-              "type": "integer",
-              "const": 0
-            },
-            {
-              "type": "integer",
-              "const": 1
-            }
-          ],
-          "minItems": 2,
-          "maxItems": 2
-        },
-        "annotation_schema": {
-          "type": "string",
-          "const": "hts-annotations-2"
-        },
-        "contradiction_policy": {
-          "type": "string",
-          "const": "separate_axis; never_automatic_zero; score_1_forbidden; insufficient_context_unlabeled"
-        },
-        "baseline_diagnostics": {
-          "type": "string",
-          "const": "(raw_cosine+1)/2; Spearman_uses_raw_cosine_and_is_invariant_to_this_affine_mapping"
-        }
-      },
-      "required": [
-        "unit",
-        "construct",
-        "range",
-        "annotation_schema",
-        "contradiction_policy",
-        "baseline_diagnostics"
-      ],
-      "additionalProperties": false
-    },
-    "siamese": {
-      "type": "object",
-      "properties": {
-        "base": {
-          "type": "string",
-          "const": "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
-        },
-        "revision": {
-          "type": "string",
-          "const": "e8f8c211226b894fcb81acc59f3b34ba3efd5f42"
-        },
-        "license": {
-          "type": "string",
-          "const": "Apache-2.0"
-        },
-        "sharing": {
-          "type": "string",
-          "const": "same_encoder_instance_and_weights_both_branches"
-        },
-        "pooling": {
-          "type": "string",
-          "const": "existing_complete_nonoverlapping_windows_content_weighted_mean_then_l2"
-        },
-        "embedding_dimension": {
-          "type": "integer",
-          "const": 384
-        },
-        "pair_features": {
-          "type": "string",
-          "const": "concat(abs(u-v),u*v)"
-        },
-        "dense_dimensions": {
-          "type": "array",
-          "prefixItems": [
-            {
-              "type": "integer",
-              "const": 768
-            },
-            {
-              "type": "integer",
-              "const": 128
-            },
-            {
-              "type": "integer",
-              "const": 1
-            }
-          ],
-          "minItems": 3,
-          "maxItems": 3
-        },
-        "head": {
-          "type": "string",
-          "const": "Linear768x128_LayerNorm128_LeakyReLU_Dropout_Linear128x1_Sigmoid"
-        },
-        "layer_norm_epsilon": {
-          "type": "number",
-          "const": 1e-05
-        },
-        "leaky_relu_alpha": {
-          "type": "number",
-          "const": 0.1
-        },
-        "dropout": {
-          "type": "number",
-          "const": 0.1
-        },
-        "loss": {
-          "type": "string",
-          "const": "MSELoss"
-        },
-        "optimizer": {
-          "type": "string",
-          "const": "Adam"
-        },
-        "learning_rate": {
-          "type": "number",
-          "const": 2e-06
-        },
-        "weight_decay": {
-          "type": "number",
-          "const": 1e-05
-        },
-        "long_sentences": {
-          "type": "string",
-          "const": "same_complete_window_policy_as_baseline; no_silent_truncation_or_test_exclusion"
-        },
-        "input": {
-          "type": "string",
-          "const": "two_texts_only; external_targets_separate"
-        },
-        "output": {
-          "type": "string",
-          "const": "one_finite_scalar_in_0_1_per_sentence_pair"
-        },
-        "source_status": {
-          "type": "string",
-          "const": "project_proposal_adapted_from_A7; dimensions_base_head_and_budget_not_attributed_to_A7"
-        },
-        "encoder_trainable": {
-          "type": "boolean",
-          "const": true
-        }
-      },
-      "required": [
-        "base",
-        "revision",
-        "license",
-        "sharing",
-        "pooling",
-        "embedding_dimension",
-        "pair_features",
-        "dense_dimensions",
-        "head",
-        "layer_norm_epsilon",
-        "leaky_relu_alpha",
-        "dropout",
-        "loss",
-        "optimizer",
-        "learning_rate",
-        "weight_decay",
-        "long_sentences",
-        "input",
-        "output",
-        "source_status",
-        "encoder_trainable"
-      ],
-      "additionalProperties": false
-    },
-    "budget": {
-      "type": "object",
-      "properties": {
-        "device": {
-          "type": "string",
-          "const": "cpu"
-        },
-        "threads": {
-          "type": "integer",
-          "const": 2
-        },
-        "microbatch": {
-          "type": "integer",
-          "const": 1
-        },
-        "gradient_accumulation": {
-          "type": "integer",
-          "const": 4
-        },
-        "maximum_epochs": {
-          "type": "integer",
-          "const": 8
-        },
-        "maximum_optimizer_updates": {
-          "type": "integer",
-          "const": 2000
-        },
-        "maximum_wall_seconds": {
-          "type": "integer",
-          "const": 7200
-        },
-        "process_rss_limit_bytes": {
-          "type": "integer",
-          "const": 3221225472
-        },
-        "attempts": {
-          "type": "integer",
-          "const": 1
-        },
-        "early_stopping_patience_epochs": {
-          "type": "integer",
-          "const": 2
-        },
-        "selection": {
-          "type": "string",
-          "const": "lowest_validation_MSE_then_earliest_epoch"
-        },
-        "stop": {
-          "type": "string",
-          "const": "first_budget_or_patience_limit; preserve_partial_status_and_all_attempts; never_extend_after_test"
-        },
-        "rationale": {
-          "type": "string",
-          "const": "conservative_resource_caps_on_observed_local_CPU; not_predicted_duration_or_guaranteed_feasibility"
-        },
-        "checkpoint_disk_limit_bytes": {
-          "type": "integer",
-          "const": 6442450944
-        },
-        "checkpoint_frequency": {
-          "type": "string",
-          "const": "epoch_and_safe_budget_stop; retain latest and selected"
-        },
-        "feature_wall_seconds": {
-          "type": "integer",
-          "const": 600
-        },
-        "checkpoint_policy": {
-          "type": "object",
-          "properties": {
-            "revision": {
-              "type": "integer",
-              "const": 2
-            },
-            "retention": {
-              "type": "string",
-              "const": "latest_and_selected"
-            },
-            "scope": {
-              "type": "string",
-              "const": "same_logical_execution_all_resume_segments"
-            },
-            "transition": {
-              "type": "string",
-              "const": "verify_load_publish_references_then_rotate_owned_intermediates"
-            },
-            "initial_margin_bytes": {
-              "type": "integer",
-              "const": 1048576
-            },
-            "observed_margin_fraction": {
-              "type": "number",
-              "const": 0.1
-            },
-            "minimum_observed_margin_bytes": {
-              "type": "integer",
-              "const": 65536
-            },
-            "unknown_files": {
-              "type": "string",
-              "const": "preserve_and_account"
-            },
-            "interrupted_temporaries": {
-              "type": "string",
-              "const": "preserve_and_account"
-            }
-          },
-          "required": [
-            "revision",
-            "retention",
-            "scope",
-            "transition",
-            "initial_margin_bytes",
-            "observed_margin_fraction",
-            "minimum_observed_margin_bytes",
-            "unknown_files",
-            "interrupted_temporaries"
+            "eligible",
+            "evaluation",
+            "folds",
+            "seed",
+            "resubstitution",
+            "final_holdout",
+            "metrics",
+            "comparators",
+            "isotonic",
+            "index_policy",
+            "selection",
+            "score_resource"
           ],
           "additionalProperties": false
         }
       },
       "required": [
-        "device",
-        "threads",
-        "microbatch",
-        "gradient_accumulation",
-        "maximum_epochs",
-        "maximum_optimizer_updates",
-        "maximum_wall_seconds",
-        "process_rss_limit_bytes",
-        "attempts",
-        "early_stopping_patience_epochs",
-        "selection",
-        "stop",
-        "rationale",
-        "checkpoint_disk_limit_bytes",
-        "checkpoint_frequency",
-        "feature_wall_seconds",
-        "checkpoint_policy"
-      ],
-      "additionalProperties": false
-    },
-    "statistics": {
-      "type": "object",
-      "properties": {
-        "scope": {
-          "type": "string",
-          "const": "finite_annotated_set_descriptive"
-        },
-        "population_intervals": {
-          "type": "boolean",
-          "const": false
-        },
-        "components_per_split": {
-          "type": "integer",
-          "const": 1
-        },
-        "formats_are_observations": {
-          "type": "boolean",
-          "const": false
-        }
-      },
-      "required": [
-        "scope",
-        "population_intervals",
-        "components_per_split",
-        "formats_are_observations"
-      ],
-      "additionalProperties": false
-    },
-    "readiness": {
-      "type": "object",
-      "properties": {
-        "minimum_train_per_class": {
-          "type": "integer",
-          "const": 2
-        },
-        "minimum_validation_per_class": {
-          "type": "integer",
-          "const": 1
-        },
-        "minimum_h2_train": {
-          "type": "integer",
-          "const": 16
-        },
-        "minimum_h2_validation": {
-          "type": "integer",
-          "const": 8
-        },
-        "minimum_distinct_h2_targets": {
-          "type": "integer",
-          "const": 3
-        },
-        "training_free_memory_bytes": {
-          "type": "integer",
-          "const": 4294967296
-        },
-        "inference_free_memory_bytes": {
-          "type": "integer",
-          "const": 2147483648
-        },
-        "reserve_explanation": {
-          "type": "string",
-          "const": "conservative operational limits: encoder storage about 449 MiB; training parameters, gradients and Adam moments about 1.8 GiB before activations/runtime; reserve is chosen, not measured requirement"
-        }
-      },
-      "required": [
-        "minimum_train_per_class",
-        "minimum_validation_per_class",
-        "minimum_h2_train",
-        "minimum_h2_validation",
-        "minimum_distinct_h2_targets",
-        "training_free_memory_bytes",
-        "inference_free_memory_bytes",
-        "reserve_explanation"
-      ],
-      "additionalProperties": false
-    },
-    "selection": {
-      "type": "object",
-      "properties": {
-        "h1": {
-          "type": "string",
-          "const": "one fixed fit; no tuning; report validation macro_f1"
-        },
-        "h2": {
-          "type": "string",
-          "const": "lowest_validation_MSE_then_earliest_epoch"
-        },
-        "h2_primary": {
-          "type": "string",
-          "const": "spearman"
-        },
-        "undefined": {
-          "type": "string",
-          "const": "null_with_reason_no_zero_substitution"
-        }
-      },
-      "required": [
+        "schema",
+        "status",
+        "adopted_utc",
+        "authorization",
+        "dataset_version",
+        "idf_identity",
+        "reference_protocol_identity",
+        "seed",
+        "allowed_splits",
+        "annotation",
         "h1",
         "h2",
-        "h2_primary",
-        "undefined"
+        "siamese",
+        "budget",
+        "statistics",
+        "readiness",
+        "selection",
+        "test_policy",
+        "application_policy",
+        "h3",
+        "rubric_sha256",
+        "campaign_plan_identity",
+        "selection_identity",
+        "decisions",
+        "calibration"
       ],
       "additionalProperties": false
-    },
-    "test_policy": {
-      "type": "string",
-      "const": "closed_no_predictions_no_annotation_no_selection"
-    },
-    "application_policy": {
-      "type": "string",
-      "const": "no automatic activation; integration requires future explicit stage"
-    },
-    "h3": {
-      "type": "object",
-      "properties": {
-        "status": {
-          "type": "string",
-          "const": "protocol_only_no_load_in_S5B"
-        },
-        "candidate_reference": {
-          "type": "string",
-          "const": "experiment_candidates_s5a.json; H3 separate stage"
-        }
-      },
-      "required": [
-        "status",
-        "candidate_reference"
-      ],
-      "additionalProperties": false
-    },
-    "rubric_sha256": {
-      "type": "string",
-      "const": "e805b86423b4a6e46e2b3a2f577dd4b8b66419b8b2270cd5eb31a785f6d579a2"
-    },
-    "campaign_plan_identity": {
-      "type": "string",
-      "const": "8e608aaa9a72c7f80d8689c3484849b4917b61b6c8ca27b0e4d1c7d787fd144a"
-    },
-    "selection_identity": {
-      "type": "string",
-      "const": "2cd70b1db1401536c0e0740b7cb4c998266e2a806d7278475ae2926a7cabe8ff"
     }
-  },
-  "required": [
-    "schema",
-    "status",
-    "adopted_utc",
-    "authorization",
-    "dataset_version",
-    "idf_identity",
-    "reference_protocol_identity",
-    "seed",
-    "allowed_splits",
-    "annotation",
-    "h1",
-    "h2",
-    "siamese",
-    "budget",
-    "statistics",
-    "readiness",
-    "selection",
-    "test_policy",
-    "application_policy",
-    "h3",
-    "rubric_sha256",
-    "campaign_plan_identity",
-    "selection_identity"
-  ],
-  "additionalProperties": false,
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "description": "Single supported adopted profile S5B revision 1; change of scientific/operational values requires a new versioned profile, not an approval boolean."
+  ]
 }
