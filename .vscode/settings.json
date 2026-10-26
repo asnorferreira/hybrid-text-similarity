@@ -1,0 +1,19 @@
+{
+  "python.defaultInterpreterPath": "${workspaceFolder}/core/.venv/bin/python",
+  "python.analysis.extraPaths": [
+    "${workspaceFolder}/core/src",
+    "${workspaceFolder}/core",
+    "${workspaceFolder}/core/scripts"
+  ],
+  "python.analysis.exclude": [
+    "**/core/artifacts/**",
+    "**/core/models/**",
+    "**/TCC/evidencias/**",
+    "**/node_modules/**",
+    "**/.venv/**"
+  ],
+  "python.analysis.indexing": false,
+  "python.analysis.nodeArguments": [
+    "--max-old-space-size=1536"
+  ]
+}

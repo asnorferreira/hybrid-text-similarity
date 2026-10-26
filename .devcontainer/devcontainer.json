@@ -1,0 +1,37 @@
+{
+  "name": "HTS Python 3.11.9",
+  "build": {
+    "dockerfile": "../core/Dockerfile",
+    "context": ".."
+  },
+  "workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind",
+  "workspaceFolder": "/workspace",
+  "remoteUser": "core",
+  "overrideCommand": true,
+  "shutdownAction": "stopContainer",
+  "runArgs": [
+    "--memory=1536m",
+    "--cpus=2"
+  ],
+  "containerEnv": {
+    "PYTHONPATH": "/workspace/core/src:/workspace/core",
+    "HF_HUB_OFFLINE": "1",
+    "TRANSFORMERS_OFFLINE": "1"
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-python.python",
+        "ms-python.vscode-pylance"
+      ],
+      "settings": {
+        "python.defaultInterpreterPath": "/opt/venv/bin/python",
+        "python.analysis.extraPaths": [
+          "/workspace/core/src",
+          "/workspace/core",
+          "/workspace/core/scripts"
+        ]
+      }
+    }
+  }
+}
