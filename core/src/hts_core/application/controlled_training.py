@@ -1,7 +1,6 @@
 from datetime import datetime, timezone
 import hashlib
 import importlib.metadata
-import json
 from pathlib import Path
 import random
 import time
@@ -162,13 +161,13 @@ def _run_h1(examples, config, bindings, idf, out, dataset=None):
                                   [r['target'] for r in examples['validation']],config['h1'],bindings)
     artifacts = save_fitted_classifiers(classifiers,out,bindings)
     baselines = {}
-    if config['schema'] == 'hts-s5b-3':
+    if config['schema'] in ('hts-s5b-3', 'hts-s5b-4'):
         from hts_core.adapters.training_baselines import fit_baselines, save_baselines
         baselines = fit_baselines(examples,features,bindings)
         artifacts.update(save_baselines(baselines,out,bindings))
     save_json_new(out/'selected-load-verification.json',{'loaded':True,'artifacts':artifacts,'bindings':bindings})
     calibration = None
-    if config['schema'] == 'hts-s5b-3':
+    if config['schema'] in ('hts-s5b-3', 'hts-s5b-4'):
         from hts_core.application.calibration_execution import run_p1
         if dataset is None:raise ValueError('P1 requires the frozen validation dataset')
         calibration = run_p1(dataset,semantic,config,bindings,out/'calibration',started=started)

@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "description": "Exact adopted S5B revisions 2 and 3; revision 2 remains immutable.",
+  "description": "Exact adopted S5B revisions 2, 3 and operational resource revision 4; revisions 2 and 3 remain immutable.",
   "oneOf": [
     {
       "type": "object",
@@ -1757,6 +1757,268 @@
         "selection_identity",
         "decisions",
         "calibration"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "schema": {
+          "type": "string",
+          "const": "hts-s5b-4"
+        },
+        "status": {
+          "$ref": "#/oneOf/1/properties/status"
+        },
+        "adopted_utc": {
+          "$ref": "#/oneOf/1/properties/adopted_utc"
+        },
+        "authorization": {
+          "type": "string",
+          "const": "author requests H2 within 2GB without feature loss; operational resource revision only; train/validation only; final test remains closed"
+        },
+        "dataset_version": {
+          "$ref": "#/oneOf/1/properties/dataset_version"
+        },
+        "idf_identity": {
+          "$ref": "#/oneOf/1/properties/idf_identity"
+        },
+        "reference_protocol_identity": {
+          "$ref": "#/oneOf/1/properties/reference_protocol_identity"
+        },
+        "seed": {
+          "$ref": "#/oneOf/1/properties/seed"
+        },
+        "allowed_splits": {
+          "$ref": "#/oneOf/1/properties/allowed_splits"
+        },
+        "annotation": {
+          "$ref": "#/oneOf/1/properties/annotation"
+        },
+        "h1": {
+          "$ref": "#/oneOf/1/properties/h1"
+        },
+        "h2": {
+          "$ref": "#/oneOf/1/properties/h2"
+        },
+        "siamese": {
+          "$ref": "#/oneOf/1/properties/siamese"
+        },
+        "budget": {
+          "type": "object",
+          "properties": {
+            "device": {
+              "$ref": "#/oneOf/1/properties/budget/properties/device"
+            },
+            "threads": {
+              "$ref": "#/oneOf/1/properties/budget/properties/threads"
+            },
+            "microbatch": {
+              "$ref": "#/oneOf/1/properties/budget/properties/microbatch"
+            },
+            "gradient_accumulation": {
+              "$ref": "#/oneOf/1/properties/budget/properties/gradient_accumulation"
+            },
+            "maximum_epochs": {
+              "$ref": "#/oneOf/1/properties/budget/properties/maximum_epochs"
+            },
+            "maximum_optimizer_updates": {
+              "$ref": "#/oneOf/1/properties/budget/properties/maximum_optimizer_updates"
+            },
+            "maximum_wall_seconds": {
+              "$ref": "#/oneOf/1/properties/budget/properties/maximum_wall_seconds"
+            },
+            "process_rss_limit_bytes": {
+              "type": "integer",
+              "const": 1800000000
+            },
+            "attempts": {
+              "$ref": "#/oneOf/1/properties/budget/properties/attempts"
+            },
+            "early_stopping_patience_epochs": {
+              "$ref": "#/oneOf/1/properties/budget/properties/early_stopping_patience_epochs"
+            },
+            "selection": {
+              "$ref": "#/oneOf/1/properties/budget/properties/selection"
+            },
+            "stop": {
+              "$ref": "#/oneOf/1/properties/budget/properties/stop"
+            },
+            "rationale": {
+              "$ref": "#/oneOf/1/properties/budget/properties/rationale"
+            },
+            "checkpoint_disk_limit_bytes": {
+              "$ref": "#/oneOf/1/properties/budget/properties/checkpoint_disk_limit_bytes"
+            },
+            "checkpoint_frequency": {
+              "$ref": "#/oneOf/1/properties/budget/properties/checkpoint_frequency"
+            },
+            "feature_wall_seconds": {
+              "$ref": "#/oneOf/1/properties/budget/properties/feature_wall_seconds"
+            },
+            "checkpoint_policy": {
+              "$ref": "#/oneOf/1/properties/budget/properties/checkpoint_policy"
+            }
+          },
+          "required": [
+            "device",
+            "threads",
+            "microbatch",
+            "gradient_accumulation",
+            "maximum_epochs",
+            "maximum_optimizer_updates",
+            "maximum_wall_seconds",
+            "process_rss_limit_bytes",
+            "attempts",
+            "early_stopping_patience_epochs",
+            "selection",
+            "stop",
+            "rationale",
+            "checkpoint_disk_limit_bytes",
+            "checkpoint_frequency",
+            "feature_wall_seconds",
+            "checkpoint_policy"
+          ],
+          "additionalProperties": false
+        },
+        "statistics": {
+          "$ref": "#/oneOf/1/properties/statistics"
+        },
+        "readiness": {
+          "type": "object",
+          "properties": {
+            "minimum_train_per_class": {
+              "$ref": "#/oneOf/1/properties/readiness/properties/minimum_train_per_class"
+            },
+            "minimum_validation_per_class": {
+              "$ref": "#/oneOf/1/properties/readiness/properties/minimum_validation_per_class"
+            },
+            "minimum_h2_train": {
+              "$ref": "#/oneOf/1/properties/readiness/properties/minimum_h2_train"
+            },
+            "minimum_h2_validation": {
+              "$ref": "#/oneOf/1/properties/readiness/properties/minimum_h2_validation"
+            },
+            "minimum_distinct_h2_targets": {
+              "$ref": "#/oneOf/1/properties/readiness/properties/minimum_distinct_h2_targets"
+            },
+            "training_free_memory_bytes": {
+              "type": "integer",
+              "const": 1800000000
+            },
+            "inference_free_memory_bytes": {
+              "$ref": "#/oneOf/1/properties/readiness/properties/inference_free_memory_bytes"
+            },
+            "reserve_explanation": {
+              "type": "string",
+              "const": "H2 frozen encoder and complete checkpoints measured under 2000000000-byte cgroup without swap; 1800000000 bytes incremental headroom after lightweight preparation, 2000000000 bytes host available before launch; measured feasibility with margin, not a universal guarantee"
+            }
+          },
+          "required": [
+            "minimum_train_per_class",
+            "minimum_validation_per_class",
+            "minimum_h2_train",
+            "minimum_h2_validation",
+            "minimum_distinct_h2_targets",
+            "training_free_memory_bytes",
+            "inference_free_memory_bytes",
+            "reserve_explanation"
+          ],
+          "additionalProperties": false
+        },
+        "selection": {
+          "$ref": "#/oneOf/1/properties/selection"
+        },
+        "test_policy": {
+          "$ref": "#/oneOf/1/properties/test_policy"
+        },
+        "application_policy": {
+          "$ref": "#/oneOf/1/properties/application_policy"
+        },
+        "h3": {
+          "$ref": "#/oneOf/1/properties/h3"
+        },
+        "rubric_sha256": {
+          "$ref": "#/oneOf/1/properties/rubric_sha256"
+        },
+        "campaign_plan_identity": {
+          "$ref": "#/oneOf/1/properties/campaign_plan_identity"
+        },
+        "selection_identity": {
+          "$ref": "#/oneOf/1/properties/selection_identity"
+        },
+        "decisions": {
+          "$ref": "#/oneOf/1/properties/decisions"
+        },
+        "calibration": {
+          "$ref": "#/oneOf/1/properties/calibration"
+        },
+        "resource_policy": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "container_memory_bytes",
+            "container_memory_swap_bytes",
+            "host_prelaunch_available_bytes",
+            "checkpoint_read_chunk_bytes",
+            "validation",
+            "record"
+          ],
+          "properties": {
+            "container_memory_bytes": {
+              "type": "integer",
+              "const": 2000000000
+            },
+            "container_memory_swap_bytes": {
+              "type": "integer",
+              "const": 2000000000
+            },
+            "host_prelaunch_available_bytes": {
+              "type": "integer",
+              "const": 2000000000
+            },
+            "checkpoint_read_chunk_bytes": {
+              "type": "integer",
+              "const": 1048576
+            },
+            "validation": {
+              "type": "string",
+              "const": "development_28_train_13_validation; complete_12000_token_windows; head_gradients; full_fit; interrupted_resume; selected_reload; no_scientific_data"
+            },
+            "record": {
+              "type": "string",
+              "const": "TCC/01-decisoes.md#revisao-4-recursos-h2"
+            }
+          }
+        }
+      },
+      "required": [
+        "schema",
+        "status",
+        "adopted_utc",
+        "authorization",
+        "dataset_version",
+        "idf_identity",
+        "reference_protocol_identity",
+        "seed",
+        "allowed_splits",
+        "annotation",
+        "h1",
+        "h2",
+        "siamese",
+        "budget",
+        "statistics",
+        "readiness",
+        "selection",
+        "test_policy",
+        "application_policy",
+        "h3",
+        "rubric_sha256",
+        "campaign_plan_identity",
+        "selection_identity",
+        "decisions",
+        "calibration",
+        "resource_policy"
       ],
       "additionalProperties": false
     }

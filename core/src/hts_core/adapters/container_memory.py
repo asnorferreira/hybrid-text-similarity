@@ -41,7 +41,32 @@ def cgroup_memory(proc=Path('/proc'), read=lambda p: p.read_text()):
             limit = None
         if usage < 0 or (limit is not None and limit < 0):
             raise OSError('invalid cgroup memory accounting')
+        swap_file = 'memory.swap.max' if kind == 'cgroup2' else 'memory.memsw.limit_in_bytes'
+        try:
+            raw_swap = read(current/swap_file).strip()
+        except (OSError, KeyError):
+            raw_swap = 'max'
+        swap_limit = None if raw_swap == 'max' else int(raw_swap)
+        if swap_limit is not None and swap_limit < 0:
+            raise OSError('invalid cgroup swap accounting')
+        if kind == 'cgroup':
+            swap_limit = (max(0, swap_limit-limit) if swap_limit is not None
+                          and swap_limit < (1 << 60) and limit is not None else None)
+        try:
+            memory_stat = dict(line.split() for line in read(current/'memory.stat').splitlines())
+        except (OSError, KeyError):
+            memory_stat = {}
+        prefix = '' if kind == 'cgroup2' else 'total_'
+        inactive, dirty, writeback = (int(memory_stat.get(prefix+key, 0))
+                                      for key in ('inactive_file', 'file_dirty' if kind == 'cgroup2' else 'dirty',
+                                                  'file_writeback' if kind == 'cgroup2' else 'writeback'))
+        if min(inactive, dirty, writeback) < 0:
+            raise OSError('invalid cgroup file cache accounting')
+        reclaimable = min(usage, max(0, inactive-dirty-writeback))
         records.append({'path': str(current), 'limit_bytes': limit, 'current_bytes': usage,
+                        'swap_limit_bytes': swap_limit,
+                        'reclaimable_file_bytes': reclaimable,
+                        'available_headroom_bytes': None if limit is None else min(limit, max(0, limit-usage+reclaimable)),
                         'headroom_bytes': None if limit is None else max(0, limit-usage)})
         if current == mount:
             break
@@ -52,7 +77,8 @@ def cgroup_memory(proc=Path('/proc'), read=lambda p: p.read_text()):
 
 def effective_memory(total, available, cgroup, host_file=None, now=None):
     limits = [r['limit_bytes'] for r in cgroup['visible_hierarchy'] if r['limit_bytes'] is not None]
-    headroom = [r['headroom_bytes'] for r in cgroup['visible_hierarchy'] if r['headroom_bytes'] is not None]
+    headroom = [r.get('available_headroom_bytes', r['headroom_bytes']) for r in cgroup['visible_hierarchy']
+                if r['headroom_bytes'] is not None]
     result = {'vm_total_bytes': total, 'vm_available_bytes': available, 'cgroup': cgroup,
               'total_bytes': min([total]+limits), 'available_bytes': min([available]+headroom)}
     if host_file is not None:

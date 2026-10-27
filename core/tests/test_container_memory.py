@@ -1,6 +1,5 @@
 from datetime import datetime, timezone, timedelta
 import json
-from pathlib import Path
 
 import pytest
 
@@ -75,3 +74,34 @@ def test_non_root_mount_and_escaped_mountpoint():
              '/cg memory/memory.max':'max', '/cg memory/memory.current':'700'}
     result = effective_memory(1000,800,cgroup_memory(read=lambda p:files[str(p)]))
     assert result['available_bytes'] == 100
+
+
+@pytest.mark.parametrize('version', [1, 2])
+def test_container_swap_limit_is_reported_without_hiding_unknown_ancestors(version):
+    read = hierarchy(version)
+    suffix = 'memory.swap.max' if version == 2 else 'memory.memsw.limit_in_bytes'
+    def with_swap(path):
+        if str(path) == '/cg/team/job/' + suffix:
+            return '0' if version == 2 else '1000'
+        return read(path)
+    groups = cgroup_memory(read=with_swap)
+    assert groups['visible_hierarchy'][0]['swap_limit_bytes'] == 0
+    assert groups['visible_hierarchy'][1]['swap_limit_bytes'] is None
+
+
+@pytest.mark.parametrize('version', [1, 2])
+def test_headroom_counts_only_clean_inactive_file_cache_and_keeps_raw_usage(version):
+    read = hierarchy(version)
+    prefix = '' if version == 2 else 'total_'
+    def with_cache(path):
+        if str(path).endswith('/memory.stat'):
+            names = ('inactive_file', 'file_dirty', 'file_writeback') if version == 2 else ('inactive_file', 'dirty', 'writeback')
+            return '\n'.join(prefix+name+' '+str(value) for name, value in zip(names, (100, 20, 10), strict=True))
+        return read(path)
+    groups = cgroup_memory(read=with_cache)
+    parent = groups['visible_hierarchy'][1]
+    assert parent['headroom_bytes'] == 100
+    assert parent['reclaimable_file_bytes'] == 70
+    assert parent['available_headroom_bytes'] == 170
+    assert effective_memory(2000, 900, groups)['available_bytes'] == 170
+    assert effective_memory(2000, 50, groups)['available_bytes'] == 50

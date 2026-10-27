@@ -12,7 +12,17 @@ SCHEMA = Path(__file__).resolve().parents[3]/'configs/experiment_s5b.schema.json
 
 
 def validate_s5b(config):
+    root_schema = read_json(SCHEMA)
+
     def visit(value, schema, path):
+        if '$ref' in schema:
+            reference = schema['$ref']
+            if not reference.startswith('#/'):
+                raise ValueError('only local S5B schema references are supported')
+            schema = root_schema
+            for part in reference[2:].split('/'):
+                key = part.replace('~1', '/').replace('~0', '~')
+                schema = schema[int(key)] if isinstance(schema, list) else schema[key]
         kind = schema['type']
         types = {'object': dict, 'array': list, 'string': str, 'boolean': bool, 'integer': int, 'null': type(None)}
         valid = type(value) in (int, float) and math.isfinite(value) if kind == 'number' else type(value) is types[kind]
@@ -32,7 +42,7 @@ def validate_s5b(config):
             raise ValueError(path+': unsupported value for adopted revision')
         elif kind == 'string':
             text(value, path)
-    schema = read_json(SCHEMA)
+    schema = root_schema
     if 'oneOf' in schema:
         profiles = {item['properties']['schema']['const']: item for item in schema['oneOf']}
         try:
@@ -77,7 +87,7 @@ def memory_snapshot():
                               int(values['MemAvailable'].split()[0])*1024, cgroup_memory(),
                               os.environ.get('HTS_HOST_MEMORY_SNAPSHOT'))
     result.update(rss_bytes=rss, peak_rss_bytes=None,
-                  scope='minimum of Linux VM MemAvailable, exposed cgroup headroom and supplied fresh host availability; RSS includes native resident pages; no GPU accounting')
+                  scope='minimum of Linux VM MemAvailable, exposed cgroup headroom including clean inactive file cache and supplied fresh host availability; raw headroom also reported; RSS includes native resident pages; no GPU accounting')
     return result
 
 
@@ -102,6 +112,18 @@ def readiness(config, task, examples, snapshot):
     gate = 'training_free_memory_bytes' if task == 'H2' else 'inference_free_memory_bytes'
     if snapshot['available_bytes'] < minimum[gate]:
         blockers.append('available_physical_memory_below_adopted_'+gate)
+    if task == 'H2' and config['schema'] == 'hts-s5b-4':
+        limits = [row['limit_bytes'] for row in snapshot.get('cgroup', {}).get('visible_hierarchy', [])
+                  if row['limit_bytes'] is not None]
+        adopted_limit = config['resource_policy']['container_memory_bytes']
+        page_size = os.sysconf('SC_PAGE_SIZE') if hasattr(os, 'sysconf') else 4096
+        rounded_limit = adopted_limit-adopted_limit % page_size
+        if not limits or not rounded_limit <= min(limits) <= adopted_limit:
+            blockers.append('H2_requires_adopted_2GB_container_memory_limit')
+        swap_limits = [row['swap_limit_bytes'] for row in snapshot.get('cgroup', {}).get('visible_hierarchy', [])
+                       if row.get('swap_limit_bytes') is not None]
+        if not swap_limits or min(swap_limits) != 0:
+            blockers.append('H2_requires_zero_container_swap')
     return {'protocol_identity': protocol_id, 'task': task, 'scope': 'exploratory_against_dependent_automated_reference',
             'eligible_counts': {s:len(v) for s,v in examples.items()}, 'resources':snapshot,
             'required_available_bytes':minimum[gate], 'blockers':blockers, 'releasable':not blockers,
