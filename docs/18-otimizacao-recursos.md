@@ -1,5 +1,9 @@
 # Otimização de recursos
 
+Registro da primeira intervenção. A revisão operacional vigente e a divisão dos
+arquivos ainda pendentes estão em [H2 com limite de 2 GB](./19-h2-limite-2gb.md).
+As reservas e a divisão de commits descritas abaixo representam aquela etapa.
+
 Patch de engenharia sobre `ef738b420ebed48f5b02680f5beb84a0d702acd0`.
 As medições usam entradas de desenvolvimento, Docker Engine, CPU, contêineres
 removidos ao terminar, 2 CPUs e teto de 2 GiB sem swap adicional no contêiner.
@@ -96,10 +100,11 @@ alterados com todas as regras F. Os resultados estão registrados em
 Nenhum commit, stage, push, publicação, ajuste global de swap ou encerramento de
 processos do usuário é necessário para aplicar o patch.
 
-## Commits sugeridos para o usuário
+## Divisão histórica dos commits
 
-Aplicar nesta ordem. Os caminhos abaixo são relativos à raiz do repositório.
-Nenhum desses commits foi executado.
+A divisão abaixo foi entregue na primeira intervenção. Para os arquivos ainda
+pendentes na base atual, usar [a divisão atualizada](./19-h2-limite-2gb.md#commits-atômicos-para-o-autor).
+Naquela entrega, o agente não havia executado os commits.
 
 1. `perf(core): reduzir memória das métricas OSA e Smith-Waterman`
    - [core/src/hts_core/domain/strings.py](../core/src/hts_core/domain/strings.py)

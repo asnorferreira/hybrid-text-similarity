@@ -1,4 +1,47 @@
-# S5B — protocolo adotado, revisão 02
+# S5B — protocolos adotados
+
+**Estado em 2026-10-27:** H1 r3 e H2 r4 concluídas em train/validation; H2 com
+8 épocas/56 passos, selecionado recarregado com erro zero. Claim H2 consumido,
+teste fechado, PH2/D5/D6 pendentes. [Resultado e vínculos P8](../TCC/evidencias/codex-p08-02/relatorio.md).
+As medições de fixture abaixo são anteriores e permanecem separadas da ciência.
+
+## Revisão operacional 4 — recursos H2
+
+O pedido do autor para executar H2 com 2 GB originou a revisão operacional
+[experiment_s5b.r4.json](../core/configs/experiment_s5b.r4.json), identidade
+`9ea49ccfba23361bdae8816e29bbf07817894edca79710f1816da8901e8edd7a`.
+O desenho científico da revisão 3 permanece igual: encoder congelado e somente
+os seis tensores da cabeça treináveis, 98.817 parâmetros. Arquitetura, precisão,
+janelas, Adam, seed, seleção, splits e orçamento de épocas/passos/tempo não mudam.
+
+Antes de qualquer treino científico, a fixture com o modelo real completou oito
+épocas, 56 atualizações, checkpoints e retomada exatamente iguais sob teto de
+2.000.000.000 bytes, sem swap e sem OOM. Pico RSS 1.555.726.336 bytes; o cgroup
+atingiu 1.999.998.976 bytes com recuperação de cache de arquivos. Não equivale a
+garantia universal nem a resultado científico H2. O readiness r4 real passou,
+sem iniciar fit ou consumir o claim H2. A revisão 3 conserva seu mínimo de 4 GiB.
+
+O executor r4 exige 2 GB físicos livres antes de iniciar; dentro do contêiner,
+readiness e teto de RSS são 1,8 GB, com limite de contêiner de 2 GB solicitado
+(arredondado para baixo por página pelo kernel), swap zero e disponibilidade
+física real. O checkpoint completo é recarregado em blocos de 1 MiB, preservando
+integridade, RNG, otimizador e todos os pesos. Ver
+[medições, parâmetros e procedimento](./19-h2-limite-2gb.md).
+
+## Revisão científica 3 — desenho adotado
+
+D1–D4 foram aprovadas pelo autor antes do fit, com o
+[protocolo r3](../core/configs/experiment_s5b.r3.json). Encoder congelado e seis
+tensores da cabeça treináveis; H1 inclui fusão aprendida e baselines; Platt P1
+usa validation e declara indisponível a avaliação independente quando faltam
+componentes. A r4 preserva esse desenho e altera apenas a política de recursos.
+H1 preserva os vínculos originais da r3; H2 foi executada na r4.
+
+As seções seguintes são **histórico da revisão 2 e de suas retomadas**. Referências
+a todos os pesos treináveis, stack completa, reservas de 4 GiB ou ausência de
+modelos pertencem àquelas execuções. Não são instruções vigentes para a H2 r4.
+
+## Revisão 2
 
 Decisões do projeto autorizadas pelo pedido S5B, sem atribuição ao orientador. A proposta S5A e seu suplemento permanecem preservados. O contrato executável separado está em [experiment_s5b.json](../core/configs/experiment_s5b.json), com [schema](../core/configs/experiment_s5b.schema.json). A revisão 2 suporta um perfil fechado: campos desconhecidos, valores diferentes, booleanos numéricos e alterações silenciosas exigem rejeição ou nova revisão explícita. Identidade do protocolo não substitui verificação de dados, alvos, modalidade, cobertura, recursos e fluxo testado.
 
@@ -14,9 +57,9 @@ Treino/validação exploratórios não confirmam essas hipóteses. Escopo adotad
 
 Dataset operacional `fccdffc984dca0b30d9c044ee62bee32eb52b3b4a828fe454e6a17de0602fd26`, IDF de treino `9ddb353e50c050f58cc3417f8a41763867550730e7c18c56851d4f6dd74680c6`, sem alteração dos dados congelados. IDF validado em integridade e vínculo com entradas; recomposição lexical C não executada novamente nem rebatizada a partir de hashes.
 
-[Rubricas adotadas](../core/artifacts/s5b-01/rubrics.md), [plano anterior às notas](../core/artifacts/s5b-01/campaign-plan.json), [seleção](../core/artifacts/s5b-01/selection-private.json) e [cobertura](../core/artifacts/s5b-01/coverage.json). Seleção determinística por metadados de construção, sem escores, com 16 células método/severidade, dois itens por célula em treino e um em validação, mais quatro combinações não ancestrais por split. Total36/20, sete lotes de até oito; nenhuma expansão após alvos ou métricas. Textos repetidos em combinações distintas são reportados; combinações textuais ordenadas foram deduplicadas antes de anotar. Nenhum item do teste selecionado.
+[Rubricas adotadas](../core/artifacts/artifacts/s5b-01/rubrics.md), [plano anterior às notas](../core/artifacts/artifacts/s5b-01/campaign-plan.json), [seleção](../core/artifacts/artifacts/s5b-01/selection-private.json) e [cobertura](../core/artifacts/artifacts/s5b-01/coverage.json). Seleção determinística por metadados de construção, sem escores, com 16 células método/severidade, dois itens por célula em treino e um em validação, mais quatro combinações não ancestrais por split. Total36/20, sete lotes de até oito; nenhuma expansão após alvos ou métricas. Textos repetidos em combinações distintas são reportados; combinações textuais ordenadas foram deduplicadas antes de anotar. Nenhum item do teste selecionado.
 
-Anotação efetiva pela sessão Codex, `automated_weak/shared`, sem chamada de API separada. Família de ferramenta/contexto compartilhada com curadoria anterior; independência não demonstrada. Prompts completos, textos, respostas, motivos, trechos, recibos e hashes preservados em [annotation](../core/artifacts/s5b-01/annotation/). Metadados internos de modelo, temperatura, tokens e seed de geração não observáveis não são inventados. Não houve anotador humano, consenso ou adjudicação independente. Erro de citação O040 foi corrigido antes de métricas com original preservado, sem alteração do alvo.
+Anotação efetiva pela sessão Codex, `automated_weak/shared`, sem chamada de API separada. Família de ferramenta/contexto compartilhada com curadoria anterior; independência não demonstrada. Prompts completos, textos, respostas, motivos, trechos, recibos e hashes preservados em [annotation](../core/artifacts/artifacts/s5b-01/annotation/). Metadados internos de modelo, temperatura, tokens e seed de geração não observáveis não são inventados. Não houve anotador humano, consenso ou adjudicação independente. Erro de citação O040 foi corrigido antes de métricas com original preservado, sem alteração do alvo.
 
 H1 tem32/17 alvos e4/3 ambiguidades; H2 tem28/13 alvos e8/7 ambiguidades; nenhuma exclusão. São tarefas com elegibilidade própria, compartilhada por todos os sistemas de cada comparação. H2 usa três âncoras observadas0/.75/1, com forte concentração nos extremos e apenas um .75 por split. Ausência de contradições e de âncoras .25/.5 nesta campanha limita sua cobertura; não fabricá-las. Aceitação estrutural não certifica qualidade semântica independente.
 
@@ -64,18 +107,18 @@ Gravar temporário próprio → verificar hashes/componentes e carregamento → 
 Verificação atual:409testes oficiais, fixture antes5épocas/cinco checkpoints e depois8épocas/um checkpoint no mesmo2MiB. Esses números são software artificial, não treinamento de pesquisa. Preflight real aceitou contratos/dados/IDF A/B, mas recusou H1/H2 antes da base por memória. Nenhum modelo real ou métrica de validação foi produzido; não há mudança na validade científica ou abertura do teste. [Próximo comando](../TCC/evidencias/codex-s5b-retomada-01/README-reproducao.md).
 
 
-## Operação vigente — Docker com stack completa
+## Histórico — Docker com stack completa
 
 S5B permanece parcial, sem treinamento real. O ajuste atual exige MongoDB/core/web ativos e saudáveis no alcance de seus checks, processo experimental separado e saídas persistentes. Usar [Compose S5B](../docker-compose.s5b.yml) e [launcher host](../core/scripts/run_s5b_docker.py); este executa somente Docker para as operações experimentais. Código/dados/modelo ro, campanha rw para claim, resultados no host. Não substituir por treino Python local, não parar serviços nem reduzir reservas.
 
 Disponibilidade efetiva é o mínimo de MemAvailable da VM, limit-current de cada ancestral cgroup exposto e snapshot físico host fresco fornecido pelo launcher; snapshot>120s/futuro/inválido falha. Ancestrais ocultos pelo namespace não são observados. Docker Memory0 e memory.max=max não significam memória infinita: VM3763134464bytes; H1/H2 bloqueados887087104/709214208 versus2/4GiB. Nenhuma configuração global alterada. Saúde e tempos de readiness não são H3. [Relatório e comandos](../TCC/evidencias/codex-s5b-docker-01/README-reproducao.md). As execuções anteriores acima permanecem históricas.
 
 
-## Auditoria integrada Docker vigente
+## Histórico — auditoria integrada Docker
 
 [Relatório](../TCC/evidencias/codex-s5b-docker-01/relatorio-final.md) e [gate](../TCC/evidencias/codex-s5b-docker-01/matriz-prontidao-s5c.md): S5A verificada no alcance auditado; S5B ainda sem treino real por recursos. Contratos científicos não modificados retrospectivamente. S5A continua recusando treino; S5B usa fluxo próprio. Teste final e S5C não executados. Falhas de export H1/manifest corrigidas e testadas; carregamento real depende de modelos ainda ausentes.
 
 
-## Verificação vigente da conclusão S5B
+## Histórico — verificação anterior da conclusão S5B
 
 [Relatório atual](../TCC/evidencias/codex-s5b-conclusao-01/relatorio-final.md): IDF A/B/C executado com diferença de lock global explícita e df integral igual; modo padrão permanece estrito, parâmetros científicos/IDF não alterados. Readiness03 H1/H2 continua bloqueado por recurso; nenhum treinamento real. [Preparação futura da referência S5C](12-plano-referencia-final-s5c.md), não executada. Históricos acima preservados.

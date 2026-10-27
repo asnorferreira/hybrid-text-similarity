@@ -1,7 +1,34 @@
 # hybrid-text-similarity
 
+## Estado atual e entrega científica
+
+Plano [16](docs/16-plano-conclusao-e-testes.md) auditado em 2026-10-27. H1 e H2
+foram treinadas em train/validation com referência automatizada dependente. H2
+completou 8 épocas/56 passos no teto de 2 GB, swap zero; selecionado recarregado
+com as mesmas 13 predições. Na validação, Spearman do siamês 0,3212 e do SBERT
+0,8660. Esses números não são avaliação do teste nem confirmação das hipóteses.
+
+A entrega integral ainda requer PH2/referência humana D5, S5C, integração dos
+modelos no app, H3/D6 e reprodução limpa S5D. Os modelos científicos não são
+ativados automaticamente. CI local corrigida; CI remoto da revisão publicada
+continua a cargo do autor. Dados, modelos e evidências científicos são privados,
+entregues separadamente; um clone público não contém esses artefatos.
+
+Linux com Docker Engine: o procedimento de recursos está em
+[19](docs/19-h2-limite-2gb.md), e a ambientação do editor em
+[17](docs/17-ambiente-editor.md). O executor [H2](core/scripts/run_h2_2gb.sh) é
+exclusivo do orçamento de treino; não limita a RAM total do host/stack/editor.
+**Não executar um novo `run` científico:** a tentativa H2 autorizada já foi
+consumida. Readiness e recarga não autorizam retreino nem abertura do teste.
+
+Os registros seguintes preservam o histórico de cada etapa; frases antigas como
+“S5 não iniciada” e comandos Windows pertencem àquelas execuções. Estado vigente,
+critérios de aceite e próximos passos estão no plano 16.
+
 <!-- S5B-CURRENT -->
-## Estado vigente — plano de conclusão, 2026-10-26
+## Histórico — estado após P7, 2026-10-26
+
+O bloqueio H2 deste registro foi superado pela P8 r4 em 2026-10-27. O estado atual está no início deste README e no plano 16; o claim H2 já foi consumido.
 
 P0–P7 concluídas no alcance local, Docker Engine; CI remoto pendente de publicação manual. Autor aprovou D1–D4 e um reinício técnico H1, registrado antes do ajuste. H1 completa: quatro logísticas e dois baselines, 32 train/17 validation, exports recarregados com predições iguais. Platt P1 ajustado em 4.560 pares únicos de validation e recarregado com erro zero; avaliação independente indisponível por haver um único componente de dependência. Métricas de ajuste são ressubstituição. H2 ainda só fixture: P8 bloqueada com 2,38 GiB disponíveis para o mínimo de 4 GiB, sem consumir tentativa; não há garantia de suficiência por congelar o encoder. D5/D6/PH2 pendentes e teste científico fechado.
 

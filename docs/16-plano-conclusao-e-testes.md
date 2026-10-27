@@ -1,127 +1,116 @@
 # Plano de conclusão e plano de testes
 
-Data: 2026-10-26. Base: repositório `hybrid-text-similarity` em `c144965`, pasta TCC e artifacts de S4–S5B.
+<!-- VERIFICACAO-INTEGRAL-20261027 -->
+## Verificação integral disponível — 2026-10-27
 
-Natureza: proposta, sem aprovação do orientador presumida. Execução técnica iniciada em 2026-10-26; estado e limites registrados abaixo. Toda mudança no protocolo S5B (revisão 2, `1bc0736e…`) exige uma revisão registrada em `01-decisoes.md` **antes** de qualquer acesso ao teste.
+Nova execução local em Docker/CPU: **899 testes do Core, 12 da Web e 10 do
+navegador aprovados**, sem falhas, erros ou skips. A matriz reconcilia os 70 IDs
+NF/NFo/RF, RL-01–06 e PL-01–08. Os 34 testes RG-01 passaram sem regravar o
+snapshot. Integração, persistência/retomada, 12 controles de segurança e
+paginação passaram. Pyright analisou 128 arquivos sem erros ou avisos; o
+typecheck passou. Npm sem alertas; pip-audit sem alertas conhecidos nas
+distribuições cobertas, com **torch CPU e modelo spaCy fora da cobertura** da
+ferramenta. A carga de engenharia mediu 18 requisições sem erros, com 1/2
+usuários; **não é H3**. Tentativas falhas de infraestrutura e registro foram
+preservadas e explicadas.
 
-<!-- PLANO16-P0-CURRENT -->
-**Execução 2026-10-26, local, Docker Engine.** P0 concluída na tentativa 02 com MongoDB 7 isolado aprovado pelo autor; volumes preservados e serviços parados. [Evidência P0](../TCC/evidencias/codex-p00-02/relatorio.md). P1 concluída no alcance local (CI remoto pendente de publicação); P2 concluída (70/70; core completo 739); P3 concluída (snapshot 32 NFo, 34 testes duas vezes, saídas idênticas). [P1](../TCC/evidencias/codex-p01-02/relatorio.md) · [P2](../TCC/evidencias/codex-p02-03/relatorio.md) · [P3](../TCC/evidencias/codex-p03-01/relatorio.md).
+**Plano completo ainda pendente:** D5 precisa de dois humanos reais; recomendam-se
+96 pares, sem seleção ou anotação nesta verificação. A autorização geral do
+autor já foi recebida. Faltam referência e runner da P9, avaliação P10,
+integração/H3 da P11 e reprodução P12. RG-02, PL-09 e E2E-01–09 não foram
+declarados aprovados. Nenhum treino novo ou predição científica do teste.
+Serviços isolados parados, volumes preservados, sem stage, commit, push ou
+publicação.
 
-**PH1: autor aprovou D1–D4. P4–P6 concluídas.** Revisão 3 registrada antes do treinamento, identidade `b8137660098a04d63ff11500ce4d3c2c23f7fd2dee23bb7fb3020ca77a5996cc`. [Decisões](../TCC/01-decisoes.md) · [P4](../TCC/evidencias/codex-p04-01/relatorio.md) · [P5](../TCC/evidencias/codex-p05-02/relatorio.md). Somente os seis tensores da cabeça MLP são treináveis (98.817 parâmetros); gradientes e atualizações de todos comprovados, encoder sem gradientes e com hash intacto. Fixture real: MSE 0,3537144363 → 0,3532803953; recarga com erro zero; pico RSS 1,8037 GiB/cgroup 2,0382 GiB incluindo checkpoint. Medição não garante suficiência; readiness 2/4 GiB mantido. [Prova e recursos P6](../TCC/evidencias/codex-p06-01/proposta-recursos.md).
+[Relatório](../TCC/evidencias/codex-verificacao-integral-01/relatorio.md) ·
+[Matriz por ID](../TCC/evidencias/codex-verificacao-integral-01/matriz-testes.md) ·
+[Partes/decisões/hipóteses](../TCC/evidencias/codex-verificacao-integral-01/matriz-execucao.md) ·
+[Preparação PH2](../TCC/evidencias/codex-verificacao-integral-01/preparacao-ph2.md).
+<!-- /VERIFICACAO-INTEGRAL-20261027 -->
 
-**P7 concluída: H1 e ajuste Platt P1.** Reinício técnico único aprovado pelo autor, anexo operacional r3.1 registrado antes do fit, originais preservados. Quatro logísticas e dois baselines, 32 train/17 validation; seis exports recarregados com predições idênticas. Macro-F1: fixa/aprendida/lexical 0,4142857143, semântico 0,4182692308, Q5-V2 1,0, majoritária 0,1304347826. Platt: 4.560 pares únicos de validation; um componente de dependência, avaliação independente null com motivo. Melhoria de Brier/log-loss/ECE apenas em ressubstituição; 4.560 probabilidades recarregadas com erro zero. PL-09 pendente de P11. [Evidência P7](../TCC/evidencias/codex-p07-04/relatorio.md).
+Atualização: 2026-10-27. **A entrega integral ainda não está concluída.** P0–P8
+foram executadas no alcance local, com H1/Platt e agora H2 científicos exploratórios.
+O próximo passo é PH2, antes de P9–P12. Não houve abertura preditiva do teste,
+anotação humana, integração dos modelos treinados no app ou medição científica H3.
+CI remoto continua dependente da publicação manual do autor.
 
-**Editor ambientado e diagnósticos corrigidos.** Python standard: 123 arquivos, zero erros/avisos; 21 imports; 819 testes core e 12 web aprovados, typecheck e Ruff limpos. 14 docstrings de abertura removidas; sem ocultar diagnósticos. [Evidência do editor](../TCC/evidencias/codex-editor-01/relatorio.md). **P8 bloqueada por memória:** readiness real com 2558152704 bytes disponíveis, mínimo 4 GiB, teto de contêiner 5 GiB. H2 ainda só fixture; nenhum claim consumido. [Evidência P8](../TCC/evidencias/codex-p08-01/relatorio.md). D5/D6/PH2 pendentes, teste fechado, readiness 2/4 GiB intacto. Serviços parados, volumes/artefatos preservados; sem commit/push/publicação. As seções seguintes mantêm a base histórica do planejamento; decisões vigentes na revisão 3.
-<!-- /PLANO16-P0-CURRENT -->
+Esta revisão documental corrige o estado antigo e conserva o desenho aprovado:
+D1–D4 pelo autor; H1 na r3 e reinício técnico r3.1; H2 na r4, em 2 GB sem swap.
+Não atribui aprovação separada ao orientador. O planejamento original foi preservado
+na [auditoria](../TCC/evidencias/codex-entrega-01/antes/docs/16-plano-conclusao-e-testes.md).
+As alternativas históricas da seção 3 não substituem as decisões vigentes.
 
-Sumário:
-
-1. Estado atual em uma página
-2. O que falta (lacunas L1–L9)
-3. Caminhos para um trabalho completo e válido (A, B, C)
-4. Regressão logística e Platt scaling: avaliação e plano
-5. Plano de testes por classes de equivalência (normal fraca, normal forte, robusta fraca)
-6. Plano de testes de regressão
-7. Plano de testes end-to-end
-8. Decisões pendentes e checklist final
-9. Guia de execução para agentes de IA (partes sequenciais)
-
----
+[Auditoria de entrega](../TCC/evidencias/codex-entrega-01/relatorio.md) ·
+[Treino H2 e validação P8](../TCC/evidencias/codex-p08-02/relatorio.md) ·
+[Handoff e hashes do selecionado](../TCC/evidencias/codex-p08-02/handoff.json).
 
 ## 1. Estado atual
 
-| Sessão | Entrega | Estado |
+| Etapa | Estado comprovado | Evidência / pendência |
 | --- | --- | --- |
-| S0 / S0.5 | Enquadramento e decisões | Concluída (documental) |
-| S1 | Parsing TXT/DOCX/PDF, TF-IDF, OSA, E2, métricas | Concluída com limites declarados |
-| S2 | Motores, fusão fixa, alinhamento húngaro, API | Concluída no alcance verificado |
-| S3 | Interface, autenticação, CSRF, histórico, E2E | Concluída no alcance verificado |
-| S4 | Dataset operacional: 59 fontes, 783 pares, 6.093 sentenças | Encerrada para uso operacional |
-| S5A | Contratos, IDF de treino, preflight | Complemento técnico concluído |
-| S5B | Treino H1/H2 | **Parcial: 0 épocas, 0 passos, nenhum modelo** |
-| S5C | Avaliação final e resultados | Não executada |
-| S5D | Reprodução e fechamento | Não executada |
-| CI | Validação contínua | **Falhando** (run 40261747702, suíte do core) |
+| P0, ambiente | Concluída localmente; MongoDB 7 isolado; volumes preservados | [P0](../TCC/evidencias/codex-p00-02/relatorio.md) |
+| P1, CI | Correções e suítes locais concluídas; CI remoto atual não comprovado | [P1](../TCC/evidencias/codex-p01-02/relatorio.md); autor publica |
+| P2, equivalência | 70 casos mapeados/aprovados | [Matriz](../TCC/evidencias/codex-p02-03/matriz.md) |
+| P3, regressão | 32 saídas congeladas, 34 testes RG-01 | [P3](../TCC/evidencias/codex-p03-01/relatorio.md) |
+| PH1/P4 | D1–D4 aprovadas pelo autor; r3 formalizada antes do fit | [Decisões](../TCC/01-decisoes.md) |
+| P5/P6 | H1/Platt e cabeça congelada implementados/verificados | [P5](../TCC/evidencias/codex-p05-02/relatorio.md), [P6](../TCC/evidencias/codex-p06-01/proposta-recursos.md) |
+| P7, H1/Platt | 4 logísticas + 2 baselines; 32 train/17 validation; exports recarregados | [P7](../TCC/evidencias/codex-p07-04/relatorio.md) |
+| P8, H2 | **Concluída**: 28 train/13 validation, 8 épocas/56 passos, selecionado recarregado | [P8](../TCC/evidencias/codex-p08-02/relatorio.md) |
+| PH2/D5 | **Pendente**: autorização S5C e referência humana prevista no caminho B | Dois humanos reais; não substituir por IA sem decisão explícita |
+| P9/P10, S5C | Não executadas; runner final ainda não implementado | Referência congelada antes das predições; teste único |
+| D6/P11 | Integração e H3 pendentes | Flags, API/UI/PL-09/E2E e protocolo H3 |
+| P12, S5D | Pendente | Cópia limpa, suítes completas, licenças/citação e texto final |
 
-Modelos definidos no código:
+| Sistema científico | Validação | Interpretação permitida |
+| --- | ---: | --- |
+| H1 lexical / fusão fixa / aprendida | macro-F1 0,4142857143 | Não superam o semântico nesse conjunto |
+| H1 semântico | macro-F1 0,4182692308 | Referência automatizada dependente |
+| H1 Q5-V2 / majoritária | macro-F1 1,0000000000 / 0,1304347826 | Baselines, mesmos 17 itens |
+| H2 SBERT fixado | Spearman 0,8659812222; MSE 0,1056127560 | MSE usa (cosseno+1)/2 predefinido |
+| H2 siamês, época 8 | Spearman 0,3212080372; MSE 0,2379762791 | Inferior ao SBERT na validação; sem veredito no teste |
+| Platt P1 | 4.560 pares únicos de validation; recarga exata | Métricas independentes null: um componente de dependência |
 
-| Componente | Modelo | Estado |
+H2 treinou exclusivamente seis tensores da cabeça MLP, **98.817 parâmetros**;
+117.653.760 pesos do encoder permaneceram congelados. Hash integral preservado,
+seis tensores alterados e gradientes finitos/não nulos no diagnóstico após recarga.
+Predições do selecionado e do SBERT repetidas em outro processo, erro máximo zero.
+Pico RSS amostrado 1.670.725.632 bytes; cgroup 1.999.998.976 bytes, com recuperação
+de cache e zero OOM observado. Orçamento de contêiner solicitado 2.000.000.000,
+swap zero. Isso não é uma garantia para qualquer ambiente ou para a stack inteira.
+
+Suíte completa anterior à verificação integral: 899 testes; Pyright 128 arquivos/zero erros/avisos,
+na intervenção de recursos anterior. Nesta P8: 140 dirigidos aprovados, incluindo
+34 RG-01, zero falhas/erros/skips. Não somar contagens nem atribuir a suíte antiga
+a uma execução nova. Fontes produtivas mantêm a identidade daquela validação.
+
+Os documentos [17](./17-ambiente-editor.md), [18](./18-otimizacao-recursos.md) e
+[19](./19-h2-limite-2gb.md) descrevem respectivamente editor, primeira otimização
+e limite operacional H2. Seus ensaios de desenvolvimento não viraram resultados
+científicos retroativos. O novo resultado científico está na evidência P8 acima.
+
+## 2. O que falta — auditoria L1–L9
+
+| Lacuna original | Situação atual | Falta para a entrega |
 | --- | --- | --- |
-| Lexical | TF-IDF + cosseno | Pronto |
-| Semântico | SBERT `paraphrase-multilingual-MiniLM-L12-v2` (rev. `e8f8c211…`, 384 dim.) | Pronto, sem ajuste |
-| Fusão fixa | `F = 0,6·C_op + 0,4·L` (Q5-V2) | Pronta, sem calibração |
-| Classificação do app | Regras Q5-V2: D ≥ 0,80 → editada; max(L, C_op) ≤ 0,30 → sem correspondência; C_op > 0,75 → paráfrase | Pronta, limiares não calibrados |
-| H1 | 3 logísticas multinomiais de 1 feature (lexical, semântico, fusão fixa) | Não treinada |
-| H2 | Siamês MiniLM com todos os pesos treináveis + cabeça MLP 768→128→1, MSE, Adam lr 2e-6 | Não treinado |
+| L1, memória/treino | H1 e H2 executadas; H2 respeitou 2 GB | Preservar artefatos/claim; não retreinar para procurar resultado melhor |
+| L2, poucas atualizações | Desenho aprovado r3/r4 concluído, 56 passos | Declarar amostra/orçamento e resultado desfavorável; não alterar hipótese |
+| L3, fusão H1 | Fusão aprendida e baselines implementados/ajustados | Avaliação final congelada; ganho não demonstrado na validação |
+| L4, independência | Continua aberta | D5: dois humanos, 80–100 pares às cegas, concordância; ou revisão explícita do alcance |
+| L5, S5C | Continua aberta | PH2; adequar plano de referência; implementar runner/guard/claim e tabelas; execução única |
+| L6, app | Continua aberta | Loaders opt-in, recursos compartilhados, campos separados, contratos/UI, RG-02/PL-09/E2Es |
+| L7, H3 | Continua aberta | D6; congelar duração/carga/configuração, adaptar load.ts, medir e reportar metas atingidas ou não |
+| L8, CI | Correção local concluída; remoto pendente | Autor publica manualmente; conferir run da revisão publicada |
+| L9, S5D | Continua aberta | Reprodução em cópia limpa com pacote privado, locks, modelos/IDF, suítes e documentação final |
 
-Dados utilizáveis da campanha S5B (56 observações, `automated_weak/shared`): H1 com 32 de treino e 17 de validação; H2 com 28 e 13; teste fechado.
+O preparador atual de referência aceita até **24 itens automatizados**, não os
+80–100 itens humanos do caminho B. Isso exige adequação formal na P9, antes de
+selecionar/anotar o teste. Ainda faltam o runner de avaliação e a integração no
+app; não basta autorizar uma execução de comandos existentes. A avaliação
+independente do Platt continua indisponível até referência/avaliação compatíveis.
 
----
+## 3. Alternativas históricas anteriores à PH1
 
-## 2. O que falta
-
-### L1 — Executar H1/H2 (bloqueio por memória)
-
-| Camada | Observado | Exigido pelo readiness |
-| --- | --- | --- |
-| Host físico disponível | 0,70–0,85 GiB (de 7,35 GiB) | ≥ 2 GiB para H1 |
-| VM WSL total / disponível | 3,505 / 2,34–2,52 GiB | ≥ 2 GiB (H1), ≥ 4 GiB (H2) |
-
-- H1 é leve: três logísticas de uma feature. O custo real é a inferência do SBERT (cerca de 450 MiB de pesos) para 49 pares. A reserva de 2 GiB foi **escolhida**, não medida.
-- H2 é pesado por desenho: o fine-tune completo com Adam ocupa cerca de 4 × 470 MB ≈ 1,8 GiB antes das ativações.
-- Causa do travamento anterior não determinada.
-
-### L2 — Siamês com poucas atualizações
-
-```
-28 pares ÷ (micro-lote 1 × acumulação 4) = 7 atualizações por época
-7 × 8 épocas = 56 atualizações no máximo, com lr 2e-6
-```
-
-O encoder praticamente não muda, e a cabeça começa aleatória (saída perto de 0,5). O resultado provável é um Spearman abaixo do SBERT, por causa do desenho e não do método. A etapa continua válida sem melhoria, mas a comparação informa pouco.
-
-### L3 — H1 não testa uma fusão aprendida
-
-O sistema "fusão" é uma logística sobre o número já combinado 0,4/0,6. Ela só aprende limiares, não o peso entre lexical e semântico. Faltam também baselines sem treino: as regras Q5-V2 e a classe majoritária.
-
-### L4 — Referência sem independência
-
-Todas as anotações vêm da mesma família de agentes que gerou o dataset: sem revisão humana, sem segundo anotador, sem κ. Sem uma referência independente, H2 só pode ser declarada exploratória.
-
-### L5 — Avaliação S5C não implementada
-
-Existem as métricas (`domain/metrics.py`: `macro_f1`, `spearman`) e a preparação da referência (`scripts/prepare_s5c_reference.py`). Faltam:
-
-- o runner que prediz no teste uma única vez;
-- a geração das tabelas de `13-resultados.md`;
-- as desagregações por transformação, severidade e formato.
-
-### L6 — Integração dos modelos no app
-
-`siamese`, `learned_fusion` e `inserted_segment` aparecem como indisponíveis (`application/comparison.py:60`). Faltam:
-
-- loaders de produção;
-- ativação explícita por configuração;
-- exibição da versão do modelo;
-- contratos atualizados.
-
-Os módulos `web/src/modules/documents` e `web/src/modules/reports` estão vazios.
-
-### L7 — H3 sem protocolo
-
-Não há meta de p95, carga nem hardware adotados. As medições da S3 são de desenvolvimento e não valem para H3.
-
-### L8 — CI falhando
-
-A etapa "Core suite with prepared resources and offline inference" falha com exit 1, sem o teste identificado. Integração, web e navegador são pulados.
-
-### L9 — Reprodução S5D
-
-Falta conferir a entrega em cópia limpa, com documentação coerente, licenças e instruções que não dependam de API paga.
-
----
-
-## 3. Caminhos para um trabalho completo e válido
+**Histórico, não instrução vigente de treino.** D1 adotou B; D2 adotou encoder congelado com cabeça MLP, lr 2e-6. As opções e estimativas abaixo eram propostas antes da medição e não foram todas adotadas.
 
 "Válido" aqui significa: cada afirmação do texto final tem execução registrada, e o alcance declarado bate com o tipo de referência usada. Nenhum caminho permite afirmar validação semântica independente sem anotação humana.
 
@@ -154,7 +143,9 @@ Recomendação: **Caminho B**. Ele usa o hardware atual (com o H2 revisado), e a
 
 Cada escolha de L2 a L4 é uma decisão D1–D6 (seção 8).
 
-### Ajustes que acompanham qualquer H2
+### Sugestões históricas não adotadas como alteração da H2
+
+O protocolo efetivo manteve lr 2e-6; não aplicar as sugestões abaixo ao modelo selecionado.
 
 - lr na faixa usual de fine-tune de sentence-transformers (de 1e-5 a 2e-5), escolhido na validação;
 - Spearman do SBERT na validação registrado como linha de base para a seleção de época;
@@ -169,8 +160,8 @@ Cada escolha de L2 a L4 é uma decisão D1–D6 (seção 8).
 **Sim, Platt scaling é válido e cabe no projeto, com três ressalvas.**
 
 1. **Ele já estava previsto.** As decisões 5 e 6 de `01-decisoes.md` dizem "limiar calibrado na validação" e "limiares calibrados na validação", e isso nunca foi feito. As regras Q5-V2 seguem sem calibração. Platt scaling é uma forma fundamentada de cumprir essa pendência.
-2. **Na H1 ele já existe implicitamente.** Uma logística sobre um único escore *é* Platt scaling (multinomial) daquele escore. Portanto, aplicá-lo de novo sobre as saídas da H1 não acrescenta nada. O ganho está em outro lugar (abaixo).
-3. **Ele não muda a H2.** Platt é monotônico: preserva a ordem e, portanto, o Spearman. Calibrar o siamês ou o SBERT não altera a métrica da H2. Ele também só muda o macro-F1 se o limiar de decisão mudar.
+2. **Na H1 há uma forma logística sobre escores.** A classificação multinomial de quatro relações não equivale ao Platt binário original. Um segundo ajuste sobre suas saídas exigiria objetivo e validação próprios. O ganho está em outro lugar (abaixo).
+3. **Ele não muda a H2.** Uma transformação estritamente crescente preserva os ranks e o Spearman; inclinação negativa inverte a ordem e saturação numérica pode criar empates. Platt P1 estima derivação, não o alvo semântico H2, e não foi usado para alterar seus escores. Ele também só muda o macro-F1 se o limiar de decisão mudar.
 
 ### Onde Platt agrega valor
 
@@ -217,7 +208,7 @@ A e B são obtidos minimizando a log-loss sobre os alvos t₊ e t₋. Comparar c
 | PL-04 | Recuperação de parâmetros | Dados gerados com A = −8, B = 4, n = 5.000 | Â e B̂ a menos de 10% dos valores reais |
 | PL-05 | Preservação de ordem | Escores da validação | Spearman(escore, P) = 1 |
 | PL-06 | Split correto | Tentativa de ajuste com split `test` | Recusa pelo guard de teste |
-| PL-07 | Métricas de calibração | Validação | Brier e log-loss calibrados ≤ não calibrados; ECE (10 faixas) e diagrama de confiabilidade gravados |
+| PL-07 | Métricas de calibração | Validação | Brier, log-loss, ECE e contagens/diagrama calculados corretamente; melhoria ou degradação reportada. Ressubstituição identificada; métricas independentes null com motivo quando não há grupos suficientes |
 | PL-08 | Persistência | Parâmetros A, B + hash da entrada | Recarga gera probabilidades idênticas |
 | PL-09 | Não vira índice | Resposta da API com P1 ativo | `index.value` inalterado em relação à fusão fixa; P em campo próprio |
 
@@ -295,7 +286,7 @@ Critérios de aprovação:
 
 - **Invariância de formato:** o mesmo conteúdo em TXT, DOCX, PDF e colado produz as mesmas sentenças extraídas e o mesmo índice (tolerância 1e-9). Diferenças só onde a extração de PDF estiver declarada como limitação.
 - **Modo:** em `lexical`, `semantic_index`, `matrices.semantic_raw` e `fused` são null; `lexical_index` é igual ao do `hybrid`.
-- **Relação:** a classe Q5-V2 esperada para R1–R4 no modo `hybrid`. No modo `lexical`, registrar a classe obtida, sem exigir paráfrase (limitação esperada do motor lexical).
+- **Relação:** a classe Q5-V2 esperada para R1–R4 no modo `hybrid`. No modo `lexical`, classes/matches semânticos permanecem null por contrato; não exigir paráfrase.
 
 Conteúdo: usar 4 pares fixos de desenvolvimento (um por R), escritos à mão e convertidos para os 4 formatos com o gerador de formatos da S4 (`adapters/dataset_formats.py`). **Não** usar pares do teste da pesquisa.
 
@@ -407,22 +398,22 @@ Repetir: usuários distintos, CSRF, expiração, logout, autorização das rotas
 | Hardware | Máquina identificada: CPU, RAM, SO, versão do Docker, limites do container |
 | Configuração | Modelos ativos congelados (sem e com siamês, se integrado) |
 | Entrada | Pares de 30 e de 120 sentenças (máximo do contrato), conteúdo de desenvolvimento |
-| Carga | 1, 5 e 10 usuários simultâneos; aquecimento descartado; D minutos por nível |(anotar tudo, registro da minha máquina etc...)
-| Meta | p95 ≤ X s por nível, OBS: se for de 30 sentenças ou menor para 1 a 5 usuários ~ 2 segundos do p95; se for de 120 sentenças para 1 a 5 usuários ~ 10 segundos; se for 10 usuários é uma análise exploratória, ou seja, não tem meta; (Na maquina atual de X segundos, em outra maquina pode dar Y segundos)|
+| Carga | 1, 5 e 10 usuários simultâneos; aquecimento descartado. Proposta de 3 minutos por cenário aguardando D6, com duração, cadência, filas e limites registrados antes da coleta |
+| Metas candidatas do autor | p95 ≤ 2 s para 30 sentenças e ≤ 10 s para 120 sentenças, com 1/5 usuários. Dez usuários exploratório, sem meta. Resultados vinculados à máquina medida |
 | Ferramenta | `web/scripts/load.ts` |
-| Saídas | p50/p95/p99, taxa de erro, 503, pico de RSS do core - registra|
-| Critério H3 | Aprovada se p95 ≤ X em todos os níveis adotados; senão, reprovada e reportada como tal |
+| Saídas | p50/p95/p99, número de amostras, erros/429/503, vazão, pico de RSS do core e limites/uso do contêiner |
+| Critério H3 a congelar em D6 | Comparar latência das operações válidas às metas; reportar falhas e rejeições com denominadores. Respostas rápidas de erro não podem fundamentar aprovação. Resultados negativos permanecem no relatório |
 
 ---
 
-## 8. Decisões pendentes e checklist final
+## 8. Decisões vigentes, pendências e checklist final
 
 | # | Decisão | Quem decide | Bloqueia |
 | --- | --- | --- | --- |
-| D1 | Caminho A, B ou C | Autor + orientador | Tudo abaixo |
-| D2 | Variante do siamês na revisão 3 (cosseno com embeddings congeladas, ou encoder congelado) | Autor + orientador | H2 |
-| D3 | Fusão aprendida e baselines na H1 | Autor + orientador | H1 completa |
-| D4 | Platt P1/P2: adotar? Alvo de derivação aceito? | Autor + orientador | Calibração e app |
+| D1 | B aprovado pelo autor; referência humana parcial futura | Registrada na r3 | D5/PH2 pendentes |
+| D2 | Encoder congelado + cabeça MLP, r3/r4; P8 concluída | Aprovada pelo autor | Nenhum novo fit autorizado |
+| D3 | Fusão aprendida + quatro sistemas e dois baselines concluídos | Aprovada pelo autor | S5C |
+| D4 | P1 derivação aprovado; ajuste validation concluído | Aprovada pelo autor | PL-09 e avaliação independente pendentes |
 | D5 | Anotação humana: quem é o 2º anotador, quantos pares | Autor | Força da H2 |
 | D6 | Meta X, carga e hardware da H3 | Autor + orientador | H3 |
 
@@ -433,7 +424,7 @@ Checklist de conclusão:
 - [x] Matriz de classes de equivalência (seção 5) mapeada para testes, faltantes criados — P2 local, 70/70, evidência codex-p02-03
 - [x] Snapshot RG-01 gravado antes de qualquer integração — P3, 32 NFo, 34 testes aprovados duas vezes, codex-p03-01
 - [x] H1 executada: 4 sistemas + 2 baselines, export recarregável (RL-01 a RL-06), P7 codex-p07-04
-- [ ] H2 executada na variante aprovada, checkpoint recarregável (RG-04)
+- [x] H2 executada na r4; 8 épocas/56 passos; recarga independente dos 13 itens com erro zero (RG-04), P8 codex-p08-02
 - [ ] Platt: ajuste validation e recarga concluídos na P7; PL-09 depende da integração P11; avaliação independente indisponível por um único componente
 - [ ] Anotação humana feita e congelada (κ / ICC registrados), se o caminho for B ou C
 - [ ] Referência final congelada com hash antes das predições

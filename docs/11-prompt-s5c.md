@@ -1,4 +1,10 @@
-# Entrada futura S5C — estado vigente após conclusão autorizada S5B
+# Entrada S5C — PH2/D5 pendentes após P8
+
+Estado conferido em 2026-10-27: H1/Platt P7 e H2 P8 concluídas em train/validation; nenhum retreino está autorizado. [Plano vigente](16-plano-conclusao-e-testes.md), [P7](../TCC/evidencias/codex-p07-04/handoff.json) e [P8](../TCC/evidencias/codex-p08-02/handoff.json) fornecem os artefatos atuais. Não usar os handoffs históricos abaixo para repetir treino.
+
+O autor solicitou a execução integral do plano e autorizou seguir as recomendações. A referência humana de D5 ainda depende de pessoas e respostas reais; a pergunta foi apresentada nesta sessão. O caminho B registrado prevê dois humanos em 80–100 pares às cegas. O preparador atual de 24 itens automatizados não implementa esse contrato. P9 exige adequação prévia, referência congelada e runner final; P10 exige execução única após os gates. Sem substituir humanos por IA ou atribuir aprovação ao orientador.
+
+## Histórico — entrada anterior à conclusão do treino
 
 Leia primeiro o [relatório da retomada](../TCC/evidencias/codex-s5b-pos-travamento-01/relatorio-retomada.md), [handoff atual](../TCC/evidencias/codex-s5b-pos-travamento-01/handoff-s5c.json), [matriz](../TCC/evidencias/codex-s5b-conclusao-01/matriz-conclusao.md) e [plano executável da referência final](12-plano-referencia-final-s5c.md). S5B segue sem treino por recursos; ferramentas prontas não são modelos reais. IDF A/B/C verificado com diferença de lock explicitada. Referência final não produzida. Obter autorização específica futura, congelar modelos reais selecionados, executar anotação cega e congelar referência antes de autorizar predições. Não usar comando local histórico para treinar. [Retomada Docker atual](../TCC/evidencias/codex-s5b-conclusao-01/README-reproducao.md).
 

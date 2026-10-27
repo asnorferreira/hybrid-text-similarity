@@ -1,5 +1,9 @@
 # Referência final da S5C — procedimento preparado, não executado
 
+**Estado em 2026-10-27:** P7/P8 concluídas; PH2/D5 pendentes. O caminho B foi adotado em D1, com 80–100 pares por dois humanos. O procedimento abaixo implementa somente a alternativa histórica A, com até 24 itens automatizados, e precisa de revisão explícita para B antes de selecionar/anotar o teste. Não executar estes comandos como se já implementassem a referência humana. [Plano vigente](16-plano-conclusao-e-testes.md) e [P8](../TCC/evidencias/codex-p08-02/handoff.json).
+
+## Histórico — contrato automatizado preparado na S5B
+
 Este plano é uma decisão operacional preparada na S5B. Não autoriza iniciar a S5C, anotar o teste ou executar predições. O [protocolo S5B](10-protocolo-s5b.md), suas hipóteses e a [campanha existente](../core/artifacts/s5b-01/campaign-plan.json) permanecem preservados. `final_test_targets=null` continua correto nesta entrega.
 
 ## Finalidades e sequência
