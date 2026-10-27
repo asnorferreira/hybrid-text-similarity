@@ -4,16 +4,21 @@ import { FlowError } from '../../../modules/comparison/infra/core-client';
 import { authenticate, boundedBody, failure, HttpError, json, rateLimit } from '../../../modules/auth/server';
 import { viewMode } from '../../../modules/comparison/domain/envelope';
 import { ComparisonRepository } from '../../../modules/comparison/infra/repository';
+import { AdmissionError, AdmissionQueue } from '../../../modules/comparison/infra/admission';
 
 export const runtime = 'nodejs';
-let inFlight = 0;
+const admission = new AdmissionQueue();
 export async function POST(request: Request) {
-  let acquired = false;
+  let release: (() => void) | undefined;
   try {
     const identity = await authenticate(request, true);
     await rateLimit('compare:' + identity.user.id, 10);
-    if (inFlight >= 2) throw new HttpError(429, 'comparações simultâneas no limite; tente novamente');
-    inFlight++; acquired = true;
+    try { release = await admission.acquire(request.signal); }
+    catch (error) {
+      if (error instanceof AdmissionError) throw new HttpError(error.reason === 'aborted' ? 408 : 429,
+        error.reason === 'aborted' ? 'requisição cancelada' : 'fila de comparações no limite; tente novamente');
+      throw error;
+    }
     const body = await boundedBody(request, 10551296);
     let form: FormData;
     try { form = await new Request(request.url, { method: 'POST', headers: { 'content-type': request.headers.get('content-type') ?? '' }, body: new Uint8Array(body).buffer }).formData(); }
@@ -36,7 +41,7 @@ export async function POST(request: Request) {
     if (error instanceof FlowError) return json({ contract_version: '1.0', state: error.state, detail: error.message }, error.status);
     if (error instanceof ZodError) return json({ detail: 'contrato inválido' }, 400);
     return failure(error);
-  } finally { if (acquired) inFlight--; }
+  } finally { release?.(); }
 }
 export async function GET(request: Request) {
   try {
