@@ -1,0 +1,15 @@
+{
+  "schema": "hts-s5c-evaluation-plan-1",
+  "reference_protocol": "core/configs/experiment_s5a.json",
+  "dataset": "core/artifacts/artifacts/s4-fechamento-01/frozen-curated-01",
+  "idf": "core/artifacts/artifacts/s4-fechamento-01/idf-final-01/idf.json",
+  "h1": "core/artifacts/plan16-r3-01/H1-restart-01/classifiers",
+  "h2_protocol": "core/configs/experiment_s5b.r4.json",
+  "h2_checkpoint": "core/artifacts/plan16-r4-01/H2-scientific-01/training/epoch-008-cursor-00000-update-000056-snapshot-0008",
+  "platt": "core/artifacts/plan16-r3-01/H1-restart-01/calibration/platt.json",
+  "minimum_valid": 8,
+  "scope": "finite_dependent_human_subset_no_population_inference",
+  "platt_scope": "selected_96_pairs_synthetic_ancestry_not_human_semantic_labels",
+  "h2_baseline_transform": "(raw_cosine+1)/2_predefined_in_S5B",
+  "failure_policy": "preserve_failure_and_claim_no_automatic_retry"
+}

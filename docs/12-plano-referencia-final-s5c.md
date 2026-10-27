@@ -1,5 +1,28 @@
 # Referência final da S5C — preparação humana cega
 
+## Estado atual — referência recebida e P10 concluída
+
+As duas devoluções humanas foram recebidas e auditadas; nenhuma nova resposta
+é necessária para esta campanha. A avaliação científica P10 foi executada uma
+única vez, com 96 predições, 95 itens H1 e 82 H2 elegíveis. O claim está consumido:
+não executar novamente `experiment evaluate`, treino ou calibração. Para reprodução,
+conferir as predições salvas conforme a [receita S5D](20-reproducao-s5d.md).
+H1/H2 não foram sustentadas e Platt piorou Brier/log-loss.
+[Relatório P10](../TCC/evidencias/codex-p10-01/relatorio.md).
+O [plano 16](16-plano-conclusao-e-testes.md) registra o estado de integração e reprodução.
+
+## Histórico — devoluções auditadas e referência congelada, 2026-10-27
+
+P9 concluída no alcance do [relatório](../TCC/evidencias/codex-p09-02/relatorio.md):
+96 pares por código, declarações de independência recebidas, originais preservados.
+κ H1=1,0 (95 pares); Spearman H2=0,9884743917439475 (82 pares).
+Ambiguidades conservadas, sem arbitragem pelo agente. Identidade não autenticada.
+[Referência final](../TCC/evidencias/codex-p09-02/referencia-final-01.json)
+`8b4af816b99468b3f8eac081d1009004916d8513cdf2a29dabb5ef6f3bd50047`.
+Runner `experiment evaluate` exige autorização e referência/hash conferidos;
+claim único persistente impede repetição automática. P10 não executada neste
+registro. Os procedimentos seguintes preservam o histórico da preparação.
+
 ## Procedimento humano B — decisão de 2026-10-27
 
 O autor autorizou preparar e testar os pacotes para duas pessoas independentes.
