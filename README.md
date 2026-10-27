@@ -27,9 +27,13 @@ dos artigos. Detalhes no [plano 16](docs/16-plano-conclusao-e-testes.md).
 
 Integração P11 e reprodução P12 concluídas localmente, com E2E-01–09,
 suítes e recargas aprovadas. H3 não sustentada em todos os cenários obrigatórios.
-[Matriz final e evidências](TCC/evidencias/codex-p12-02/matriz-testes.md). CI remoto da revisão publicada `3d26db5` passou no
-[run 40455735826](https://github.com/asnorferreira/hybrid-text-similarity/actions/runs/40455735826).
-Alterações locais posteriores exigem publicação e novo CI pelo autor.
+[Matriz final e evidências](TCC/evidencias/codex-p12-02/matriz-testes.md).
+CI remoto da revisão publicada `153238e` aprovado no
+[run 40512937738](https://github.com/asnorferreira/hybrid-text-similarity/actions/runs/40512937738),
+após a correção de inicialização do MongoDB. O [registro do CI](TCC/evidencias/codex-ci-40512937738-01/relatorio.md)
+preserva logs e artefatos. Checklist do plano16 concluído no alcance aprovado;
+isso não altera os resultados negativos de H1/H2/H3. Fine-tuning integral do
+encoder não integra o protocolo D2 adotado.
 
 
 Reprodução final vigente: P12 tentativa02. O empacotador conserva também
@@ -38,6 +42,23 @@ os selos antes/depois e repetiu todas as suítes. A tentativa anterior
 e a falha de integridade da primeira entrega foram preservadas.
 
 ## Reprodução em Docker/CPU
+
+Estudo posterior de engenharia autorizado: caches limitados ao HTTP e fila
+FIFO Web, preservando índice e caminhos científicos. Nova H3 completa:
+12 cenários, zero falhas e 7/8 metas obrigatórias atendidas. Com 120 sentenças,
+cinco usuários e modelos ativos, p95 de 12,523 s para meta de 10 s;
+hipótese posterior não sustentada integralmente. Entradas repetidas após
+aquecimento favorecem cache; não extrapolar para textos inéditos.
+[Protocolo próprio](docs/h3-serving-protocol.json), com fontes congeladas e
+[evidências separadas](TCC/evidencias/codex-h3-melhoria-01/relatorio.md).
+O CI aprovado e o pacote P12 abaixo descrevem a revisão histórica; não passam
+a incluir automaticamente essas alterações locais.
+
+A base experimental permite redigir um TCC com os resultados negativos
+registrados. A prontidão para depósito ainda depende da monografia final e
+do manual institucional, não localizados na inspeção. Consulte o
+[parecer acadêmico](docs/17-prontidao-tcc.md) e o
+[roteiro opcional de nova pesquisa H1/H2](docs/18-novo-estudo-h1-h2.md).
 
 Siga a [receita S5D](docs/20-reproducao-s5d.md) para restaurar o pacote privado
 verificado, construir as imagens, rodar as suítes, carregar seeds e percorrer os

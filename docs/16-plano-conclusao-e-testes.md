@@ -1,6 +1,47 @@
 # Plano de conclusão e plano de testes
 
-## Atualização do CI — run 40510356894, 2026-10-27
+## Engenharia posterior e prontidão para TCC — 2026-10-27
+
+12 cenários completos, 1420/1420 sucessos, 40 aquecimentos excluídos; 7/8 metas obrigatórias atendidas. 120 sentenças, 5 usuários, modelos ativos: p95=12,523 s acima de 10 s, 102/102 sucessos. **H3 posterior não sustentada integralmente.**
+Core 1.040, Web 20/tipos/build, Pyright em 142 arquivos e Ruff nos arquivos afetados, RG02/PL09 em 32 casos,
+19 E2E ativos e 3 indisponibilidades aprovados em Docker/CPU. Nova fila/caches
+restritos ao serving; pesos/pooling/índice e caminhos científicos preservados.
+Entradas manuscritas repetidas após aquecimento favorecem caches; não extrapolar para textos inéditos, latência fria ou população. Mudança conjunta de fila/cache, sem atribuição causal isolada. A H3 original e H1/H2/P1 permanecem preservadas; sem novo treino científico nem repetição de inferência P10.
+
+[Relatório novo](../TCC/evidencias/codex-h3-melhoria-01/relatorio.md) ·
+[tabelas](../TCC/evidencias/codex-h3-melhoria-01/medicao-01/h3-tabelas.md) ·
+[protocolo](h3-serving-protocol.json). Este estudo não reabre P0–P12 nem altera
+seus selos/vereditos. A meta adicional de desempenho integral não foi atingida;
+não resta cenário desta coleta sem executar. CI de 153238e e pacote P12 são
+históricos; alterações posteriores precisam de publicação/CI próprio pelo autor.
+
+Base experimental disponível para redigir TCC; prontidão para depósito não
+demonstrada sem manuscrito/manual. [Parecer](17-prontidao-tcc.md).
+Novo treino/fine-tuning não é requisito do plano; eventual pesquisa adicional
+precisa de [protocolo e teste independente](18-novo-estudo-h1-h2.md).
+
+## Encerramento do checklist — CI aprovado, 2026-10-27
+
+CI remoto confirmado na revisão `153238e409722cdacc8208bda7279b7bf1098763`:
+[run 40512937738](https://github.com/asnorferreira/hybrid-text-similarity/actions/runs/40512937738),
+todas as etapas aprovadas, 1.022 Core,15 Web/tipos,dez E2E e integração/segurança.
+Metadados, logs e artefatos preservados em
+[evidência nova](../TCC/evidencias/codex-ci-40512937738-01/relatorio.md), sem alterar
+os selos anteriores. Checklist procedimental concluído no protocolo adotado.
+
+H1/H2 foram treinadas e avaliadas; H3 foi medida. Resultados negativos não
+são execuções pendentes. Não há novo treino, calibração ou fine-tuning integral
+do encoder exigido pelo D2 vigente (encoder congelado/cabeça MLP). P2/P3 de
+calibração, isotônica e extensão Unicode opcional continuam fora do obrigatório.
+As metas H3 não foram todas atingidas; melhorá-las exige engenharia e nova
+medição preservando a original. Uma nova investigação H1/H2 exige protocolo
+próprio, desenvolvimento em train/validation e teste final independente da
+referência P10 já observada. Os103 IDs não equivalem a 100% de cobertura de
+linhas/ramos; esse percentual não foi medido nem exigido neste plano.
+
+Registros abaixo preservam os estados anteriores e suas pendências históricas.
+
+## Registro histórico — correção local do CI 40510356894, 2026-10-27
 
 A revisão publicada `c20d3bf` passou nos 1.022 testes Core, mas o MongoDB
 8.0.34 encerrou na inicialização; as etapas dependentes ficaram sem execução.
@@ -207,7 +248,7 @@ Nenhuma aprovação específica do orientador é atribuída.
 | L5 | S5C única selada; recálculo das predições salvas aprovado |
 | L6 | Loaders/API/UI opt-in, RG-02/PL-09/E2E aprovados |
 | L7 | H3 completa, metas preservadas e falhas reportadas; veredito no relatório |
-| L8 | CI de3d26db5 passou; revisão local final aguarda publicação manual e novo CI |
+| L8 | CI de153238e aprovado no run40512937738; logs/XMLs preservados em evidência nova |
 | L9 | S5D em destino novo, suítes/recargas/E2E-09; licenças/citação/texto final |
 
 ## 3. Alternativas históricas anteriores à PH1
@@ -519,7 +560,7 @@ de 24 combinações é opcional; a matriz obrigatória tem 70 IDs e E2E-07.
 
 - [x] D1–D6 registradas; r3/r4 com hashes e decisões anteriores ao fit/coleta
 - [x] CI corrigido e verde no main publicado 3d26db5, run 40455735826
-- [ ] Publicar manualmente a revisão local final e conferir o seu CI remoto
+- [x] Revisão final e correção publicadas pelo autor; CI de153238e aprovado no run40512937738
 - [x] 70 IDs NF/NFo/RF mapeados/executados, faltantes implementados
 - [x] Snapshot RG-01 anterior à integração,32 casos/34 testes, preservado
 - [x] H1: quatro classificadores+dois baselines, exports e RL01–06
@@ -535,7 +576,9 @@ de 24 combinações é opcional; a matriz obrigatória tem 70 IDs e E2E-07.
 
 Evidências: [matriz por ID](../TCC/evidencias/codex-p12-02/matriz-testes.md),
 [partes P0–P12](../TCC/evidencias/codex-p12-02/matriz-execucao.md).
-O item remoto da revisão final é ação manual do autor, não um CI afirmado pelo agente.
+O item remoto foi conferido pelo agente a partir do run40512937738 e dos seus
+artefatos reais, após a publicação manual pelo autor. A aprovação do CI não
+altera os vereditos científicos H1/H2/H3 nem os limites do alcance aprovado.
 
 ---
 
