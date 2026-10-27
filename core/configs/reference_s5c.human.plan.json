@@ -1,0 +1,36 @@
+{
+  "schema": "hts-s5c-human-plan-1",
+  "dataset_version": "fccdffc984dca0b30d9c044ee62bee32eb52b3b4a828fe454e6a17de0602fd26",
+  "s5b_protocol_identities": {
+    "H1": "b8137660098a04d63ff11500ce4d3c2c23f7fd2dee23bb7fb3020ca77a5996cc",
+    "H2": "9ea49ccfba23361bdae8816e29bbf07817894edca79710f1816da8901e8edd7a"
+  },
+  "source_rubric_sha256": "e805b86423b4a6e46e2b3a2f577dd4b8b66419b8b2270cd5eb31a785f6d579a2",
+  "seed": 20261025,
+  "expected_cells": 16,
+  "observations_per_cell": 5,
+  "extra_nonancestral": 16,
+  "target_observations": 96,
+  "assessors": [
+    "A1",
+    "A2"
+  ],
+  "unit": "sentence_pair",
+  "modality": "human_blind_pending",
+  "selection": "five_per_method_severity_cell_plus_sixteen_nonancestral_text_deduplicated",
+  "presentation": "opaque_content_ids_and_separate_hash_order_per_assessor",
+  "disagreement_policy": {
+    "H1": "agreement_only_else_null",
+    "H2": "mean_if_both_labeled_else_null",
+    "individual_scores": "preserve_and_report_each_assessor"
+  },
+  "agreement": {
+    "H1": "nominal_cohen_kappa",
+    "H2": "spearman_average_ranks",
+    "undefined": "null_with_reason",
+    "scope": "finite_dependent_set_no_population_CI"
+  },
+  "test_predictions_authorized": false,
+  "rubric_sha256": "cb479bff6fdd026d9f159e5af6dd5928452d85e0d3aaba3833276f04327bb849",
+  "frozen_inputs_identity": "a9839a8a2133938cc33391ff9cbb84d5dc519a28b944658685f8b377f9a7fcf5"
+}

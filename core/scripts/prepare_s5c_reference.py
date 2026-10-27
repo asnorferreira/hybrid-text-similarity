@@ -78,13 +78,32 @@ def main(argv=None):
     parser.add_argument('--reference',default='configs/experiment_s5a.json')
     # The frozen rubric is part of the source distribution, including Docker.
     # Local experiment artifacts are optional and excluded from clean builds.
-    parser.add_argument('--rubric',default=str(Path(__file__).resolve().parents[1]/'assets/rubrics/s5b-rubric-01.md'))
+    parser.add_argument('--rubric')
+    parser.add_argument('--h1-protocol',default='configs/experiment_s5b.r3.json')
+    parser.add_argument('--h2-protocol',default='configs/experiment_s5b.r4.json')
+    parser.add_argument('--frozen-inputs')
     parser.add_argument('--check-plan-only',action='store_true')
     parser.add_argument('--authorization-record')
     parser.add_argument('--dataset')
     parser.add_argument('--out')
     args=parser.parse_args(argv)
-    plan=read_json(args.plan); plan_id=validate_plan(plan)
+    plan=read_json(args.plan)
+    if plan.get('schema') == 'hts-s5c-human-plan-1':
+        from hts_core.application.human_reference import prepare_human_reference, validate_preparation_inputs
+        rubric = args.rubric or str(Path(__file__).resolve().parents[1]/'assets/rubrics/s5c-human-01.md')
+        plan_id = validate_preparation_inputs(plan, rubric, args.reference, args.h1_protocol, args.h2_protocol)
+        if args.check_plan_only:
+            print(json.dumps({'plan_identity':plan_id,'status':'plan_checked_no_dataset_opened',
+                              'labels_produced':0,'predictions':False}))
+            return
+        if not all((args.authorization_record, args.dataset, args.frozen_inputs, args.out)):
+            parser.error('human preparation requires actual authorization, dataset, frozen inputs and new output')
+        result = prepare_human_reference(plan, rubric, args.reference, args.h1_protocol, args.h2_protocol,
+                                        args.authorization_record, args.dataset, args.frozen_inputs, args.out)
+        print(json.dumps(result,ensure_ascii=False))
+        return
+    plan_id=validate_plan(plan)
+    args.rubric = args.rubric or str(Path(__file__).resolve().parents[1]/'assets/rubrics/s5b-rubric-01.md')
     protocol=read_json(args.protocol)
     from hts_core.adapters.training_contract import validate_s5b
     if validate_s5b(protocol)!=plan['s5b_protocol_identity'] or protocol['dataset_version']!=plan['dataset_version']:
