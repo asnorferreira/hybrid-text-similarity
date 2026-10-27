@@ -9,14 +9,9 @@ from flask import Flask, jsonify, request
 from pydantic import ValidationError
 from werkzeug.exceptions import BadRequest, RequestEntityTooLarge, UnsupportedMediaType
 
-from hts_core.adapters import nlp
-from hts_core.adapters.parsers import UnsupportedFileError, parse_document
-from hts_core.adapters.parsers.pdf_parser import NoTextLayerError, ProtectedPdfError, PdfReadError
-from hts_core.adapters.parsers.txt_parser import TxtDecodeError
 from hts_core.adapters.resources import idf_resource, load_policy
 from hts_core.adapters.schemas import ApiError, CompareRequest, ComparisonResult, Extraction
 from hts_core.adapters.semantic import ResourceUnavailable, SemanticEncoder
-from hts_core.application.comparison import ComparisonService, InvalidDocument
 
 
 def create_app(service=None):
@@ -24,17 +19,31 @@ def create_app(service=None):
     config, config_hash = load_policy()
     app.config['MAX_CONTENT_LENGTH'] = 2 * config['max_upload_bytes'] + 65536
     resource_lock = Lock()
+    semantic_initialized = service is not None
 
     @lru_cache(maxsize=1)
     def resources():
         if service is not None:
             return service
+        from hts_core.adapters import nlp
+        from hts_core.application.comparison import ComparisonService
+
         idf, idf_info = idf_resource(os.environ.get('HTS_IDF_PATH'))
+        return ComparisonService(idf, idf_info, None, config, config_hash, nlp.analyze, nlp.STOPWORDS)
+
+    @lru_cache(maxsize=1)
+    def semantic_resources():
+        from hts_core.application.comparison import ComparisonService
+
+        nonlocal semantic_initialized
+        lexical = resources()
         try:
             encoder, error = SemanticEncoder(), None
         except ResourceUnavailable as exc:
             encoder, error = None, str(exc)
-        return ComparisonService(idf, idf_info, encoder, config, config_hash, nlp.analyze, nlp.STOPWORDS, error)
+        semantic_initialized = True
+        return ComparisonService(lexical.idf, lexical.idf_info, encoder, config, config_hash,
+                                 lexical.analyze, lexical.stopwords, error)
 
     def error(state, detail, status):
         return jsonify(ApiError(state=state, detail=detail).model_dump()), status
@@ -65,14 +74,17 @@ def create_app(service=None):
             data = CompareRequest.model_validate(request.get_json())
         except (ValidationError, BadRequest, UnsupportedMediaType, TypeError):
             return error('invalid_input', 'requisição incompatível com contrato 1.0', 400)
+        from hts_core.application.comparison import InvalidDocument
+
         try:
             started = perf_counter()
             with resource_lock:
-                state = 'cached' if resources.cache_info().currsize else 'cold_or_concurrent'
-                service = resources()
+                ready = resources.cache_info().currsize and (data.mode == 'lexical' or semantic_initialized)
+                state = 'cached' if ready else 'cold_or_concurrent'
+                comparison = resources() if data.mode == 'lexical' or service is not None else semantic_resources()
             prepared = perf_counter()
             phases = {}
-            result = service.compare(data.source.text, data.suspect.text, data.mode, timings=phases)
+            result = comparison.compare(data.source.text, data.suspect.text, data.mode, timings=phases)
             compared = perf_counter()
             if result['state'] == 'resource_unavailable':
                 return error('resource_unavailable', 'recurso semântico obrigatório indisponível; sem classificação', 503)
@@ -88,6 +100,10 @@ def create_app(service=None):
 
     @app.post('/v1/extract')
     def extract():
+        from hts_core.adapters.parsers import UnsupportedFileError, parse_document
+        from hts_core.adapters.parsers.pdf_parser import NoTextLayerError, ProtectedPdfError, PdfReadError
+        from hts_core.adapters.parsers.txt_parser import TxtDecodeError
+
         if set(request.files) != {'file'} or set(request.form) != {'contract_version'} or request.form['contract_version'] != '1.0':
             return error('invalid_input', 'envie file e contract_version=1.0', 400)
         file = request.files['file']

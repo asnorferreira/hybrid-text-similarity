@@ -61,3 +61,36 @@ def test_cache_manifest_matches_fixed_configs():
     assert descriptor['revision'] == REVISION
     config = json.loads((cache_path() / 'sentence_bert_config.json').read_text())
     assert config['max_seq_length'] == 128
+
+
+def test_repeated_text_is_encoded_once_per_call_without_aliasing(encoder):
+    calls = []
+    hook = encoder.model.register_forward_hook(lambda *args: calls.append(1))
+    try:
+        texts = ['A pesquisa usa memória limitada.', 'O rio atravessa a cidade.', 'A pesquisa usa memória limitada.']
+        vectors, info = encoder.encode(texts)
+        assert len(calls) == 2
+        np.testing.assert_array_equal(vectors[0], vectors[2])
+        assert info[0] == info[2] and info[0] is not info[2]
+        info[0]['window_tokens'].clear()
+        assert info[2]['window_tokens']
+        vectors[0].fill(0)
+        assert np.any(vectors[2])
+        with pytest.raises(ValueError):
+            encoder.encode(texts, max_tokens=1)
+        encoder.encode(texts)
+        assert len(calls) == 4
+    finally:
+        hook.remove()
+
+
+def test_repeated_text_is_not_deduplicated_in_training_mode(encoder):
+    calls = []
+    hook = encoder.model.register_forward_hook(lambda *args: calls.append(1))
+    encoder.model.train()
+    try:
+        encoder.encode(['Uma pesquisa válida.'] * 2)
+        assert len(calls) == 2
+    finally:
+        encoder.model.eval()
+        hook.remove()

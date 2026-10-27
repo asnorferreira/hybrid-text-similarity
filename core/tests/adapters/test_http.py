@@ -169,6 +169,61 @@ def test_character_score_is_computed_once_and_reused_for_classification(services
     assert count == 1
 
 
+def test_concurrent_hybrid_initialization_failure_is_cached_and_lexical_still_works(services, monkeypatch):
+    count = 0
+    def unavailable_model():
+        nonlocal count
+        count += 1
+        time.sleep(.1)
+        raise ResourceUnavailable('modelo ausente no cenário controlado')
+    monkeypatch.setattr(http, 'idf_resource', lambda path: (services[0].idf, services[0].idf_info))
+    monkeypatch.setattr(http, 'SemanticEncoder', unavailable_model)
+    app = create_app()
+    payload = {'contract_version': '1.0', 'source': {'text': 'Pesquisa válida.'}, 'suspect': {'text': 'Pesquisa válida.'}}
+    barrier = threading.Barrier(2)
+    def compare(_):
+        barrier.wait()
+        with app.test_client() as client:
+            return client.post('/v1/compare', json=payload)
+    with ThreadPoolExecutor(max_workers=2) as pool:
+        responses = list(pool.map(compare, range(2)))
+    assert all(response.status_code == 503 for response in responses)
+    with app.test_client() as client:
+        assert client.post('/v1/compare', json=payload).status_code == 503
+        response = client.post('/v1/compare', json={**payload, 'mode': 'lexical'})
+    assert response.status_code == 200 and count == 1
+    assert json_object(response)['index']['value'] == pytest.approx(100)
+
+
+def test_lexical_then_concurrent_hybrid_loads_encoder_once(services, monkeypatch):
+    count = 0
+    def model():
+        nonlocal count
+        count += 1
+        time.sleep(.1)
+        return services[0].encoder
+    monkeypatch.setattr(http, 'idf_resource', lambda path: (services[0].idf, services[0].idf_info))
+    monkeypatch.setattr(http, 'SemanticEncoder', model)
+    app = create_app()
+    payload = {'contract_version': '1.0', 'source': {'text': 'Pesquisa válida.'}, 'suspect': {'text': 'Pesquisa válida.'}}
+    with app.test_client() as client:
+        lexical = client.post('/v1/compare', json={**payload, 'mode': 'lexical'})
+    assert lexical.status_code == 200 and count == 0
+    barrier = threading.Barrier(2)
+    def compare(_):
+        barrier.wait()
+        with app.test_client() as client:
+            return client.post('/v1/compare', json=payload)
+    with ThreadPoolExecutor(max_workers=2) as pool:
+        responses = list(pool.map(compare, range(2)))
+    assert count == 1 and all(response.status_code == 200 for response in responses)
+    assert all(json_object(response)['metadata']['model'] == services[0].encoder.identity for response in responses)
+    assert sorted(response.headers['X-HTS-Resource-State'] for response in responses) == ['cached', 'cold_or_concurrent']
+    with app.test_client() as client:
+        assert client.post('/v1/compare', json={**payload, 'mode': 'lexical'}).status_code == 200
+    assert count == 1
+
+
 def test_resource_initialization_is_serialized_but_lexical_calculation_is_real(services, monkeypatch):
     count = 0
     def unavailable_model():
@@ -189,4 +244,6 @@ def test_resource_initialization_is_serialized_but_lexical_calculation_is_real(s
         responses = list(pool.map(compare, range(2)))
     assert all(response.status_code == 200 for response in responses)
     assert all(json_object(response)['index']['value'] == pytest.approx(100) for response in responses)
-    assert count == 1
+    assert count == 0
+    assert all(json_object(response)['metadata']['model'] is None for response in responses)
+    assert sorted(response.headers['X-HTS-Resource-State'] for response in responses) == ['cached', 'cold_or_concurrent']

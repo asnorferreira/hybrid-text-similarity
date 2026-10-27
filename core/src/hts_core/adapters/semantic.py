@@ -5,10 +5,6 @@ import os
 from pathlib import Path
 import threading
 
-import numpy as np
-
-from hts_core.domain.hybrid import content_windows, pool_windows
-
 MODEL = 'sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2'
 REVISION = 'e8f8c211226b894fcb81acc59f3b34ba3efd5f42'
 DEFAULT_CACHE = Path(__file__).resolve().parents[3] / 'models' / REVISION
@@ -84,10 +80,20 @@ class SemanticEncoder:
         return self.tokenizer(text, add_special_tokens=False, truncation=False)['input_ids']
 
     def encode(self, texts, max_tokens=12000):
+        import numpy as np
         import torch
+        from hts_core.domain.hybrid import pool_windows
+
         outputs, diagnostics = [], []
         with self.lock, torch.inference_mode():
+            repeated = {}
+            deterministic = not any(module.training for module in self.model.modules())
             for text in texts:
+                if deterministic and text in repeated:
+                    index = repeated[text]
+                    outputs.append(outputs[index])
+                    diagnostics.append({**diagnostics[index], 'window_tokens': list(diagnostics[index]['window_tokens'])})
+                    continue
                 encoded = self.tokenizer(text, add_special_tokens=False, truncation=False).encodings[0]
                 ids = encoded.ids
                 if len(ids) > max_tokens:
@@ -109,4 +115,6 @@ class SemanticEncoder:
                 outputs.append(pool_windows(embeddings, [len(chunk.ids) for chunk in chunks]))
                 diagnostics.append({'content_tokens': len(ids), 'windows': len(chunks),
                                     'window_tokens': [len(chunk.ids) for chunk in chunks], 'covered_tokens': sum(len(chunk.ids) for chunk in chunks)})
+                if deterministic and len(repeated) < 128:
+                    repeated[text] = len(outputs) - 1
         return np.asarray(outputs), diagnostics
