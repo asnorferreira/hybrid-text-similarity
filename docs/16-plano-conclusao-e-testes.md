@@ -1,5 +1,48 @@
 # Plano de conclusão e plano de testes
 
+## Preparação humana cega e correção local do CI — 2026-10-27
+
+**Pacotes A1/A2 preparados e verificados:** 96 pares do teste, cinco por cada
+uma das 16 células método/severidade mais 16 combinações sem ancestralidade
+direta; 96 pares textuais ordenados únicos. Mesmos itens em ordens diferentes,
+formulário offline com respostas inicialmente vazias, rubrica, rascunho/retomada,
+exportação e declaração pseudônima. Nomes civis dispensáveis; o autor deverá
+enviar separadamente a duas pessoas reais distintas e registrar as datas.
+Vínculo/exposição anterior e participação individual precisam ser declarados.
+As declarações não autenticam identidade nem provam independência por si sós.
+
+**Verificação local final em Docker/CPU:** 987 testes do Core aprovados;
+5 fluxos do formulário com fixtures artificiais no Chromium aprovados;
+ambos os pacotes reais percorridos nos 96 itens sem preencher julgamentos;
+CRC/hashes/campos cegos/cobertura conferidos. Pyright: 134 arquivos, zero
+erros/avisos; Ruff aprovado. Testes anteriores falhos e a interrupção do autor
+foram preservados. Os números não somam reexecuções nem testes de ambientes
+diferentes. A Web/integração histórica não foi reexecutada nesta mudança.
+
+**CI 40451552564 corrigido localmente:** orçamento numérico explícito apenas
+para campos semânticos float32 e derivados; equivalência limitada LF/CRLF no
+manifesto. Snapshot e recursos científicos preservados; 47 proteções da política
+mais 34 RG-01 aprovados. O run remoto original continua falho, aguardando
+publicação e nova execução pelo autor; não houve commit/push pelo agente.
+
+**Estado científico:** PH2/D5 autoriza esta preparação humana do caminho B/96,
+sem nomes ou respostas inventados. Modelos/IDF/dataset/código inventariados antes
+da seleção. Textos expostos para anotação, **zero respostas humanas recebidas,
+zero predições do teste, referência científica ainda não congelada**. P9 permanece
+parcial: faltam respostas reais, concordância real, elegibilidade/congelamento e
+runner final. P10–P12, RG-02, PL-09 e E2E-01–09 continuam pendentes no alcance
+científico/integrado previsto. Não houve novo treino nem ajuste de esperado.
+
+Os registros abaixo descrevem snapshots históricos. Este registro
+atualiza somente o alcance desta entrega.
+
+[Pacote A1](../TCC/evidencias/codex-p09-01/campanha-01/A1.zip) ·
+[Pacote A2](../TCC/evidencias/codex-p09-01/campanha-01/A2.zip) ·
+[Roteiro do autor](../TCC/evidencias/codex-p09-01/roteiro-autor.md) ·
+[Relatório](../TCC/evidencias/codex-p09-01/relatorio.md) ·
+[CI local](../TCC/evidencias/codex-ci-40451552564-01/relatorio.md).
+
+
 <!-- VERIFICACAO-INTEGRAL-20261027 -->
 ## Verificação integral disponível — 2026-10-27
 
@@ -56,8 +99,8 @@ As alternativas históricas da seção 3 não substituem as decisões vigentes.
 | P5/P6 | H1/Platt e cabeça congelada implementados/verificados | [P5](../TCC/evidencias/codex-p05-02/relatorio.md), [P6](../TCC/evidencias/codex-p06-01/proposta-recursos.md) |
 | P7, H1/Platt | 4 logísticas + 2 baselines; 32 train/17 validation; exports recarregados | [P7](../TCC/evidencias/codex-p07-04/relatorio.md) |
 | P8, H2 | **Concluída**: 28 train/13 validation, 8 épocas/56 passos, selecionado recarregado | [P8](../TCC/evidencias/codex-p08-02/relatorio.md) |
-| PH2/D5 | **Pendente**: autorização S5C e referência humana prevista no caminho B | Dois humanos reais; não substituir por IA sem decisão explícita |
-| P9/P10, S5C | Não executadas; runner final ainda não implementado | Referência congelada antes das predições; teste único |
+| PH2/D5 | Preparação humana B/96 autorizada e pacotes entregues; respostas pendentes | A1/A2 pseudônimos; duas pessoas reais distintas, declarações e concordância ainda necessárias |
+| P9/P10, S5C | P9 parcial: pacotes preparados/testados; referência final e runner pendentes; P10 não executada | Respostas e congelamento antes das predições; teste único |
 | D6/P11 | Integração e H3 pendentes | Flags, API/UI/PL-09/E2E e protocolo H3 |
 | P12, S5D | Pendente | Cópia limpa, suítes completas, licenças/citação e texto final |
 

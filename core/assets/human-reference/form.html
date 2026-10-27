@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="pt-BR">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; connect-src 'none'; img-src 'none'; font-src 'none'; base-uri 'none'; form-action 'none'">
+<title>Avaliação individual de textos</title>
+<style>
+body{font:17px/1.6 system-ui,sans-serif;max-width:1080px;margin:24px auto;padding:0 20px;color:#182b3a;background:#fafbfc}h1{font-size:1.8rem}h2{font-size:1.35rem}button,select,input,textarea{font:inherit;padding:8px;max-width:100%;box-sizing:border-box}button{cursor:pointer;background:#e6eff9;border:1px solid #536e8a;border-radius:4px}button:disabled{opacity:.5;cursor:default}label{display:block;margin:10px 0}textarea{display:block;width:100%;min-height:75px}select{display:block}fieldset{margin:20px 0;padding:16px;border:1px solid #8a9cac}legend{font-weight:bold}.texts{display:grid;grid-template-columns:1fr 1fr;gap:20px}.text{white-space:pre-wrap;overflow-wrap:anywhere;padding:16px;background:white;border:1px solid #8499ad;user-select:text}.toolbar{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin:15px 0}.toolbar label{margin:0}.toolbar select{display:inline}pre{white-space:pre-wrap;font:inherit;overflow-wrap:anywhere}#notice{white-space:pre-wrap;color:#713400;min-height:2em}small{display:block}details{border:1px solid #8a9cac;padding:12px;background:white}summary{cursor:pointer;font-weight:bold}input[type=file]{width:100%}:focus-visible{outline:3px solid #1256b0;outline-offset:3px}@media(max-width:700px){.texts{grid-template-columns:1fr}}
+</style>
+<style>fieldset{min-inline-size:0}.texts>section{min-width:0}</style>
+<h1>Avaliação individual de textos</h1>
+<p id="intro"></p>
+<p>Trabalhe individualmente, sem IA, buscas externas ou comparação de respostas. Faça pausas quando precisar. Nenhuma resposta é enviada automaticamente.</p>
+<details><summary>Leia as instruções completas e os exemplos antes de começar</summary><pre id="rubric"></pre></details>
+<div class="toolbar"><button id="draft" type="button">Salvar rascunho</button><label>Retomar arquivo JSON<input id="resume" type="file" accept=".json,application/json"></label></div>
+<p id="notice" role="status" aria-live="polite"></p>
+<nav class="toolbar" aria-label="Navegação entre pares"><button id="previous" type="button">Anterior</button><label>Ir ao par <select id="jump"></select></label><button id="next" type="button">Próximo</button><span id="progress"></span></nav>
+<h2 id="pair-title"></h2>
+<div class="texts"><section><h3>Texto A</h3><div id="text-a" class="text" dir="auto"></div></section><section><h3>Texto B</h3><div id="text-b" class="text" dir="auto"></div></section></div>
+<div id="judgments"></div>
+<details id="declaration-panel"><summary>Declaração final do participante</summary>
+<p>Seu código basta. Não informe nome, e-mail ou documento pessoal. Uma resposta negativa não deve ser escondida: declare sua situação real.</p>
+<div id="declaration-fields"></div>
+<label>Qual é seu vínculo com o projeto? (Ex.: nenhum; colega; orientador.)<textarea id="project_relationship" maxlength="4000"></textarea></label>
+<label>Você já teve acesso a estes exemplos, escores dos sistemas ou respostas de avaliação?<select id="prior_exposure"><option value="">Selecione</option><option value="none">Não</option><option value="yes">Sim</option></select></label>
+<label>Se sim, descreva o acesso anterior<textarea id="exposure_details" maxlength="4000"></textarea></label>
+</details>
+<p><button id="export" type="button">Exportar respostas finais</button></p>
+<p><small>Guarde rascunhos JSON regularmente. O salvamento local depende do navegador e da pasta usada. Devolva somente o JSON final ao pesquisador e não compartilhe suas respostas com outro participante.</small></p>
+<script id="packet" type="application/json">@@PACKET_JSON@@</script>
+<script>
+'use strict';
+(() => {
+const packet = JSON.parse(document.getElementById('packet').textContent);
+const $ = id => document.getElementById(id);
+const statuses = [['labeled','Decisão válida'],['ambiguous','Ambíguo'],['excluded','Excluído']];
+const classes = [['copia_exata','Cópia exata'],['copia_editada','Cópia editada'],['parafrase','Paráfrase'],['sem_correspondencia_detectada','Sem correspondência detectada']];
+const anchors = [['0','0 — nenhuma proposição comum'],['0.25','0,25 — fragmento secundário'],['0.5','0,50 — conteúdo parcial com divergência'],['0.75','0,75 — núcleo preservado com diferença relevante'],['1','1 — equivalência dos fatos']];
+const axes = {
+ thematic_overlap:[['none','Nenhum'],['some','Algum'],['strong','Forte'],['uncertain','Incerto']],
+ propositional_relation:[['compatible','Compatível'],['contradiction','Contraditória'],['unrelated','Sem relação'],['uncertain','Incerta']],
+ shared_content:[['none','Nenhum'],['partial','Parcial'],['predominant','Predominante'],['equivalent','Equivalente'],['uncertain','Incerto']],
+ context:[['sufficient','Suficiente'],['insufficient','Insuficiente']]
+};
+const flagLabels = {human:'Você é uma pessoa respondendo esta avaliação?',independent:'Você fez seus julgamentos independentemente, sem consultar escores ou respostas?',no_ai:'Você realizou a avaliação sem usar IA ou ferramenta de similaridade?',no_collaboration:'Você respondeu sem consultar ou colaborar com outra pessoa?',participated_in_creation:'Você participou da construção dos textos, dados ou modelos deste projeto?'};
+const flags = Object.keys(flagLabels);
+const blankJudgment = task => ({status:'',target:null,reason:'',quote_a:'',quote_b:'',...(task==='H2'?{axes:Object.fromEntries(Object.keys(axes).map(k=>[k,'']))}:{})});
+const blank = () => ({schema:'hts-human-response-1',campaign_identity:packet.campaign_identity,packet_identity:packet.packet_identity,assessor_id:packet.assessor_id,complete:false,completed_at:null,declaration:{...Object.fromEntries(flags.map(k=>[k,null])),project_relationship:'',prior_exposure:'',exposure_details:''},records:packet.items.map(item=>({observation_id:item.observation_id,H1:blankJudgment('H1'),H2:blankJudgment('H2')}))});
+let state = blank(), index = 0;
+const storageKey = 'hts-human-draft-' + packet.packet_identity;
+function notice(text){$('notice').textContent=text;}
+function select(id,options){const el=document.createElement('select');el.id=id;for(const [value,text] of [['','Selecione'],...options]){const opt=document.createElement('option');opt.value=value;opt.textContent=text;el.append(opt);}return el;}
+function labeled(parent,text,control){const label=document.createElement('label');label.textContent=text;label.append(control);parent.append(label);}
+for(const task of ['H1','H2']){
+ const field=document.createElement('fieldset'),legend=document.createElement('legend');legend.textContent=task==='H1'?'1. Relação textual':'2. Conteúdo compartilhado';field.append(legend);
+ labeled(field,'Estado da decisão',select(task+'-status',statuses));
+ labeled(field,task==='H1'?'Classe':'Nota',select(task+'-target',task==='H1'?classes:anchors));
+ if(task==='H2')for(const [key,text] of [['thematic_overlap','Tema em comum'],['propositional_relation','Relação entre as proposições'],['shared_content','Conteúdo compartilhado'],['context','Contexto']])labeled(field,text,select('H2-'+key,axes[key]));
+ for(const [key,text] of [['reason','Justifique a decisão'],['quote_a','Copie um trecho do Texto A'],['quote_b','Copie um trecho do Texto B']]){const input=document.createElement('textarea');input.id=task+'-'+key;input.maxLength=key==='reason'?4000:100000;labeled(field,text,input);}
+ $('judgments').append(field);
+}
+for(const key of flags)labeled($('declaration-fields'),flagLabels[key],select(key,[['true','Sim'],['false','Não']]));
+$('rubric').textContent=packet.rubric;
+$('intro').textContent='Participante '+packet.assessor_id+' · '+packet.items.length+' pares · dois julgamentos por par. Todas as respostas começam vazias.';
+for(let n=0;n<packet.items.length;n++){const opt=document.createElement('option');opt.value=String(n);opt.textContent=String(n+1);$('jump').append(opt);}
+function judgmentError(j,task,item){
+ if(!statuses.some(([v])=>v===j.status))return 'selecione o estado da decisão';
+ if(typeof j.reason!=='string'||!j.reason.trim()||j.reason.length>4000)return 'escreva uma justificativa';
+ for(const [key,text] of [['quote_a',item.text_a],['quote_b',item.text_b]]){if(typeof j[key]!=='string'||(j[key]&&!text.includes(j[key])))return 'o trecho de evidência precisa existir no texto correspondente';if(j.status==='labeled'&&!j[key].trim())return 'copie um trecho de cada texto';}
+ if(j.status!=='labeled'&&j.target!==null)return 'ambiguidade ou exclusão exige classe/nota vazia';
+ if(j.status==='labeled'&&(task==='H1'?!classes.some(([v])=>v===j.target):typeof j.target!=='number'||![0,.25,.5,.75,1].includes(j.target)))return 'selecione a classe ou nota';
+ if(task==='H2'){
+  for(const key of Object.keys(axes))if(!axes[key].some(([v])=>v===j.axes[key]))return 'preencha os quatro eixos';
+  if(j.status==='labeled'&&j.axes.context==='insufficient')return 'contexto insuficiente exige ambiguidade ou exclusão';
+  if(j.status==='labeled'&&j.target===1&&(j.axes.propositional_relation!=='compatible'||j.axes.shared_content!=='equivalent'))return 'nota 1 exige relação compatível e conteúdo equivalente';
+  if(j.axes.shared_content==='equivalent'&&['contradiction','unrelated'].includes(j.axes.propositional_relation))return 'conteúdo equivalente é incompatível com contradição ou ausência de relação';
+ }
+ return '';
+}
+function rowError(row,n){for(const task of ['H1','H2']){const error=judgmentError(row[task],task,packet.items[n]);if(error)return (task==='H1'?'Relação textual: ':'Conteúdo compartilhado: ')+error;}return '';}
+function progress(){$('progress').textContent=state.records.filter((row,n)=>!rowError(row,n)).length+' de '+packet.items.length+' pares completos';}
+function persist(){state.complete=false;state.completed_at=null;try{localStorage.setItem(storageKey,JSON.stringify(state));}catch{notice('O navegador não permitiu salvar localmente. Use Salvar rascunho para guardar seu trabalho.');}progress();}
+function show(){
+ const row=state.records[index],item=packet.items[index];$('pair-title').textContent='Par '+(index+1)+' de '+packet.items.length+' · '+item.observation_id;
+ $('text-a').textContent=item.text_a;$('text-b').textContent=item.text_b;$('jump').value=String(index);$('previous').disabled=index===0;$('next').disabled=index===packet.items.length-1;
+ for(const task of ['H1','H2']){for(const key of ['status','reason','quote_a','quote_b'])$(task+'-'+key).value=row[task][key];$(task+'-target').value=row[task].target===null?'':String(row[task].target);$(task+'-target').disabled=row[task].status!=='labeled';}
+ for(const key of Object.keys(axes))$('H2-'+key).value=row.H2.axes[key];
+ for(const key of flags)$(key).value=state.declaration[key]===null?'':String(state.declaration[key]);
+ for(const key of ['project_relationship','prior_exposure','exposure_details'])$(key).value=state.declaration[key];progress();
+}
+for(const task of ['H1','H2'])for(const key of ['status','target','reason','quote_a','quote_b'])$(task+'-'+key).addEventListener('input',()=>{const j=state.records[index][task];j[key]=key==='target'?($(task+'-'+key).value===''?null:task==='H2'?Number($(task+'-'+key).value):$(task+'-'+key).value):$(task+'-'+key).value;if(key==='status'){if(j.status!=='labeled')j.target=null;$(task+'-target').disabled=j.status!=='labeled';$(task+'-target').value=j.target===null?'':String(j.target);}persist();});
+for(const key of Object.keys(axes))$('H2-'+key).addEventListener('input',()=>{state.records[index].H2.axes[key]=$('H2-'+key).value;persist();});
+for(const key of [...flags,'project_relationship','prior_exposure','exposure_details'])$(key).addEventListener('input',()=>{const value=$(key).value;state.declaration[key]=flags.includes(key)?(value===''?null:value==='true'):value;persist();});
+$('previous').onclick=()=>{if(index>0){index--;show();}};$('next').onclick=()=>{if(index<packet.items.length-1){index++;show();}};$('jump').onchange=()=>{index=Number($('jump').value);show();};
+function download(value,name){const url=URL.createObjectURL(new Blob([JSON.stringify(value,null,2)],{type:'application/json'}));const link=document.createElement('a');link.href=url;link.download=name;link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
+$('draft').onclick=()=>{persist();download(state,'rascunho-'+packet.assessor_id+'.json');notice('Rascunho baixado. Guarde este arquivo para retomar depois.');};
+function exact(value,keys){return value&&typeof value==='object'&&!Array.isArray(value)&&Object.keys(value).sort().join('|')===[...keys].sort().join('|');}
+function restore(value){
+ const empty=blank();if(!exact(value,Object.keys(empty))||value.schema!==empty.schema||!['campaign_identity','packet_identity','assessor_id'].every(k=>value[k]===empty[k])||typeof value.complete!=='boolean'||(value.complete?typeof value.completed_at!=='string':value.completed_at!==null))throw Error('Arquivo de outro pacote ou formato inválido.');
+ if(!exact(value.declaration,Object.keys(empty.declaration))||!flags.every(k=>value.declaration[k]===null||typeof value.declaration[k]==='boolean')||!['project_relationship','prior_exposure','exposure_details'].every(k=>typeof value.declaration[k]==='string'&&value.declaration[k].length<=4000)||!['','none','yes'].includes(value.declaration.prior_exposure))throw Error('Declaração inválida.');
+ if(!Array.isArray(value.records)||value.records.length!==empty.records.length)throw Error('Quantidade de pares inválida.');
+ const rows=new Map();for(const row of value.records){if(!exact(row,['observation_id','H1','H2'])||typeof row.observation_id!=='string'||rows.has(row.observation_id))throw Error('IDs inválidos ou repetidos.');rows.set(row.observation_id,row);for(const task of ['H1','H2']){const j=row[task];if(!exact(j,Object.keys(blankJudgment(task)))||!['',...statuses.map(([v])=>v)].includes(j.status)||!['reason','quote_a','quote_b'].every(k=>typeof j[k]==='string'&&j[k].length<=(k==='reason'?4000:100000))||!(j.target===null||(task==='H1'?classes.some(([v])=>v===j.target):typeof j.target==='number'&&[0,.25,.5,.75,1].includes(j.target))))throw Error('Julgamento inválido.');if(task==='H2'&&(!exact(j.axes,Object.keys(axes))||!Object.keys(axes).every(k=>['',...axes[k].map(([v])=>v)].includes(j.axes[k]))))throw Error('Eixos inválidos.');}}
+ const ordered=empty.records.map(row=>{if(!rows.has(row.observation_id))throw Error('ID desconhecido.');return rows.get(row.observation_id);});state={...value,complete:false,completed_at:null,records:ordered};index=0;show();persist();
+}
+$('resume').onchange=async()=>{try{const file=$('resume').files[0];if(!file)return;if(file.size>5000000)throw Error('Arquivo grande demais.');restore(JSON.parse(await file.text()));notice('Arquivo retomado. Confira as respostas antes de exportar.');}catch(error){notice('Não foi possível retomar: '+error.message);}finally{$('resume').value='';}};
+$('export').onclick=()=>{
+ for(let n=0;n<state.records.length;n++){const error=rowError(state.records[n],n);if(error){index=n;show();notice('Par '+(n+1)+': '+error+'.');return;}}
+ const d=state.declaration;if(!flags.every(k=>typeof d[k]==='boolean')||!d.project_relationship.trim()||!['none','yes'].includes(d.prior_exposure)||(d.prior_exposure==='yes'&&!d.exposure_details.trim())){$('declaration-panel').open=true;notice('Preencha toda a declaração final, inclusive vínculo e eventual exposição anterior.');return;}
+ const final={...state,complete:true,completed_at:new Date().toISOString()};download(final,'respostas-'+packet.assessor_id+'.json');notice('Respostas finais baixadas. Devolva somente esse JSON ao pesquisador.');
+};
+try{const cached=localStorage.getItem(storageKey);if(cached){restore(JSON.parse(cached));notice('Rascunho local retomado. Mantenha também uma cópia JSON.');}}catch{notice('Rascunho local indisponível ou incompatível. Você pode retomar uma cópia JSON.');}
+show();
+})();
+</script>
+</html>

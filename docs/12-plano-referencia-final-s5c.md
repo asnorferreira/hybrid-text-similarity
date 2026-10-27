@@ -1,4 +1,65 @@
-# Referência final da S5C — procedimento preparado, não executado
+# Referência final da S5C — preparação humana cega
+
+## Procedimento humano B — decisão de 2026-10-27
+
+O autor autorizou preparar e testar os pacotes para duas pessoas independentes.
+Adotados **96 pares**: cinco por cada uma das 16 células método/severidade,
+mais 16 combinações sem ancestralidade direta, com deduplicação textual global.
+O [plano humano](../core/configs/reference_s5c.human.plan.json) é separado do
+plano histórico A/24, que permanece preservado. A seleção usa somente test,
+seed 20261025, sem consultar escores, rótulos como respostas ou desempenho.
+Os modelos H1/H2/Platt, IDF, dataset e código são inventariados antes da seleção.
+Não há predição ou ajuste no teste nesta preparação.
+
+A1/A2 identificam destinos, sem nomes civis exigidos. Cada pacote contém um
+formulário HTML offline, [rubrica humana](../core/assets/rubrics/s5c-human-01.md),
+instruções e hashes. Mesmos pares, ordens distintas, IDs opacos, sem método,
+ancestralidade, escores ou respostas alheias. As classes/âncoras originais foram
+preservadas, adaptando a instrução de procedimento humano. Os exemplos didáticos
+são artificiais e não são respostas dos itens da campanha.
+
+O autor deve escolher duas pessoas distintas com leitura adequada em português,
+preferindo quem não criou ou viu os materiais/modelos. Cada uma declara vínculo,
+exposição anterior e participação individual, sem IA ou colaboração. Não inventar
+identidades nem interpretar os booleanos do formulário como autenticação externa.
+Nomes não precisam aparecer no pacote/relatório; o controle privado de envio e
+recebimento por código deve registrar acontecimentos reais. Consulte o
+[roteiro completo do autor](../TCC/evidencias/codex-p09-01/roteiro-autor.md).
+
+### Respostas e concordância
+
+O formulário começa vazio, permite baixar/retomar rascunhos JSON e exporta final
+somente com todos os julgamentos/declaracões preenchidos. Ambíguo/excluído exige
+motivo e alvo nulo; decisão válida exige justificativa e trechos dos dois textos.
+As duas tarefas são separadas. Não forçar notas nem substituir itens ambíguos.
+
+O importador `import_s5c_human.py` recebe os dois arquivos finais e a campanha
+original em destino novo. Preserva bytes brutos antes de validar as respostas,
+verifica hashes, vínculo ao pacote, códigos distintos, cobertura exata dos IDs,
+valores discretos, trechos, coerência dos eixos e declarações. Falhas preservam
+os brutos disponíveis e um recibo de rejeição. A revisão de problemas operacionais
+deve conservar versões anteriores e ocorrer sem consulta a métricas preditivas.
+
+Políticas fixadas antes das respostas: κ nominal para H1; Spearman com ranks
+médios para H2. Valores indefinidos ficam nulos com motivo e denominadores.
+H1 só tem consenso se ambos rotulam e concordam; discordância fica nula, sem
+arbitragem pelo agente. H2 usa média se ambos rotulam. Respostas individuais,
+empates, ausências e conflitos permanecem no relatório. Conjunto finito dependente,
+sem alegação de observações independentes ou intervalo populacional.
+
+**Limite:** o importador audita e calcula concordância; não produz o congelamento
+final, bundles científicos definitivos ou predições. Os gates de elegibilidade do
+plano, o runner final P9 e a execução única P10 continuam próprios. A presença de
+ZIPs, declarações ou testes artificiais não significa anotação humana realizada.
+
+### Registro da entrega
+
+[Relatório e testes](../TCC/evidencias/codex-p09-01/relatorio.md) e
+[handoff](../TCC/evidencias/codex-p09-01/handoff.json) registram o estado real da
+preparação, autorização, inventário, cobertura, tentativas e verificações.
+Somente os dois ZIPs da campanha devem ser enviados aos participantes.
+
+## Histórico preservado — procedimento A/24 anterior à autorização humana
 
 **Estado em 2026-10-27:** P7/P8 concluídas; PH2/D5 pendentes. O caminho B foi adotado em D1, com 80–100 pares por dois humanos. O procedimento abaixo implementa somente a alternativa histórica A, com até 24 itens automatizados, e precisa de revisão explícita para B antes de selecionar/anotar o teste. Não executar estes comandos como se já implementassem a referência humana. [Plano vigente](16-plano-conclusao-e-testes.md) e [P8](../TCC/evidencias/codex-p08-02/handoff.json).
 
