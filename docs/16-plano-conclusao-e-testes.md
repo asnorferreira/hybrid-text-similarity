@@ -1,5 +1,78 @@
 # Plano de conclusão e plano de testes
 
+## Estado final local — P0–P12, 2026-10-27
+
+Reprodução final vigente: P12 tentativa02. O empacotador conserva também
+arquivos históricos de cache exigidos pelos selos; a cópia nova conferiu
+os selos antes/depois e repetiu todas as suítes. A tentativa anterior
+e a falha de integridade da primeira entrega foram preservadas.
+
+
+
+Plano 16 executado no alcance documentado. P9: duas devoluções de 96 IDs,
+independência humana declarada, identidade não autenticada, nomes dispensáveis;
+95 H1/82 H2 elegíveis, ambiguidades mantidas. Referência congelada antes da
+inferência única P10. H1/H2 não sustentadas; Platt piorou Brier/log-loss.
+H3 não sustentada em todos os cenários obrigatórios, com 12 cenários completos e falhas preservadas.
+P12: cópia limpa da árvore local com manifesto, Core 1022, Web 15/tipos,
+19 E2E ativos e três indisponibilidades aprovados; seeds/12 controles/retomada,
+recarga de seis H1/Platt/H2 em validation e recálculo P10 aprovados.
+Sem retreino, calibração, inferência P10 repetida ou publicação pelo agente.
+CI remoto de 3d26db5 passou; CI da revisão final depende da publicação manual.
+
+[Relatório final](../TCC/evidencias/codex-p12-02/relatorio.md) ·
+[Matriz por ID](../TCC/evidencias/codex-p12-02/matriz-testes.md) ·
+[Partes P0–P12](../TCC/evidencias/codex-p12-02/matriz-execucao.md).
+
+
+## Registros anteriores preservados
+
+
+## Registro histórico — fechamento P11
+
+Integração opt-in verificada; Core 1.022, Web 15/tipos, 12 controles de segurança,
+RG-02/PL-09 em 32 casos e E2E-01–08 aprovados. H3 não sustentada em todos os cenários obrigatórios; todos os 12
+cenários foram medidos sem mudar protocolo/modelos. Tentativa01 inválida por
+cadência preservada; tentativa02 parcial preservada após correção de integração;
+tentativa03 auditada por timestamps. P12 ainda pendente.
+CI publicado anterior passou; código posterior ainda local, publicação pelo autor.
+
+[Relatório P11](../TCC/evidencias/codex-p11-01/relatorio.md) ·
+[H3](../TCC/evidencias/codex-p11-01/h3-tentativa-03/h3-tabelas.md).
+
+
+## Registro histórico — estado nessa etapa — P10 concluída, 2026-10-27
+
+Avaliação científica única concluída e claim preservado: 96 predições,
+95 H1 e 82 H2 elegíveis; referência humana parcial, independente por declaração.
+H1 não sustentada: fusões macro-F1 0,4104104104, lexical 0,4173913043 e
+semântico 0,4090909091. H2 não sustentada: Spearman siamês 0,1823451914,
+SBERT 0,8166448555. P1 piorou Brier/log-loss; ECE menor não implica ganho global.
+Sem novo treino, escolha posterior ou repetição de inferência. Recálculo aprovado.
+P11/P12 pendentes; CI publicado de 3d26db5 passou, código posterior ainda local.
+Registros anteriores abaixo preservam estados históricos e seus limites.
+
+[P10: relatório](../TCC/evidencias/codex-p10-01/relatorio.md).
+
+## Registro histórico — estado nessa etapa — P9 concluída em 2026-10-27, após as devoluções
+
+Dois arquivos finais recebidos, preservados e auditados: 96 IDs cada, participação
+humana independente declarada; identidade não autenticada pelo JSON. κ H1=1,0
+em 95 pares; Spearman H2=0,9884743917439475 em 82 pares. Ambiguidades preservadas,
+sem substituição de itens. Referência congelada antes das predições:
+`8b4af816b99468b3f8eac081d1009004916d8513cdf2a29dabb5ef6f3bd50047`.
+Runner final e guards implementados; 1.010 testes Core aprovados em Docker/CPU,
+Pyright 136 arquivos sem erros/avisos e Ruff aprovado. Os 838 arquivos científicos
+pré-seleção foram conferidos, com única mudança de roteamento CLI documentada.
+
+P10 ainda não executada neste registro; P11/P12 pendentes. O CI publicado pelo
+autor em 3d26db5 passou no run 40455735826; código posterior ainda é local.
+Os blocos anteriores abaixo passam a ser histórico dos seus próprios estados.
+
+[Relatório P9](../TCC/evidencias/codex-p09-02/relatorio.md) ·
+[Referência](../TCC/evidencias/codex-p09-02/referencia-final-01.json) ·
+[Testes](../TCC/evidencias/codex-p09-02/testes.json).
+
 ## Preparação humana cega e correção local do CI — 2026-10-27
 
 **Pacotes A1/A2 preparados e verificados:** 96 pares do teste, cinco por cada
@@ -89,67 +162,38 @@ As alternativas históricas da seção 3 não substituem as decisões vigentes.
 
 ## 1. Estado atual
 
-| Etapa | Estado comprovado | Evidência / pendência |
+P0–P12 concluídas no alcance local, com evidências E/T/V/G individuais e
+matriz final por ID. PH1/PH2 e D1–D6 registrados sob autorização do autor.
+Nenhuma aprovação específica do orientador é atribuída.
+
+| Etapa | Estado | Evidência |
 | --- | --- | --- |
-| P0, ambiente | Concluída localmente; MongoDB 7 isolado; volumes preservados | [P0](../TCC/evidencias/codex-p00-02/relatorio.md) |
-| P1, CI | Correções e suítes locais concluídas; CI remoto atual não comprovado | [P1](../TCC/evidencias/codex-p01-02/relatorio.md); autor publica |
-| P2, equivalência | 70 casos mapeados/aprovados | [Matriz](../TCC/evidencias/codex-p02-03/matriz.md) |
-| P3, regressão | 32 saídas congeladas, 34 testes RG-01 | [P3](../TCC/evidencias/codex-p03-01/relatorio.md) |
-| PH1/P4 | D1–D4 aprovadas pelo autor; r3 formalizada antes do fit | [Decisões](../TCC/01-decisoes.md) |
-| P5/P6 | H1/Platt e cabeça congelada implementados/verificados | [P5](../TCC/evidencias/codex-p05-02/relatorio.md), [P6](../TCC/evidencias/codex-p06-01/proposta-recursos.md) |
-| P7, H1/Platt | 4 logísticas + 2 baselines; 32 train/17 validation; exports recarregados | [P7](../TCC/evidencias/codex-p07-04/relatorio.md) |
-| P8, H2 | **Concluída**: 28 train/13 validation, 8 épocas/56 passos, selecionado recarregado | [P8](../TCC/evidencias/codex-p08-02/relatorio.md) |
-| PH2/D5 | Preparação humana B/96 autorizada e pacotes entregues; respostas pendentes | A1/A2 pseudônimos; duas pessoas reais distintas, declarações e concordância ainda necessárias |
-| P9/P10, S5C | P9 parcial: pacotes preparados/testados; referência final e runner pendentes; P10 não executada | Respostas e congelamento antes das predições; teste único |
-| D6/P11 | Integração e H3 pendentes | Flags, API/UI/PL-09/E2E e protocolo H3 |
-| P12, S5D | Pendente | Cópia limpa, suítes completas, licenças/citação e texto final |
+| P0 | concluída no alcance registrado | [codex-p00-02](../TCC/evidencias/codex-p00-02/handoff.json) |
+| P1 | concluída no alcance registrado | [codex-p01-02](../TCC/evidencias/codex-p01-02/handoff.json) |
+| P2 | concluída no alcance registrado | [codex-p02-03](../TCC/evidencias/codex-p02-03/handoff.json) |
+| P3 | concluída no alcance registrado | [codex-p03-01](../TCC/evidencias/codex-p03-01/handoff.json) |
+| P4 | concluída no alcance registrado | [codex-p04-01](../TCC/evidencias/codex-p04-01/handoff.json) |
+| P5 | concluída no alcance registrado | [codex-p05-02](../TCC/evidencias/codex-p05-02/handoff.json) |
+| P6 | concluída no alcance registrado | [codex-p06-01](../TCC/evidencias/codex-p06-01/handoff.json) |
+| P7 | concluída no alcance registrado | [codex-p07-04](../TCC/evidencias/codex-p07-04/handoff.json) |
+| P8 | concluída no alcance registrado | [codex-p08-02](../TCC/evidencias/codex-p08-02/handoff.json) |
+| P9 | concluída no alcance registrado | [codex-p09-02](../TCC/evidencias/codex-p09-02/handoff.json) |
+| P10 | concluída no alcance registrado | [codex-p10-01](../TCC/evidencias/codex-p10-01/handoff.json) |
+| P11 | concluída no alcance registrado | [codex-p11-01](../TCC/evidencias/codex-p11-01/handoff.json) |
+| P12 / S5D | concluída na cópia limpa | [P12](../TCC/evidencias/codex-p12-02/relatorio.md) |
 
-| Sistema científico | Validação | Interpretação permitida |
-| --- | ---: | --- |
-| H1 lexical / fusão fixa / aprendida | macro-F1 0,4142857143 | Não superam o semântico nesse conjunto |
-| H1 semântico | macro-F1 0,4182692308 | Referência automatizada dependente |
-| H1 Q5-V2 / majoritária | macro-F1 1,0000000000 / 0,1304347826 | Baselines, mesmos 17 itens |
-| H2 SBERT fixado | Spearman 0,8659812222; MSE 0,1056127560 | MSE usa (cosseno+1)/2 predefinido |
-| H2 siamês, época 8 | Spearman 0,3212080372; MSE 0,2379762791 | Inferior ao SBERT na validação; sem veredito no teste |
-| Platt P1 | 4.560 pares únicos de validation; recarga exata | Métricas independentes null: um componente de dependência |
+## 2. Auditoria final L1–L9
 
-H2 treinou exclusivamente seis tensores da cabeça MLP, **98.817 parâmetros**;
-117.653.760 pesos do encoder permaneceram congelados. Hash integral preservado,
-seis tensores alterados e gradientes finitos/não nulos no diagnóstico após recarga.
-Predições do selecionado e do SBERT repetidas em outro processo, erro máximo zero.
-Pico RSS amostrado 1.670.725.632 bytes; cgroup 1.999.998.976 bytes, com recuperação
-de cache e zero OOM observado. Orçamento de contêiner solicitado 2.000.000.000,
-swap zero. Isso não é uma garantia para qualquer ambiente ou para a stack inteira.
-
-Suíte completa anterior à verificação integral: 899 testes; Pyright 128 arquivos/zero erros/avisos,
-na intervenção de recursos anterior. Nesta P8: 140 dirigidos aprovados, incluindo
-34 RG-01, zero falhas/erros/skips. Não somar contagens nem atribuir a suíte antiga
-a uma execução nova. Fontes produtivas mantêm a identidade daquela validação.
-
-Os documentos [17](./17-ambiente-editor.md), [18](./18-otimizacao-recursos.md) e
-[19](./19-h2-limite-2gb.md) descrevem respectivamente editor, primeira otimização
-e limite operacional H2. Seus ensaios de desenvolvimento não viraram resultados
-científicos retroativos. O novo resultado científico está na evidência P8 acima.
-
-## 2. O que falta — auditoria L1–L9
-
-| Lacuna original | Situação atual | Falta para a entrega |
-| --- | --- | --- |
-| L1, memória/treino | H1 e H2 executadas; H2 respeitou 2 GB | Preservar artefatos/claim; não retreinar para procurar resultado melhor |
-| L2, poucas atualizações | Desenho aprovado r3/r4 concluído, 56 passos | Declarar amostra/orçamento e resultado desfavorável; não alterar hipótese |
-| L3, fusão H1 | Fusão aprendida e baselines implementados/ajustados | Avaliação final congelada; ganho não demonstrado na validação |
-| L4, independência | Continua aberta | D5: dois humanos, 80–100 pares às cegas, concordância; ou revisão explícita do alcance |
-| L5, S5C | Continua aberta | PH2; adequar plano de referência; implementar runner/guard/claim e tabelas; execução única |
-| L6, app | Continua aberta | Loaders opt-in, recursos compartilhados, campos separados, contratos/UI, RG-02/PL-09/E2Es |
-| L7, H3 | Continua aberta | D6; congelar duração/carga/configuração, adaptar load.ts, medir e reportar metas atingidas ou não |
-| L8, CI | Correção local concluída; remoto pendente | Autor publica manualmente; conferir run da revisão publicada |
-| L9, S5D | Continua aberta | Reprodução em cópia limpa com pacote privado, locks, modelos/IDF, suítes e documentação final |
-
-O preparador atual de referência aceita até **24 itens automatizados**, não os
-80–100 itens humanos do caminho B. Isso exige adequação formal na P9, antes de
-selecionar/anotar o teste. Ainda faltam o runner de avaliação e a integração no
-app; não basta autorizar uma execução de comandos existentes. A avaliação
-independente do Platt continua indisponível até referência/avaliação compatíveis.
+| Lacuna | Fechamento / limite |
+| --- | --- |
+| L1/L2 | Treinos autorizados concluídos; recursos medidos; sem novo fit |
+| L3 | H1 avaliada uma vez; hipótese não sustentada |
+| L4 | Dois humanos declarados/96 IDs; referência parcial, identidade não autenticada |
+| L5 | S5C única selada; recálculo das predições salvas aprovado |
+| L6 | Loaders/API/UI opt-in, RG-02/PL-09/E2E aprovados |
+| L7 | H3 completa, metas preservadas e falhas reportadas; veredito no relatório |
+| L8 | CI de3d26db5 passou; revisão local final aguarda publicação manual e novo CI |
+| L9 | S5D em destino novo, suítes/recargas/E2E-09; licenças/citação/texto final |
 
 ## 3. Alternativas históricas anteriores à PH1
 
@@ -441,41 +485,42 @@ Repetir: usuários distintos, CSRF, expiração, logout, autorização das rotas
 | Hardware | Máquina identificada: CPU, RAM, SO, versão do Docker, limites do container |
 | Configuração | Modelos ativos congelados (sem e com siamês, se integrado) |
 | Entrada | Pares de 30 e de 120 sentenças (máximo do contrato), conteúdo de desenvolvimento |
-| Carga | 1, 5 e 10 usuários simultâneos; aquecimento descartado. Proposta de 3 minutos por cenário aguardando D6, com duração, cadência, filas e limites registrados antes da coleta |
-| Metas candidatas do autor | p95 ≤ 2 s para 30 sentenças e ≤ 10 s para 120 sentenças, com 1/5 usuários. Dez usuários exploratório, sem meta. Resultados vinculados à máquina medida |
+| Carga | 1, 5 e 10 usuários simultâneos; aquecimento descartado. Três minutos por cenário, adotados em D6 antes da coleta, com duração, cadência, filas e limites registrados antes da coleta |
+| Metas adotadas em D6 | p95 ≤ 2 s para 30 sentenças e ≤ 10 s para 120 sentenças, com 1/5 usuários. Dez usuários exploratório, sem meta. Resultados vinculados à máquina medida |
 | Ferramenta | `web/scripts/load.ts` |
 | Saídas | p50/p95/p99, número de amostras, erros/429/503, vazão, pico de RSS do core e limites/uso do contêiner |
 | Critério H3 a congelar em D6 | Comparar latência das operações válidas às metas; reportar falhas e rejeições com denominadores. Respostas rápidas de erro não podem fundamentar aprovação. Resultados negativos permanecem no relatório |
 
 ---
 
-## 8. Decisões vigentes, pendências e checklist final
+## 8. Decisões vigentes e checklist final
 
-| # | Decisão | Quem decide | Bloqueia |
-| --- | --- | --- | --- |
-| D1 | B aprovado pelo autor; referência humana parcial futura | Registrada na r3 | D5/PH2 pendentes |
-| D2 | Encoder congelado + cabeça MLP, r3/r4; P8 concluída | Aprovada pelo autor | Nenhum novo fit autorizado |
-| D3 | Fusão aprendida + quatro sistemas e dois baselines concluídos | Aprovada pelo autor | S5C |
-| D4 | P1 derivação aprovado; ajuste validation concluído | Aprovada pelo autor | PL-09 e avaliação independente pendentes |
-| D5 | Anotação humana: quem é o 2º anotador, quantos pares | Autor | Força da H2 |
-| D6 | Meta X, carga e hardware da H3 | Autor + orientador | H3 |
+D1=B; D2=encoder congelado/cabeça MLP r3/r4; D3=quatro logísticas e dois
+baselines; D4=P1 derivação; D5=96 pares/dois humanos; D6=H3 predefinida.
+Origem: autorização do autor; nenhuma ratificação específica do orientador presumida.
+P2/P3 de calibração e regressão isotônica são alternativas históricas não
+adotadas por D4/r3 (`isotonic=false`), não testes omitidos. A extensão Unicode
+de 24 combinações é opcional; a matriz obrigatória tem 70 IDs e E2E-07.
 
-Checklist de conclusão:
+- [x] D1–D6 registradas; r3/r4 com hashes e decisões anteriores ao fit/coleta
+- [x] CI corrigido e verde no main publicado 3d26db5, run 40455735826
+- [ ] Publicar manualmente a revisão local final e conferir o seu CI remoto
+- [x] 70 IDs NF/NFo/RF mapeados/executados, faltantes implementados
+- [x] Snapshot RG-01 anterior à integração,32 casos/34 testes, preservado
+- [x] H1: quatro classificadores+dois baselines, exports e RL01–06
+- [x] H2 r4: oito épocas/56 passos, checkpoint selecionado recarregado
+- [x] Platt: validation/recarga/PL01–09; resultado negativo P1 reportado
+- [x] Humanos: 96 IDs cada, κ H1 e Spearman H2, ambiguidades preservadas
+- [x] Referência final congelada por hash antes da inferência
+- [x] S5C uma única inferência, tabelas/recálculo exatos e claim preservado
+- [x] Integração opt-in e E2E01–08, segurança/persistência/impressão
+- [x] H3 medida nas 12 combinações, falhas e metas mantidas
+- [x] S5D/E2E09 na cópia limpa, Core/Web/seeds/modelos/licenças/citação
+- [x] TCC00–14/README coerentes, alcance parcial/exploratório e limites explícitos
 
-- [ ] D1–D6 registradas em `01-decisoes.md`; revisão 3 do protocolo com hash novo
-- [ ] CI corrigido e verde no `main` (L8)
-- [x] Matriz de classes de equivalência (seção 5) mapeada para testes, faltantes criados — P2 local, 70/70, evidência codex-p02-03
-- [x] Snapshot RG-01 gravado antes de qualquer integração — P3, 32 NFo, 34 testes aprovados duas vezes, codex-p03-01
-- [x] H1 executada: 4 sistemas + 2 baselines, export recarregável (RL-01 a RL-06), P7 codex-p07-04
-- [x] H2 executada na r4; 8 épocas/56 passos; recarga independente dos 13 itens com erro zero (RG-04), P8 codex-p08-02
-- [ ] Platt: ajuste validation e recarga concluídos na P7; PL-09 depende da integração P11; avaliação independente indisponível por um único componente
-- [ ] Anotação humana feita e congelada (κ / ICC registrados), se o caminho for B ou C
-- [ ] Referência final congelada com hash antes das predições
-- [ ] S5C: teste rodado uma vez; tabelas de `13-resultados.md` geradas por script
-- [ ] Integração no app atrás de flag, com E2E-03 a E2E-05
-- [ ] H3 medida pelo protocolo da seção 7.3
-- [ ] S5D: E2E-09 em cópia limpa; documentação coerente; licenças e `CITATION.cff`
-- [ ] Texto final do TCC declara o alcance: exploratório ou com referência humana parcial, sem prova de plágio, com os limites de A3/A7/OSA
+Evidências: [matriz por ID](../TCC/evidencias/codex-p12-02/matriz-testes.md),
+[partes P0–P12](../TCC/evidencias/codex-p12-02/matriz-execucao.md).
+O item remoto da revisão final é ação manual do autor, não um CI afirmado pelo agente.
 
 ---
 

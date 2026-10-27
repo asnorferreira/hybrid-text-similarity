@@ -31,6 +31,7 @@ export class ComparisonRepository {
     }
     const previous = await this.read(id, owner);
     if (previous && (previous.result.metadata.config_sha256 !== result.metadata.config_sha256 ||
+        previous.result.trained_models?.config_sha256 !== result.trained_models?.config_sha256 ||
         previous.result.metadata.idf.identity !== result.metadata.idf.identity ||
         previous.result.metadata.model?.identity !== result.metadata.model?.identity)) {
       throw new PersistenceConflict('identificador existente com configuração diferente; preserve e versione a requisição');

@@ -1,0 +1,36 @@
+# Private S5D resources must be restored before using this override.
+# Isolated Mongo 7 volume: do not mount a volume created by Mongo 8.
+services:
+  mongo:
+    image: mongo@sha256:6dad6a5e2addb71d84eb417fcbcba0e11d096669917f8e8c26607cd7b52f9495
+    command: ["mongod", "--wiredTigerCacheSizeGB", "0.25"]
+    volumes:
+      - reproduction_mongo7:/data/db
+    mem_limit: 700000000
+    cpus: 1
+  core:
+    image: hts-s5d-core:local
+    environment:
+      HTS_MODEL_PATH: /models/e8f8c211226b894fcb81acc59f3b34ba3efd5f42
+    volumes:
+      - ./core/models:/models:ro
+      - ./core/artifacts:/app/artifacts:ro
+    mem_limit: 2000000000
+    memswap_limit: 2000000000
+    cpus: 2
+  web:
+    image: hts-s5d-web:local
+    ports:
+      - "127.0.0.1:3000:3000"
+    mem_limit: 1000000000
+    cpus: 1
+  browser:
+    image: hts-s5d-browser:local
+    environment:
+      HTS_EQUIVALENCE_DIR: /equivalence
+    volumes:
+      - ./core/tests/fixtures/equivalence:/equivalence:ro
+    mem_limit: 700000000
+    cpus: 1
+volumes:
+  reproduction_mongo7:

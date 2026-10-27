@@ -1,0 +1,14 @@
+cff-version: 1.2.0
+message: "Se utilizar este software, cite o repositório e a revisão efetivamente utilizada."
+type: software
+title: hybrid-text-similarity
+authors:
+  - family-names: Silva
+    given-names: Asnor Zelaquett Ferreira Quirino
+repository-code: 'https://github.com/asnorferreira/hybrid-text-similarity'
+url: 'https://github.com/asnorferreira/hybrid-text-similarity'
+license: Apache-2.0
+abstract: >-
+  Comparação local de textos por sentenças com componentes lexical e semântico,
+  fusão fixa Q5-V2 e saídas experimentais opcionais de modelos treinados.
+  O índice não constitui prova de plágio. Dados e pesos têm licenças próprias.
