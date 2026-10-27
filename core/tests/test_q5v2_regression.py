@@ -7,6 +7,7 @@ import pytest
 
 from hts_core.adapters.semantic import cache_path
 from tests.equivalence_support import STRONG, client_for, make_service, projection, strong_response
+from tests.regression_support import PORTABILITY_POLICY, assert_frozen, assert_frozen_manifest
 
 SNAPSHOT = Path(__file__).parent / 'fixtures/regression/q5v2-snapshot.json'
 
@@ -38,23 +39,6 @@ def observed():
             stream.write('\n')
 
 
-def assert_frozen(actual, expected, path='result'):
-    if isinstance(expected, dict):
-        assert isinstance(actual, dict) and actual.keys() == expected.keys(), path
-        for key in expected:
-            assert_frozen(actual[key], expected[key], f'{path}.{key}')
-    elif isinstance(expected, list):
-        assert isinstance(actual, list) and len(actual) == len(expected), path
-        for i, (a, b) in enumerate(zip(actual, expected, strict=True)):
-            assert_frozen(a, b, f'{path}[{i}]')
-    elif isinstance(expected, float):
-        assert type(actual) is float, path
-        assert actual == pytest.approx(expected, abs=1e-9, rel=0), path
-    else:
-        assert type(actual) is type(expected), path
-        assert actual == expected, path
-
-
 @pytest.mark.parametrize('case,kind,mode,relation', STRONG, ids=[r[0] for r in STRONG])
 def test_rg01_frozen_output(case, kind, mode, relation, snapshot, service, observed, record_property):
     expected = next(c['result'] for c in snapshot['cases'] if c['id'] == case)
@@ -63,12 +47,13 @@ def test_rg01_frozen_output(case, kind, mode, relation, snapshot, service, obser
     assert_frozen(actual, expected)
     record_property('regression_id', f'RG-01/{case}')
     record_property('snapshot_sha256', hashlib.sha256(SNAPSHOT.read_bytes()).hexdigest())
+    record_property('comparison_policy', PORTABILITY_POLICY)
 
 
 def test_rg01_frozen_resources(snapshot, service):
     resources = snapshot['resources']
     assert service.encoder.identity == resources['model']
-    assert hashlib.sha256((cache_path() / 'hts-model.json').read_bytes()).hexdigest() == resources['model_manifest_sha256']
+    assert_frozen_manifest((cache_path() / 'hts-model.json').read_bytes(), resources['model_manifest_sha256'])
     from hts_core.adapters.resource_migrations import verify_idf_header_migration
     verify_idf_header_migration(service.idf_info, resources['application_idf']['identity'])
     assert service.config['file_sha256'] == resources['policy_file_sha256']
