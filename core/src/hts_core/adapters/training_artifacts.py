@@ -1,11 +1,9 @@
-from pathlib import Path
-
 from hts_core.adapters.dataset_store import identity, read_json
 from hts_core.adapters.checkpoint_retention import safe_path
 
 
 def load_inference_weights(checkpoint, model, expected_bindings):
-    from safetensors.torch import load_file
+    from hts_core.adapters.tensor_storage import load_weights_bounded
     from hts_core.adapters.training_runtime import file_hash
     if type(expected_bindings) is not dict or not expected_bindings:
         raise ValueError('expected execution bindings required')
@@ -20,7 +18,7 @@ def load_inference_weights(checkpoint, model, expected_bindings):
     for name, expected in manifest['files'].items():
         if file_hash(safe_path(root/name)) != expected:
             raise ValueError('inference checkpoint bytes altered: '+name)
-    model.load_state_dict(load_file(str(root/'weights.safetensors')),strict=True)
+    load_weights_bounded(root/'weights.safetensors', model)
     model.eval()
     return {'schema':'hts-inference-load-receipt-1','bindings_identity':identity(expected_bindings),
             'weights_sha256':manifest['files']['weights.safetensors'],
