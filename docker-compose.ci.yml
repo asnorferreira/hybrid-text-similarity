@@ -1,7 +1,12 @@
 services:
   mongo:
     networks: [backend]
-    image: mongo:8.0.34
+    # MongoDB 8.0.34 refuses Linux kernels >= 6.19 (SERVER-121912).
+    # Match the MongoDB 7.0.45 image verified by S5D, in a separate CI volume.
+    image: mongo@sha256:6dad6a5e2addb71d84eb417fcbcba0e11d096669917f8e8c26607cd7b52f9495
+    command: ["mongod", "--wiredTigerCacheSizeGB", "0.25"]
+    volumes:
+      - mongo_ci7:/data/db
     healthcheck:
       test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping').ok"]
       interval: 5s
@@ -80,3 +85,6 @@ services:
 networks:
   backend:
     internal: true
+
+volumes:
+  mongo_ci7:

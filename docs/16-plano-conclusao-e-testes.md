@@ -1,5 +1,20 @@
 # Plano de conclusão e plano de testes
 
+## Atualização do CI — run 40510356894, 2026-10-27
+
+A revisão publicada `c20d3bf` passou nos 1.022 testes Core, mas o MongoDB
+8.0.34 encerrou na inicialização; as etapas dependentes ficaram sem execução.
+A reprodução local confirmou a incompatibilidade dessa imagem com kernel
+Linux >=6.19. O CI foi corrigido localmente para o MongoDB 7.0.45 fixado por
+digest, já verificado na S5D, em volume isolado. Web15/tipos, integração,
+segurança12, paginação, dez E2E e auditorias passaram em Docker. Logs dos
+serviços, kernel e runtime Mongo passam a ser preservados pelo workflow.
+O CI remoto da correção continua pendente de publicação pelo autor; o item
+remoto do checklist permanece aberto. Nenhum retreino/inferência P10 repetida.
+
+[Relatório e evidências da correção](../TCC/evidencias/codex-ci-40510356894-01/relatorio.md).
+O estado P12 abaixo descreve a entrega anterior à correção do CI.
+
 ## Estado final local — P0–P12, 2026-10-27
 
 Reprodução final vigente: P12 tentativa02. O empacotador conserva também
