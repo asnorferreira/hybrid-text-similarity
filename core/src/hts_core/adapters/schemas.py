@@ -95,6 +95,28 @@ class Metadata(StrictModel):
     signature: dict[str, JsonValue]
 
 
+class TrainedIdentity(StrictModel):
+    name: str
+    version: str
+    sha256: str = Field(pattern=r'^[0-9a-f]{64}$')
+
+
+class TrainedPair(StrictModel):
+    source: int = Field(ge=0)
+    suspect: int = Field(ge=0)
+    h1_label: Literal['copia_exata', 'copia_editada', 'parafrase', 'sem_correspondencia_detectada']
+    h2_score: UnitScore
+    derivation_probability: UnitScore
+
+
+class TrainedResult(StrictModel):
+    state: Literal['calculated']
+    config_sha256: str = Field(pattern=r'^[0-9a-f]{64}$')
+    scope: Literal['best_q5v2_pairs_exploratory_not_document_index']
+    models: list[TrainedIdentity]
+    pairs: list[TrainedPair]
+
+
 class ComparisonResult(StrictModel):
     contract_version: Literal['1.0']
     state: Literal['calculated', 'resource_unavailable']
@@ -109,6 +131,7 @@ class ComparisonResult(StrictModel):
     alignment: Alignment | None
     summary: Summary | None
     metadata: Metadata
+    trained_models: TrainedResult | None = None
 
 
 class ApiError(StrictModel):

@@ -83,7 +83,14 @@ export function Result({ saved, clientMs }: { saved: SavedComparison; clientMs: 
     </section>
     <section><h2>Resumo do documento analisado</h2>{result.summary ? <><p>Denominador: {result.summary.denominator} sentenças. Predominância: <strong>{labels[result.summary.predominance] ?? result.summary.predominance}</strong>.</p>
       <ul>{Object.entries(result.summary.counts).map(([label, count]) => <li key={label}>{labels[label]}: {count} ({format(result.summary!.proportions[label] * 100)}%)</li>)}</ul></> : <p>Resumo de classes indisponível.</p>}
-      <p>Trecho inserido, siamês treinado e fusão aprendida: indisponíveis. A fração direcional de reuso do dataset não é conhecida nestes documentos e não foi inferida pela nota.</p></section>
+      <p>Trecho inserido: indisponível. A fração direcional de reuso do dataset não é conhecida nestes documentos e não foi inferida pela nota.</p></section>
+    {result.trained_models ? <section aria-label="Modelos treinados"><h2>Modelos treinados — demonstração exploratória</h2>
+      <p>Aplicados aos melhores pares de Q5-V2. Saídas por sentença, separadas do índice de similaridade. H1/H2 não superaram os baselines na avaliação final; Platt piorou Brier e log-loss. A probabilidade de derivação usa ancestralidade sintética e não tem garantia de calibração nestes documentos.</p>
+      <p>Data desta comparação: {new Date(saved.created_at).toLocaleString('pt-BR')}.</p>
+      {result.trained_models.models.map(item => <p key={item.name}>{item.name}; versão <code>{item.version}</code>; SHA-256 <code>{item.sha256}</code>.</p>)}
+      <div className="table-scroll"><table><thead><tr><th>Par</th><th>Classe H1 aprendida</th><th>Escore H2 siamês [0,1]</th><th>Probabilidade de derivação [0,1]</th></tr></thead>
+        <tbody>{result.trained_models.pairs.map(item => <tr key={item.suspect}><td>F{item.source+1} → A{item.suspect+1}</td><td>{labels[item.h1_label]}</td><td>{format(item.h2_score)}</td><td>{format(item.derivation_probability)}</td></tr>)}</tbody></table></div>
+    </section> : <p>Siamês treinado, fusão aprendida e probabilidade de derivação: desativados nesta execução.</p>}
     <section><h2>Instrumentação de engenharia</h2><p>Tempos monotônicos desta execução; não são resultado experimental ou validação de H3. Preparação/carregamento e comparação compartilham recursos; não há tempo ou memória atribuídos individualmente aos algoritmos.</p>
       <ul><li>Parsing e transporte dos dois arquivos em paralelo: {format(saved.engineering.parsing_http_ms)} ms.</li><li>Chamada HTTP de comparação: {format(saved.engineering.compare_http_ms)} ms, incluindo transporte e acesso a recursos.</li>
         <li>Persistência antes da publicação do registro final: {format(saved.engineering.persistence_before_publish_ms)} ms.</li><li>Caso de uso antes da publicação: {format(saved.engineering.server_before_publish_ms)} ms; exclui autenticação, recepção do formulário, gravação final, releitura e transporte da resposta.</li>
@@ -95,6 +102,6 @@ export function Result({ saved, clientMs }: { saved: SavedComparison; clientMs: 
     <section className="provenance"><h2>Rastreabilidade e limites</h2><p>Política {result.metadata.policy}; configuração <code>{result.metadata.config_sha256}</code>.</p>
       <p>IDF provisório: versão <code>{String(result.metadata.idf.historical_version ?? result.metadata.idf.version ?? 'ver metadados de identidade')}</code>; identidade <code>{String(result.metadata.idf.identity ?? 'indisponível')}</code>. Descritor observado não é atestação retroativa de construção.</p>
       <p>Modelo: {String(model?.model ?? 'indisponível')}; revisão <code>{String(model?.revision ?? 'indisponível')}</code>. Janelas completas por tokens, sem sobreposição; pooling ponderado e normalização final conforme configuração.</p>
-      <p>Exibição decimal half-up em duas casas; resultados persistidos mantêm a precisão. Similaridade e correspondências não concluem plágio, autoria ou intenção. Sem OCR, busca online, calibração ou validação científica nesta sessão.</p></section>
+      <p>Exibição decimal half-up em duas casas; resultados persistidos mantêm a precisão. Similaridade e correspondências não concluem plágio, autoria ou intenção. Sem OCR ou busca online. Modelos ativos, quando presentes, usam artefatos congelados; nenhuma calibração é ajustada nestes documentos.</p></section>
   </article>;
 }

@@ -20,6 +20,12 @@ def create_app(service=None):
     app.config['MAX_CONTENT_LENGTH'] = 2 * config['max_upload_bytes'] + 65536
     resource_lock = Lock()
     semantic_initialized = service is not None
+    from hts_core.adapters.trained_models import load_config, TrainedModels
+    trained_config = load_config()
+
+    @lru_cache(maxsize=1)
+    def trained_resources(encoder):
+        return TrainedModels(encoder, trained_config)
 
     @lru_cache(maxsize=1)
     def resources():
@@ -82,13 +88,17 @@ def create_app(service=None):
                 ready = resources.cache_info().currsize and (data.mode == 'lexical' or semantic_initialized)
                 state = 'cached' if ready else 'cold_or_concurrent'
                 comparison = resources() if data.mode == 'lexical' or service is not None else semantic_resources()
+                trained = (trained_resources(comparison.encoder)
+                           if trained_config['enabled'] and data.mode == 'hybrid' and comparison.encoder is not None else None)
             prepared = perf_counter()
             phases = {}
             result = comparison.compare(data.source.text, data.suspect.text, data.mode, timings=phases)
             compared = perf_counter()
             if result['state'] == 'resource_unavailable':
                 return error('resource_unavailable', 'recurso semântico obrigatório indisponível; sem classificação', 503)
-            return engineering(jsonify(ComparisonResult.model_validate(result).model_dump()),
+            if trained is not None:
+                trained.enrich(result)
+            return engineering(jsonify(ComparisonResult.model_validate(result).model_dump(exclude_unset=True)),
                                {'resources': prepared - started, 'compare': compared - prepared, **phases}, state)
         except InvalidDocument as exc:
             state = 'no_useful_content' if 'sem conteúdo' in str(exc) else 'invalid_input'

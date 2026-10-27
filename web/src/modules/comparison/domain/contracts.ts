@@ -15,7 +15,13 @@ const sentence = z.strictObject({ index: z.number().int().nonnegative(), raw: z.
   lexical: z.array(z.string()), words: z.number().int().nonnegative(), flags: z.array(z.string()), window: jsonRecord.nullable() });
 const labels = z.enum(['copia_exata', 'copia_editada', 'parafrase', 'sem_correspondencia_detectada']);
 const matrix = (entry: z.ZodNumber) => z.array(z.array(entry));
+const sha256 = z.string().regex(/^[0-9a-f]{64}$/);
 export const responseSchema = z.strictObject({
+  trained_models: z.strictObject({ state: z.literal('calculated'), config_sha256: sha256,
+    scope: z.literal('best_q5v2_pairs_exploratory_not_document_index'),
+    models: z.array(z.strictObject({ name: z.string(), version: z.string(), sha256 })),
+    pairs: z.array(z.strictObject({ source: z.number().int().nonnegative(), suspect: z.number().int().nonnegative(),
+      h1_label: labels, h2_score: score, derivation_probability: score })) }).nullable().optional(),
   contract_version: version, state: z.enum(['calculated', 'resource_unavailable']), method: z.enum(['hybrid', 'lexical']),
   index: index.nullable(), lexical_index: index, semantic_index: index.nullable(),
   matrices: z.strictObject({ lexical: matrix(score), semantic_raw: matrix(z.number().min(-1).max(1)).nullable(),

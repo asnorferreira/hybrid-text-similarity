@@ -1,0 +1,17 @@
+{
+  "schema": "hts-trained-models-1",
+  "enabled": false,
+  "files": {
+    "artifacts/plan16-r3-01/H1-restart-01/classifiers/learned_fusion.json": "5879164a89e5b1cf12ab81fced03556b6360c5db0131179e6780854619ee3e95",
+    "artifacts/artifacts/s4-fechamento-01/idf-final-01/idf.json": "73ed9423cb5e8d304b40983b98e528701fb5f649887a9373050c2b3b54a94296",
+    "configs/experiment_s5b.r4.json": "ae15624977c62006c7eb1aafc07454aa85d09c1799f87d0c530cd658e5547b3b",
+    "artifacts/plan16-r3-01/H1-restart-01/calibration/platt.json": "0914ba2cd317a17bd9938455b18c5437063fc45e3c402474147a7645a0e6b167",
+    "artifacts/plan16-r4-01/H2-scientific-01/training/epoch-008-cursor-00000-update-000056-snapshot-0008/manifest.json": "1577e4d44d6cc8873b7530e0cba33ac4241bfc7675307c3d2fc6b61c926cb76b",
+    "artifacts/plan16-r4-01/H2-scientific-01/training/epoch-008-cursor-00000-update-000056-snapshot-0008/weights.safetensors": "1e328864a155d40f54439c03a699dc7fa3caee2885aacd6198ec603be72482ac"
+  },
+  "idf": "artifacts/artifacts/s4-fechamento-01/idf-final-01/idf.json",
+  "h2_protocol": "configs/experiment_s5b.r4.json",
+  "h2_checkpoint": "artifacts/plan16-r4-01/H2-scientific-01/training/epoch-008-cursor-00000-update-000056-snapshot-0008",
+  "platt": "artifacts/plan16-r3-01/H1-restart-01/calibration/platt.json",
+  "h1": "artifacts/plan16-r3-01/H1-restart-01/classifiers/learned_fusion.json"
+}

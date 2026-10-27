@@ -69,6 +69,96 @@
         ],
         "signature": {}
       }
+    },
+    {
+      "contract_version": "1.0",
+      "state": "calculated",
+      "method": "lexical",
+      "index": {
+        "source_to_suspect": 1.0,
+        "suspect_to_source": 1.0,
+        "value": 100.0
+      },
+      "lexical_index": {
+        "source_to_suspect": 1.0,
+        "suspect_to_source": 1.0,
+        "value": 100.0
+      },
+      "semantic_index": null,
+      "matrices": {
+        "lexical": [
+          [
+            1.0
+          ]
+        ],
+        "semantic_raw": null,
+        "semantic_operational": null,
+        "fused": null
+      },
+      "source": [
+        {
+          "index": 0,
+          "raw": "Texto.",
+          "semantic": "Texto.",
+          "lexical": [
+            "texto"
+          ],
+          "words": 1,
+          "flags": [],
+          "window": null
+        }
+      ],
+      "suspect": [
+        {
+          "index": 0,
+          "raw": "Texto.",
+          "semantic": "Texto.",
+          "lexical": [
+            "texto"
+          ],
+          "words": 1,
+          "flags": [],
+          "window": null
+        }
+      ],
+      "matches": null,
+      "alignment": null,
+      "summary": null,
+      "metadata": {
+        "policy": "q5-v2",
+        "config_sha256": "fixture-independent-contract",
+        "configuration": {},
+        "idf": {
+          "fixture": true
+        },
+        "model": null,
+        "semantic_unavailable": "cenário de contrato",
+        "unavailable_components": [
+          "siamese"
+        ],
+        "signature": {}
+      },
+      "trained_models": {
+        "state": "calculated",
+        "config_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "scope": "best_q5v2_pairs_exploratory_not_document_index",
+        "models": [
+          {
+            "name": "Fixture H1",
+            "version": "fixture-1",
+            "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          }
+        ],
+        "pairs": [
+          {
+            "source": 0,
+            "suspect": 0,
+            "h1_label": "copia_editada",
+            "h2_score": 0.5,
+            "derivation_probability": 0.6
+          }
+        ]
+      }
     }
   ],
   "invalid": [
@@ -687,6 +777,277 @@
           "siamese"
         ],
         "signature": {}
+      }
+    },
+    {
+      "contract_version": "1.0",
+      "state": "calculated",
+      "method": "lexical",
+      "index": {
+        "source_to_suspect": 1.0,
+        "suspect_to_source": 1.0,
+        "value": 100.0
+      },
+      "lexical_index": {
+        "source_to_suspect": 1.0,
+        "suspect_to_source": 1.0,
+        "value": 100.0
+      },
+      "semantic_index": null,
+      "matrices": {
+        "lexical": [
+          [
+            1.0
+          ]
+        ],
+        "semantic_raw": null,
+        "semantic_operational": null,
+        "fused": null
+      },
+      "source": [
+        {
+          "index": 0,
+          "raw": "Texto.",
+          "semantic": "Texto.",
+          "lexical": [
+            "texto"
+          ],
+          "words": 1,
+          "flags": [],
+          "window": null
+        }
+      ],
+      "suspect": [
+        {
+          "index": 0,
+          "raw": "Texto.",
+          "semantic": "Texto.",
+          "lexical": [
+            "texto"
+          ],
+          "words": 1,
+          "flags": [],
+          "window": null
+        }
+      ],
+      "matches": null,
+      "alignment": null,
+      "summary": null,
+      "metadata": {
+        "policy": "q5-v2",
+        "config_sha256": "fixture-independent-contract",
+        "configuration": {},
+        "idf": {
+          "fixture": true
+        },
+        "model": null,
+        "semantic_unavailable": "cenário de contrato",
+        "unavailable_components": [
+          "siamese"
+        ],
+        "signature": {}
+      },
+      "trained_models": {
+        "state": "calculated",
+        "config_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "scope": "best_q5v2_pairs_exploratory_not_document_index",
+        "models": [
+          {
+            "name": "Fixture H1",
+            "version": "fixture-1",
+            "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          }
+        ],
+        "pairs": [
+          {
+            "source": 0,
+            "suspect": 0,
+            "h1_label": "copia_editada",
+            "h2_score": 0.5,
+            "derivation_probability": 1.01
+          }
+        ]
+      }
+    },
+    {
+      "contract_version": "1.0",
+      "state": "calculated",
+      "method": "lexical",
+      "index": {
+        "source_to_suspect": 1.0,
+        "suspect_to_source": 1.0,
+        "value": 100.0
+      },
+      "lexical_index": {
+        "source_to_suspect": 1.0,
+        "suspect_to_source": 1.0,
+        "value": 100.0
+      },
+      "semantic_index": null,
+      "matrices": {
+        "lexical": [
+          [
+            1.0
+          ]
+        ],
+        "semantic_raw": null,
+        "semantic_operational": null,
+        "fused": null
+      },
+      "source": [
+        {
+          "index": 0,
+          "raw": "Texto.",
+          "semantic": "Texto.",
+          "lexical": [
+            "texto"
+          ],
+          "words": 1,
+          "flags": [],
+          "window": null
+        }
+      ],
+      "suspect": [
+        {
+          "index": 0,
+          "raw": "Texto.",
+          "semantic": "Texto.",
+          "lexical": [
+            "texto"
+          ],
+          "words": 1,
+          "flags": [],
+          "window": null
+        }
+      ],
+      "matches": null,
+      "alignment": null,
+      "summary": null,
+      "metadata": {
+        "policy": "q5-v2",
+        "config_sha256": "fixture-independent-contract",
+        "configuration": {},
+        "idf": {
+          "fixture": true
+        },
+        "model": null,
+        "semantic_unavailable": "cenário de contrato",
+        "unavailable_components": [
+          "siamese"
+        ],
+        "signature": {}
+      },
+      "trained_models": {
+        "state": "calculated",
+        "config_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "scope": "best_q5v2_pairs_exploratory_not_document_index",
+        "models": [
+          {
+            "name": "Fixture H1",
+            "version": "fixture-1",
+            "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          }
+        ],
+        "pairs": [
+          {
+            "source": 0,
+            "suspect": 0,
+            "h1_label": "r=1",
+            "h2_score": 0.5,
+            "derivation_probability": 0.6
+          }
+        ]
+      }
+    },
+    {
+      "contract_version": "1.0",
+      "state": "calculated",
+      "method": "lexical",
+      "index": {
+        "source_to_suspect": 1.0,
+        "suspect_to_source": 1.0,
+        "value": 100.0
+      },
+      "lexical_index": {
+        "source_to_suspect": 1.0,
+        "suspect_to_source": 1.0,
+        "value": 100.0
+      },
+      "semantic_index": null,
+      "matrices": {
+        "lexical": [
+          [
+            1.0
+          ]
+        ],
+        "semantic_raw": null,
+        "semantic_operational": null,
+        "fused": null
+      },
+      "source": [
+        {
+          "index": 0,
+          "raw": "Texto.",
+          "semantic": "Texto.",
+          "lexical": [
+            "texto"
+          ],
+          "words": 1,
+          "flags": [],
+          "window": null
+        }
+      ],
+      "suspect": [
+        {
+          "index": 0,
+          "raw": "Texto.",
+          "semantic": "Texto.",
+          "lexical": [
+            "texto"
+          ],
+          "words": 1,
+          "flags": [],
+          "window": null
+        }
+      ],
+      "matches": null,
+      "alignment": null,
+      "summary": null,
+      "metadata": {
+        "policy": "q5-v2",
+        "config_sha256": "fixture-independent-contract",
+        "configuration": {},
+        "idf": {
+          "fixture": true
+        },
+        "model": null,
+        "semantic_unavailable": "cenário de contrato",
+        "unavailable_components": [
+          "siamese"
+        ],
+        "signature": {}
+      },
+      "trained_models": {
+        "state": "calculated",
+        "config_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "scope": "best_q5v2_pairs_exploratory_not_document_index",
+        "models": [
+          {
+            "name": "Fixture H1",
+            "version": "fixture-1",
+            "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          }
+        ],
+        "pairs": [
+          {
+            "source": 0,
+            "suspect": 0,
+            "h1_label": "copia_editada",
+            "h2_score": 0.5,
+            "derivation_probability": 0.6
+          }
+        ],
+        "index": 100
       }
     }
   ]

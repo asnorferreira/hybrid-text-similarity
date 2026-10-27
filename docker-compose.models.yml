@@ -1,0 +1,9 @@
+# Optional trained outputs. Keep the default configuration disabled in Git.
+# Prepare core/artifacts/trained_models.active.json from configs/trained_models.json
+# and set enabled=true only after restoring the private frozen artifacts.
+services:
+  core:
+    environment:
+      HTS_TRAINED_MODELS_CONFIG: /app/artifacts/trained_models.active.json
+    volumes:
+      - ./core/artifacts:/app/artifacts:ro
