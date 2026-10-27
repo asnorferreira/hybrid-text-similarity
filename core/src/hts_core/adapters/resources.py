@@ -6,8 +6,6 @@ import platform
 from pathlib import Path
 import unicodedata
 
-from hts_core.adapters import nlp
-from hts_core.adapters.refcorpus import load_idf, manifest_hash
 from hts_core.adapters.semantic import ResourceUnavailable
 
 CORE = Path(__file__).resolve().parents[3]
@@ -28,6 +26,9 @@ def load_policy():
 
 
 def idf_resource(path=None):
+    from hts_core.adapters import nlp
+    from hts_core.adapters.refcorpus import load_idf, manifest_hash
+
     path = Path(path) if path else CORE / 'data/refcorpus/idf.json'
     try:
         table = load_idf(path)

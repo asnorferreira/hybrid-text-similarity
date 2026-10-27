@@ -24,19 +24,19 @@ def levenshtein_distance(a: str, b: str) -> int:
 
 def damerau_levenshtein_distance(a: str, b: str) -> int:
     """Forma OSA: Levenshtein + transposição de adjacentes (mapa, Art. 5)."""
-    m, n = len(a), len(b)
-    d = [[0] * (n + 1) for _ in range(m + 1)]
-    for i in range(m + 1):
-        d[i][0] = i
-    for j in range(n + 1):
-        d[0][j] = j
-    for i in range(1, m + 1):
-        for j in range(1, n + 1):
-            cost = a[i - 1] != b[j - 1]
-            d[i][j] = min(d[i - 1][j] + 1, d[i][j - 1] + 1, d[i - 1][j - 1] + cost)
-            if i > 1 and j > 1 and a[i - 1] == b[j - 2] and a[i - 2] == b[j - 1]:
-                d[i][j] = min(d[i][j], d[i - 2][j - 2] + 1)
-    return d[m][n]
+    if len(a) < len(b):
+        a, b = b, a
+    previous = list(range(len(b) + 1))
+    before_previous = previous
+    for i, ca in enumerate(a, 1):
+        current = [i]
+        for j, cb in enumerate(b, 1):
+            value = min(previous[j] + 1, current[j - 1] + 1, previous[j - 1] + (ca != cb))
+            if i > 1 and j > 1 and ca == b[j - 2] and a[i - 2] == cb:
+                value = min(value, before_previous[j - 2] + 1)
+            current.append(value)
+        before_previous, previous = previous, current
+    return previous[-1]
 
 
 def edit_similarity(distance: int, a: str, b: str) -> float:
@@ -111,6 +111,8 @@ def jaro_winkler(s1: str, s2: str, p: float = JW_PREFIX_SCALE) -> float:
 
 def smith_waterman_score(a: str, b: str, match: int = SW_MATCH, mismatch: int = SW_MISMATCH,
                          gap: int = SW_GAP) -> int:
+    if len(a) < len(b):
+        a, b = b, a
     best = 0
     previous = [0] * (len(b) + 1)
     for ca in a:
