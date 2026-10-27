@@ -52,4 +52,6 @@ async function main() {
   console.log(JSON.stringify({ output, purpose: result.purpose, phases: phases.map(({ concurrency, completed, errors, p50_ms, p95_ms, p99_ms }) => ({ concurrency, completed, errors, p50_ms, p95_ms, p99_ms })) }));
   if (phases.some(phase => phase.errors || phase.warmup.some(value => !value.ok))) process.exitCode = 1;
 }
-main();
+if (process.env.HTS_H3_PROTOCOL) {
+  import('./load-h3').then(module => module.runH3()).catch(error => { console.error(error); process.exitCode = 1; });
+} else main();
