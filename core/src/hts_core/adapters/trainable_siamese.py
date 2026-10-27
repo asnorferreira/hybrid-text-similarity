@@ -1,4 +1,6 @@
+from collections import OrderedDict
 from contextlib import nullcontext
+import sys
 from typing import TypedDict
 
 import torch
@@ -15,15 +17,50 @@ def pool_tensors(embeddings, counts):
 
 
 class WindowEncoder(nn.Module):
-    def __init__(self, model, tokenizer, limit):
+    def __init__(self, model, tokenizer, limit, cache_bytes=1024 * 1024, cache_entries=128):
         super().__init__()
         self.model, self.tokenizer, self.limit = model, tokenizer, limit
         self.capacity = limit-tokenizer.num_special_tokens_to_add(pair=False)
         if self.capacity < 1:
             raise ValueError('no room for content')
+        if type(cache_bytes) is not int or cache_bytes < 0 or type(cache_entries) is not int or cache_entries < 0:
+            raise ValueError('cache limits must be nonnegative integers')
         self.diagnostics = []
+        self.cache_bytes, self.cache_entries = cache_bytes, cache_entries
+        self._embedding_cache: OrderedDict[str, tuple[torch.Tensor, int, tuple[int, ...], int]] = OrderedDict()
+        self._cache_size = 0
+        self._cache_signature = None
+
+    def clear_embedding_cache(self):
+        self._embedding_cache.clear()
+        self._cache_size = 0
+        self._cache_signature = None
+
+    def _cache_allowed(self):
+        parameters = tuple(self.model.parameters())
+        tensors = (*parameters, *self.model.buffers())
+        allowed = (self.cache_bytes > 0 and self.cache_entries > 0 and not torch.is_grad_enabled()
+                   and not torch.is_inference_mode_enabled() and not torch.is_autocast_enabled('cpu')
+                   and not torch.is_autocast_enabled('cuda') and not any(p.requires_grad for p in parameters)
+                   and not any(module.training for module in self.model.modules())
+                   and not any(torch.is_inference(tensor) for tensor in tensors))
+        if not allowed:
+            self.clear_embedding_cache()
+            return False
+        signature = (self.capacity, self.limit, self.cache_bytes, self.cache_entries, id(self.tokenizer),
+                     tuple((id(t), t._version, t.dtype, t.device) for t in tensors))
+        if signature != self._cache_signature:
+            self.clear_embedding_cache()
+            self._cache_signature = signature
+        return True
 
     def forward(self, text):
+        cache_allowed = self._cache_allowed()
+        if cache_allowed and text in self._embedding_cache:
+            value, tokens, counts, _ = self._embedding_cache[text]
+            self._embedding_cache.move_to_end(text)
+            self.diagnostics.append({'tokens': tokens, 'window_tokens': list(counts), 'covered': sum(counts)})
+            return value.clone()
         encoded = self.tokenizer(text, add_special_tokens=False, truncation=False).encodings[0]
         original = list(encoded.ids)
         if not original or len(original) > 12000:
@@ -42,7 +79,19 @@ class WindowEncoder(nn.Module):
             embeddings.append(self.model(features)['sentence_embedding'][0])
             counts.append(len(chunk.ids))
         self.diagnostics.append({'tokens':len(original), 'window_tokens':counts, 'covered':sum(counts)})
-        return pool_tensors(embeddings, counts)
+        value = pool_tensors(embeddings, counts)
+        if cache_allowed:
+            window_counts = tuple(counts)
+            size = (sys.getsizeof(text) + value.numel() * value.element_size() + sys.getsizeof(value)
+                    + sys.getsizeof(window_counts) + sum(sys.getsizeof(c) for c in counts) + 256)
+            if size <= self.cache_bytes:
+                while self._embedding_cache and (self._cache_size + size > self.cache_bytes
+                                                  or len(self._embedding_cache) >= self.cache_entries):
+                    _, evicted = self._embedding_cache.popitem(last=False)
+                    self._cache_size -= evicted[3]
+                self._embedding_cache[text] = (value.detach().clone(), len(original), window_counts, size)
+                self._cache_size += size
+        return value
 
 
 class Siamese(nn.Module):

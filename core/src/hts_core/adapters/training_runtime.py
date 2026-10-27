@@ -1,3 +1,4 @@
+from collections.abc import Iterable
 import hashlib
 import json
 import os
@@ -8,11 +9,28 @@ import time
 
 import numpy as np
 import torch
-from safetensors.torch import load_file, save_file
+from safetensors.torch import save_file
 
 from hts_core.adapters.dataset_store import identity
 from hts_core.adapters.training_contract import memory_snapshot
+from hts_core.adapters.tensor_storage import load_weights_bounded
 from hts_core.domain.experiments import regression_report, require_split
+
+
+def parameters_are_finite(parameters: Iterable[torch.Tensor], chunk_elements: int = 65536) -> bool:
+    if type(chunk_elements) is not int or chunk_elements < 1:
+        raise ValueError('chunk_elements must be a positive integer')
+
+    def finite(tensor):
+        if tensor.numel() <= chunk_elements:
+            return bool(torch.isfinite(tensor).all())
+        axis = max(range(tensor.ndim), key=lambda index: tensor.shape[index])
+        width = max(1, chunk_elements // (tensor.numel() // tensor.shape[axis]))
+        return all(finite(tensor.narrow(axis, start, min(width, tensor.shape[axis] - start)))
+                   for start in range(0, tensor.shape[axis], width))
+
+    with torch.no_grad():
+        return all(finite(parameter.detach()) for parameter in parameters)
 
 
 def file_hash(path):
@@ -101,8 +119,8 @@ def load_training_checkpoint(path, model, optimizer, bindings):
         safe_path(path/name)
         if file_hash(path/name) != expected:
             raise ValueError('checkpoint bytes altered: '+name)
-    model.load_state_dict(load_file(str(path/'weights.safetensors')), strict=True)
-    payload = torch.load(path/'local-state.pt', map_location='cpu', weights_only=True)
+    load_weights_bounded(path/'weights.safetensors', model)
+    payload = torch.load(path/'local-state.pt', map_location='cpu', weights_only=True, mmap=True)
     if set(payload) != {'optimizer','rng','state'}:
         raise ValueError('invalid local state components')
     optimizer.load_state_dict(payload['optimizer'])
@@ -216,12 +234,12 @@ def train_loop(model, optimizer, train, validation, budget, bindings, destinatio
                     state['epoch_squared_error']+=float(loss.detach())
                     state['epoch_samples']+=1
                 grads=[p.grad for p in model.parameters() if p.requires_grad]
-                if not grads or any(g is None or not torch.isfinite(g).all() for g in grads):
+                if not grads or any(g is None for g in grads) or not parameters_are_finite(g for g in grads if g is not None):
                     raise FloatingPointError('missing or nonfinite gradients')
                 if any(p.grad is not None for p in model.parameters() if not p.requires_grad):
                     raise FloatingPointError('frozen parameter received a gradient')
                 optimizer.step(); optimizer.zero_grad(set_to_none=True)
-                if any(not torch.isfinite(p).all() for p in model.parameters()):
+                if not parameters_are_finite(model.parameters()):
                     raise FloatingPointError('nonfinite updated parameters')
                 state['updates']+=1; state['cursor']+=len(indices)
                 state['elapsed_seconds']=elapsed()
