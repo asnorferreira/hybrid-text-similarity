@@ -141,7 +141,7 @@ def test_phase_headers_are_optional_to_body_and_match_executed_stages(services):
         ComparisonResult.model_validate(json_object(response))
         stages = {part.strip().split(';dur=')[0]: float(part.strip().split(';dur=')[1])
                   for part in response.headers['Server-Timing'].split(',')}
-        expected = {'resources', 'compare', 'preprocess', 'lexical'}
+        expected = {'resources', 'compare', 'preprocess', 'lexical', 'enrich'}
         if mode == 'hybrid':
             expected |= {'embeddings', 'matrices', 'alignment', 'pairs'}
         assert set(stages) == expected

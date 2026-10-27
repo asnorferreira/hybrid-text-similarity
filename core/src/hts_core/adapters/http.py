@@ -32,19 +32,21 @@ def create_app(service=None):
         if service is not None:
             return service
         from hts_core.adapters import nlp
+        from hts_core.adapters.serving_analysis import ServingAnalysis
         from hts_core.application.comparison import ComparisonService
 
         idf, idf_info = idf_resource(os.environ.get('HTS_IDF_PATH'))
-        return ComparisonService(idf, idf_info, None, config, config_hash, nlp.analyze, nlp.STOPWORDS)
+        return ComparisonService(idf, idf_info, None, config, config_hash, ServingAnalysis(nlp.analyze), nlp.STOPWORDS)
 
     @lru_cache(maxsize=1)
     def semantic_resources():
         from hts_core.application.comparison import ComparisonService
+        from hts_core.adapters.serving_encoder import ServingEncoder
 
         nonlocal semantic_initialized
         lexical = resources()
         try:
-            encoder, error = SemanticEncoder(), None
+            encoder, error = ServingEncoder(SemanticEncoder()), None
         except ResourceUnavailable as exc:
             encoder, error = None, str(exc)
         semantic_initialized = True
@@ -98,8 +100,10 @@ def create_app(service=None):
                 return error('resource_unavailable', 'recurso semântico obrigatório indisponível; sem classificação', 503)
             if trained is not None:
                 trained.enrich(result)
+            enriched = perf_counter()
             return engineering(jsonify(ComparisonResult.model_validate(result).model_dump(exclude_unset=True)),
-                               {'resources': prepared - started, 'compare': compared - prepared, **phases}, state)
+                               {'resources': prepared - started, 'compare': compared - prepared,
+                                'enrich': enriched - compared, **phases}, state)
         except InvalidDocument as exc:
             state = 'no_useful_content' if 'sem conteúdo' in str(exc) else 'invalid_input'
             return error(state, str(exc), 422)

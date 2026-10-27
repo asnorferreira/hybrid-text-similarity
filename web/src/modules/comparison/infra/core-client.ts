@@ -16,7 +16,7 @@ export class CoreClient {
     catch { throw new FlowError('resource_unavailable', 'core indisponível ou prazo de resposta excedido', 503); }
     const stages: Record<string, number> = {};
     for (const part of (response.headers.get('server-timing') ?? '').split(',')) {
-      const match = part.trim().match(/^(resources|compare|parse|preprocess|lexical|embeddings|matrices|alignment|pairs);dur=(\d+(?:\.\d+)?)$/);
+      const match = part.trim().match(/^(resources|compare|enrich|parse|preprocess|lexical|embeddings|matrices|alignment|pairs);dur=(\d+(?:\.\d+)?)$/);
       if (match && Number.isFinite(Number(match[2]))) stages[match[1]] = Number(match[2]);
     }
     const rss = response.headers.get('x-hts-process-peak-rss-kib');
