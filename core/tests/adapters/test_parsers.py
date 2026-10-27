@@ -124,3 +124,42 @@ def test_type_comes_from_content_not_extension():
         parse_document("falso.txt", _pdf(["conteudo"]))
     with pytest.raises(UnsupportedFileError):
         parse_document("imagem.png", b"\x89PNG\r\n\x1a\n\x00\x00binario")
+
+
+@pytest.mark.parametrize('failure', [None, 'text', 'images'])
+def test_pdf_closes_each_page_before_advancing_and_on_extraction_error(monkeypatch, failure):
+    from types import SimpleNamespace
+    from hts_core.adapters.parsers import pdf_parser
+    pages = []
+    class Page:
+        closed = False
+        def __init__(self, number):
+            self.number = number
+        def extract_text(self):
+            assert all(p.closed for p in pages[:self.number])
+            if self.number == 1 and failure == 'text':
+                raise ValueError('controlled extraction failure')
+            return f'Página {self.number}'
+        @property
+        def images(self):
+            if self.number == 1 and failure == 'images':
+                raise ValueError('controlled image failure')
+            return []
+        def close(self):
+            self.closed = True
+    class Pdf:
+        doc = SimpleNamespace(is_extractable=True)
+        def __enter__(self):
+            self.pages = pages
+            return self
+        def __exit__(self, *args):
+            pass
+    pages.extend(Page(i) for i in range(3))
+    monkeypatch.setattr(pdf_parser.pdfplumber, 'open', lambda *args: Pdf())
+    if failure:
+        with pytest.raises(PdfReadError):
+            pdf_parser.extract_pdf_text(b'fixture')
+        assert pages[0].closed and pages[1].closed and not pages[2].closed
+    else:
+        assert pdf_parser.extract_pdf_text(b'fixture') == 'Página 0\nPágina 1\nPágina 2'
+        assert all(page.closed for page in pages)

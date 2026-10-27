@@ -54,8 +54,14 @@ def extract_pdf_text(data: bytes) -> str:
             pdf.rsrcmgr = _TextResourceManager()
             if not pdf.doc.is_extractable:
                 raise PDFTextExtractionNotAllowed("extração não permitida")
-            pages = [page.extract_text() or "" for page in pdf.pages]
-            has_images = any(page.images for page in pdf.pages)
+            pages = []
+            has_images = False
+            for page in pdf.pages:
+                try:
+                    pages.append(page.extract_text() or "")
+                    has_images = has_images or bool(page.images)
+                finally:
+                    page.close()
     except (PDFPasswordIncorrect, PDFTextExtractionNotAllowed) as exc:
         raise ProtectedPdfError("PDF protegido; forneça uma versão com extração permitida") from exc
     except PdfminerException as exc:
